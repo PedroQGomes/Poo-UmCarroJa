@@ -13,8 +13,9 @@ public class Main
     
     public static void main(String [] args)
     {   
-        /*Client clt = new Client(generalUser);
-        Owner own = new Owner(generalUser); */
+        Menus menus = new Menus();
+        Data mData = new Data();
+        menus.initMenu(mData);
         
     }
     

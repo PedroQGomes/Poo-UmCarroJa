@@ -6,6 +6,7 @@
  */
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,13 +14,13 @@ import java.util.stream.Collectors;
 public abstract class GeneralUser implements Serializable
 {
     // instance variables - replace the example below with your own
-    private String email,name,password,morada;
-    private LocalDateTime birthDate;
+    private String email,name,password,morada,nif;
+    private LocalDate birthDate;
     private List<Rent> rentList;
     /**
      * Constructor for objects of class Utilizador
      */
-    public GeneralUser(String email,String name, String password, String morada, LocalDateTime birthDate)
+    public GeneralUser(String email,String name, String password, String morada, LocalDate birthDate)
     {
         // initialise instance variables
         this.email = email;
@@ -60,7 +61,7 @@ public abstract class GeneralUser implements Serializable
         return this.morada;
     }
     
-    public LocalDateTime getBirthDate() {
+    public LocalDate getBirthDate() {
         return this.birthDate;
     }
 

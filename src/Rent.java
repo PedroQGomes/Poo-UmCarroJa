@@ -15,9 +15,9 @@ public class Rent implements Serializable
     // instance variables - replace the example below with your own
     private LocalDateTime date;
     private Duration rentTime;
-    private Double price;
+    private double price;
     private Posicao pos;
-    private int nif;
+    private String nif;
 
     public LocalDateTime getDate ( ) {
         return this.date;
@@ -27,12 +27,12 @@ public class Rent implements Serializable
         return this.rentTime;
     }
 
-    public Double getPrice ( ) {
+    public double getPrice ( ) {
         return this.price;
     }
 
     public Posicao getPosicao() { return this.pos.clone();}
-    public int getNif() { return this.nif;}
+    public String getNif() { return this.nif;}
 
     /**
      * Constructor for objects of class Rent

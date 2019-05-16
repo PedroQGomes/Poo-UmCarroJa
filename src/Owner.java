@@ -1,3 +1,5 @@
+import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,7 +11,7 @@ import java.time.LocalDateTime;
  * @version (a version number or a date)
  */
 
-public class Owner extends GeneralUser implements Serializable
+public class Owner extends GeneralUser
 {
     // instance variables
     private int rating;
@@ -17,7 +19,7 @@ public class Owner extends GeneralUser implements Serializable
     /**
      * Constructor for objects of class Client
      */
-    public Owner(String _email, String _name, String _password, String _morada,LocalDateTime _birthDate)
+    public Owner(String _email, String _name, String _password, String _morada, LocalDate _birthDate)
     {
         super(_email,_name,_password,_morada,_birthDate);
         this.rating = 0;
@@ -38,5 +40,10 @@ public class Owner extends GeneralUser implements Serializable
         return new Owner(this);
     }
 
-
+    private void updateRating(int mRating) { // ASSUMINDO QUE ISTO É CHAMADO ANTES DE ADICIONAR O RENT A LISTA
+        int tmp = rating * arrListCar.size();
+        tmp += mRating;
+        tmp /= arrListCar.size()+1;
+        this.rating = tmp;
+    }
 }
