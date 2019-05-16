@@ -116,9 +116,19 @@ public abstract class Vehicle implements Serializable {
         return price;
     }
 
-    /*
-    public List<Rent> getAllRent(String nif){
-        this.alugueres.values().stream().
-    }*/
+    public abstract void warningGas();
+    public abstract boolean enoughAutonomy(Posicao x);
+    public abstract void updateAutonomy(Posicao x);
+
+    public double exacuteTrip(Rent a){ // retorna qnd custa a viagem-> 0 se nao for possivel
+        Posicao x = a.getPosicao();
+        if(enoughAutonomy(x) == false) return 0; // verifica se o carro tem autonomia para realizar a viagem
+        this.updateAutonomy(x); // update do combustivel
+        this.setPos(x); // muda a posicao do carro
+        this.addRent(a); // adiciona o aluguer a lista de alugueres do carro
+        this.warningGas(); // verifica se o carro está com pouca autonomia
+        double preco = this.rentPrice(a); // calcula e retorna o preço a pagar
+        return preco;
+    }
 
 }

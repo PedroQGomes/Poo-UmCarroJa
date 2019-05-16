@@ -67,7 +67,7 @@ public class HybridCar extends Vehicle{
     }
 
     // retira a gota que gasta na viagem ao carro
-    private void updateAutonomy(Posicao x){
+    public void updateAutonomy(Posicao x){
         double distancia = super.getPos().distancia(x);
         double gastaGota = distancia*super.getConsumptionPerKm();
         if(gastaGota > this.gasoleo){
@@ -79,17 +79,6 @@ public class HybridCar extends Vehicle{
         }
     }
 
-
-    public double exacuteTrip(Rent a){ // retorna qnd custa a viagem-> 0 se nao for possivel
-        Posicao x = a.getPosicao();
-        if(enoughAutonomy(x) == false) return 0; // verifica se o carro tem autonomia para realizar a viagem
-        this.updateAutonomy(x); // update do combustivel
-        super.setPos(x); // muda a posicao do carro
-        super.addRent(a); // adiciona o aluguer a lista de alugueres do carro
-        this.warningGas(); // verifica se o carro está com pouca autonomia
-        double preco = super.rentPrice(a); // calcula e retorna o preço a pagar
-        return preco;
-    }
 
 
 
