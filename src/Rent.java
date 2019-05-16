@@ -32,7 +32,7 @@ public class Rent implements Serializable
     }
 
     public Posicao getPosicao() { return this.pos.clone();}
-
+    public int getNif() { return this.nif;}
 
     /**
      * Constructor for objects of class Rent
@@ -41,13 +41,13 @@ public class Rent implements Serializable
         this.date = LocalDateTime.now();
         this.rentTime = _rentTime;
         this.price = _price;
-        this.vehicle = _vehicle.clone();
     }
     public Rent(Rent r) {
         this.date = getDate();
         this.rentTime = getRentTime();
         this.price = getPrice();
-        this.vehicle = getVehicle();
+        this.nif = getNif();
+        this.pos = r.getPosicao().clone();
     }
 
     public Rent clone(){
