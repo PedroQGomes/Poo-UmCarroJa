@@ -1,2 +1,0 @@
-# UMCarroJa
-Trabalho de POO
