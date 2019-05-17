@@ -17,9 +17,9 @@ public class Client extends GeneralUser
     /**
      * Constructor for objects of class Client
      */
-    public Client(String _email, String _name, String _password, String _morada, LocalDate _birthDate)
+    public Client(String _email, String _name, String _password, String _morada, LocalDate _birthDate,String _nif)
     {
-        super(_email,_name,_password,_morada,_birthDate);
+        super(_email,_name,_password,_morada,_birthDate,_nif);
         this.pos = new Posicao();
     }
 

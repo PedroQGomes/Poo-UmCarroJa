@@ -19,9 +19,9 @@ public class Owner extends GeneralUser
     /**
      * Constructor for objects of class Client
      */
-    public Owner(String _email, String _name, String _password, String _morada, LocalDate _birthDate)
+    public Owner(String _email, String _name, String _password, String _morada, LocalDate _birthDate,String _nif)
     {
-        super(_email,_name,_password,_morada,_birthDate);
+        super(_email,_name,_password,_morada,_birthDate,_nif);
         this.rating = 0;
         arrListCar = new ArrayList<>();
     }

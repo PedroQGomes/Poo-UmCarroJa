@@ -8,31 +8,45 @@
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 public class Data implements  Serializable ,IData
 {
-   private Map<Integer, Owner> owners;//HashMap que contém todos os users, tendo o email como chave
-   private Map<Integer, Client> clients;//HashMap que contém todos os users, tendo o email como chave
+   private Map<String, GeneralUser> users;//HashMap que contém todos os users, tendo o email como chave
+   private GeneralUser loggedInUser = null;
+
+   public boolean isLoggedIn ( ) {
+      return (loggedInUser != null);
+   }
+
 
    public Data() {
-      owners = new HashMap<>();
-      clients = new HashMap<>();
+      users = new HashMap<>();
+      //clients = new HashMap<>();
    }
 
-   public boolean checkClientExists (String nifClient) {
-      return false;
+   public void logout() {
+      loggedInUser = null;
    }
 
-   public boolean checkOwnerExists (String nifOwner) {
-      return false;
+   public boolean loginOn (String username, String pass) {
+         GeneralUser generalUser = null;
+         boolean login = false;
+         if(users.containsKey(username)){
+            generalUser = users.get(username);
+            login = (generalUser.getEmail().equals(username) && generalUser.getPassword().equals(pass));
+         }
+         if(login) {
+            loggedInUser = generalUser;
+         }
+      return login;
    }
-
-   public void addOwner (Owner owner) {
-
+   public GeneralUser getLoggedInUser() {
+      return this.loggedInUser.clone();
    }
-
-   public void addClient (Client client) {
-
+   public void addUser (GeneralUser generalUser) {
+      String key = generalUser.getEmail();
+      users.put(key,generalUser);
    }
 
    public void populateData ( ) {
