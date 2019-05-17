@@ -20,9 +20,10 @@ public abstract class GeneralUser implements Serializable
     /**
      * Constructor for objects of class Utilizador
      */
-    public GeneralUser(String email,String name, String password, String morada, LocalDate birthDate)
+    public GeneralUser(String email,String name, String password, String morada, LocalDate birthDate,String nif)
     {
         // initialise instance variables
+        this.nif = nif;
         this.email = email;
         this.name = name;
         this.password = password;
@@ -32,6 +33,7 @@ public abstract class GeneralUser implements Serializable
     }
 
     public GeneralUser(GeneralUser generalUser) {
+        this.nif = generalUser.getNif();
         this.email = generalUser.getEmail();
         this.name = generalUser.getName();
         this.password = generalUser.getPassword();
@@ -44,6 +46,7 @@ public abstract class GeneralUser implements Serializable
         return this.rentList.stream().map(Rent::clone).collect(Collectors.toList());
     }
 
+    public String getNif(){return this.nif;}
 
     public String getEmail() {
         return this.email;
@@ -77,8 +80,14 @@ public abstract class GeneralUser implements Serializable
                 && this.getMorada().equals(gU.getMorada())
                 && this.getBirthDate().equals(gU.getBirthDate()));
     }
-        
+
+
+    public void addHistoty(Rent a){
+        this.rentList.add(a.clone());
+    }
     
-    
+    public List<Rent> getRentOfClient(String nif){
+        return this.rentList.stream().filter(l -> l.getNif().equals(nif)).map(Rent::clone).collect(Collectors.toList());
+    }
         
 }

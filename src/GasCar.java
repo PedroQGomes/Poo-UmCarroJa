@@ -35,7 +35,10 @@ public class GasCar extends Vehicle
     public boolean enoughAutonomy(Posicao x){
         double distancia = super.getPos().distancia(x);
         double autonomia = distancia*super.getConsumptionPerKm();
-        if(autonomia > gasoleo){return false;}else {return true;}
+        if(autonomia > gasoleo){
+            this.warningGas();
+            return false;
+        }else {return true;}
     }
     
     public void abastece(){

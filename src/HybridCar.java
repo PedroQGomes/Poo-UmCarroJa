@@ -49,7 +49,10 @@ public class HybridCar extends Vehicle{
         double distancia = super.getPos().distancia(x);
         double autonomia = distancia*super.getConsumptionPerKm();
         double total = gasoleo + bateria;
-        if(autonomia > total){return false;}else {return true;}
+        if(autonomia > total){
+            this.warningGas();
+            return false;
+        }else {return true;}
     }
 
     public void abastece(){
