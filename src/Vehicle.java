@@ -89,6 +89,8 @@ public abstract class Vehicle implements Serializable {
         this.pos = x.clone();
     }
 
+    public void setPrice(double price){this.pricePerKm = price;}
+
     public boolean equals(Object o){
         if(o == this)return true;
         if((o == null) || o.getClass() != this.getClass()) return false;
@@ -119,6 +121,7 @@ public abstract class Vehicle implements Serializable {
     public abstract void warningGas();
     public abstract boolean enoughAutonomy(Posicao x);
     public abstract void updateAutonomy(Posicao x);
+    public abstract void abastece();
 
     public double exacuteTrip(Rent a){ // retorna qnd custa a viagem-> 0 se nao for possivel
         Posicao x = a.getPosicao();

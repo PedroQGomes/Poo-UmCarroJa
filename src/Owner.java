@@ -1,6 +1,7 @@
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.time.LocalDateTime;
@@ -46,4 +47,39 @@ public class Owner extends GeneralUser
         tmp /= arrListCar.size()+1;
         this.rating = tmp;
     }
+    public void addVehicle(Vehicle a){
+        this.arrListCar.add(a.clone());
+    }
+    public List<Vehicle> signalAvailable(Rent a){
+        return this.arrListCar.stream().filter(l -> l.enoughAutonomy(a.getPosicao())).collect(Collectors.toList());
+    }
+
+    public void fuelCar(Vehicle a){
+        Iterator<Vehicle> it = this.arrListCar.iterator();
+        boolean flag = true;
+        while(flag && it.hasNext()){
+            Vehicle b = it.next();
+            if(b.equals(a) == true){
+                flag = false;
+                b.abastece();
+            }
+        }
+    }
+
+    public void changePrice(Vehicle a,double price){
+        Iterator<Vehicle> it = this.arrListCar.iterator();
+        boolean flag = true;
+        while(flag && it.hasNext()){
+            Vehicle b = it.next();
+            if(a.equals(b) == true){
+                flag = false;
+                b.setPrice(price);
+            }
+        }
+    }
+
+
+
+
+
 }

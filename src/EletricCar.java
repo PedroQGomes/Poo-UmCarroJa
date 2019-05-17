@@ -43,7 +43,10 @@ public class EletricCar extends Vehicle {
     public boolean enoughAutonomy(Posicao x){
         double distancia = super.getPos().distancia(x);
         double autonomia = distancia*super.getConsumptionPerKm();
-        if(autonomia > bateria){return false;}else {return true;}
+        if(autonomia > bateria){
+            this.warningGas();
+            return false;
+        }else {return true;}
     }
 
     public void abastece(){
