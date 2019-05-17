@@ -1,3 +1,4 @@
+import java.io.*;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
 
@@ -12,11 +13,28 @@ public class Main
  
     
     public static void main(String [] args)
-    {   
-        Menus menus = new Menus();
-        Data mData = new Data();
-        menus.initMenu(mData);
-        
+    {
+        Data mData = null;
+        try {
+            FileInputStream fis = new FileInputStream("data.tmp");
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            mData = (Data) ois.readObject();
+            System.out.println("Dados Lidos");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        if (mData == null) mData = new Data();
+        Menus menus = new Menus(mData);
+        menus.initMenu();
+        try {
+            FileOutputStream fos = new FileOutputStream("data.tmp");
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(mData);
+            System.out.println("Dados Gravados");
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
     }
     
    

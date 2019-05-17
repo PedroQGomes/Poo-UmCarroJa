@@ -1,3 +1,4 @@
+import java.io.Serializable;
 
 /**
  * Write a description of class Posicao here.
@@ -5,7 +6,7 @@
  * @author (your name)
  * @version (a version number or a date)
  */
-public class Posicao
+public class Posicao implements Serializable
 {
     // instance variables
     private double x,y;

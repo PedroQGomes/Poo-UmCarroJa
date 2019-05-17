@@ -29,6 +29,7 @@ public abstract class GeneralUser implements Serializable
         this.password = password;
         this.morada = morada;
         this.birthDate = birthDate;
+        this.nif = nif;
         this.rentList = new ArrayList<>();
     }
 
@@ -39,6 +40,7 @@ public abstract class GeneralUser implements Serializable
         this.password = generalUser.getPassword();
         this.morada = generalUser.getMorada();
         this.birthDate = generalUser.getBirthDate();
+        this.nif = generalUser.getNif();
         this.rentList = generalUser.getRentList();
     }
 
@@ -63,7 +65,8 @@ public abstract class GeneralUser implements Serializable
     public String getMorada() {
         return this.morada;
     }
-    
+
+    public String getNif() { return this.nif;}
     public LocalDate getBirthDate() {
         return this.birthDate;
     }
@@ -75,7 +78,8 @@ public abstract class GeneralUser implements Serializable
         if((o == null) || (this.getClass() != o.getClass())) 
         return false;
         GeneralUser gU = (GeneralUser) o;
-        return (this.getEmail().equals(gU.getEmail()) 
+        return ( this.getNif().equals(gU.getNif())
+                && this.getEmail().equals(gU.getEmail())
                 && this.getName().equals(gU.getName())
                 && this.getMorada().equals(gU.getMorada())
                 && this.getBirthDate().equals(gU.getBirthDate()));
