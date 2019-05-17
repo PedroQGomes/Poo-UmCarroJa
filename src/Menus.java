@@ -46,6 +46,8 @@ public class Menus
     private void ownerMenu() {
         System.out.println("1 -> ETC");
         System.out.println("9 -> Sair");
+        System.out.println("aceitar/rejeitar o aluguer de um determinado cliente");
+        System.out.println("registar qnt custou a viagem");
         int res = sn.nextInt();
         switch (res) {
             case 1:
@@ -65,6 +67,11 @@ public class Menus
     private void clientMenu() {
         System.out.println("1 -> ETC");
         System.out.println("9 -> Sair");
+        System.out.println("solicitar um aluguer de um carro mais prox das sua Posicao");
+        System.out.println("solicitar um aluguer de um carro mais barato");
+        System.out.println("solicitar um aluguer de um carro mais barato dentro uma dist q podem andar");
+        System.out.println("solicitar um aluguer de um carro especifico");
+        System.out.println("solicitar um aluguer de um carro com uma autonomia desejada");
         int res = sn.nextInt();
         switch (res) {
             case 1:

@@ -4,7 +4,7 @@ import java.util.stream.Collectors;
 
 public class GasCar extends Vehicle
 {
-    private static double maxGasoleo = 30;
+    private static double maxGasoleo = 1000;
 
     public static double getMaxGasoleo(){return maxGasoleo;}
 
@@ -16,8 +16,8 @@ public class GasCar extends Vehicle
     }
 
 
-    public GasCar(int averageSpeed,double pricePerKm, double consumptionPerKm,Posicao mPos,String nome,List<Rent> a,boolean disp,boolean fuel,double gas){
-        super(averageSpeed,pricePerKm,consumptionPerKm,mPos,nome,a,disp,fuel);
+    public GasCar(int averageSpeed,double pricePerKm, double consumptionPerKm,Posicao mPos,String nome,List<Rent> a,boolean fuel,double gas){
+        super(averageSpeed,pricePerKm,consumptionPerKm,mPos,nome,a,fuel);
         this.gasoleo = gas;
     }
 
@@ -35,7 +35,7 @@ public class GasCar extends Vehicle
     public boolean enoughAutonomy(Posicao x){
         double distancia = super.getPos().distancia(x);
         double autonomia = distancia*super.getConsumptionPerKm();
-        if(autonomia > gasoleo){
+        if(autonomia > this.gasoleo){
             this.warningGas();
             return false;
         }else {return true;}
@@ -59,6 +59,13 @@ public class GasCar extends Vehicle
         this.gasoleo = this.gasoleo - gastaGota;
     }
 
+    public double getCurrentFuel(){
+        return this.gasoleo;
+    }
+
+    public double getAutonomy(){
+        return this.gasoleo / super.getConsumptionPerKm();
+    }
 
 
 

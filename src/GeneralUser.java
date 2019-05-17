@@ -66,7 +66,6 @@ public abstract class GeneralUser implements Serializable
         return this.morada;
     }
 
-    public String getNif() { return this.nif;}
     public LocalDate getBirthDate() {
         return this.birthDate;
     }

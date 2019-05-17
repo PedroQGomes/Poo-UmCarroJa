@@ -3,7 +3,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class EletricCar extends Vehicle {
-    private static double maxBateria = 30;
+    private static double maxBateria = 1000;
 
     public static  double getMaxBateria(){return maxBateria;}
 
@@ -13,8 +13,8 @@ public class EletricCar extends Vehicle {
         super();
         this.bateria = 0.0;
     }
-    public EletricCar(int averageSpeed,double pricePerKm, double consumptionPerKm,Posicao mPos,String nome,List<Rent> a,boolean disp,boolean fuel,double bateria){
-        super(averageSpeed,pricePerKm,consumptionPerKm,mPos,nome,a,disp,fuel);
+    public EletricCar(int averageSpeed,double pricePerKm, double consumptionPerKm,Posicao mPos,String nome,List<Rent> a,boolean fuel,double bateria){
+        super(averageSpeed,pricePerKm,consumptionPerKm,mPos,nome,a,fuel);
         this.bateria = bateria;
     }
 
@@ -43,7 +43,7 @@ public class EletricCar extends Vehicle {
     public boolean enoughAutonomy(Posicao x){
         double distancia = super.getPos().distancia(x);
         double autonomia = distancia*super.getConsumptionPerKm();
-        if(autonomia > bateria){
+        if(autonomia > this.bateria){
             this.warningGas();
             return false;
         }else {return true;}
@@ -66,6 +66,17 @@ public class EletricCar extends Vehicle {
         double gastaGota = distancia*super.getConsumptionPerKm();
         this.bateria = this.bateria - gastaGota;
     }
+
+    public double getCurrentFuel(){
+        return this.bateria;
+    }
+
+    public double getAutonomy(){
+        return this.bateria / super.getConsumptionPerKm();
+    }
+
+
+
 
 
 
