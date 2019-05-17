@@ -5,7 +5,7 @@
  * @version (a version number or a date)
  */
 
-import java.io.Serializable;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -54,10 +54,14 @@ public class Data implements  Serializable ,IData
    }
 
    public void saveState ( ) {
-
+      try {
+         FileOutputStream fos = new FileOutputStream("data.tmp");
+         ObjectOutputStream oos = new ObjectOutputStream(fos);
+         oos.writeObject(this);
+         System.out.println("Dados Gravados");
+      } catch (IOException e) {
+         System.out.println(e.getMessage());
+      }
    }
 
-   public void recoverState ( ) {
-
-   }
 }
