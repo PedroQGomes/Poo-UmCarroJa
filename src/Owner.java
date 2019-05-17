@@ -84,5 +84,18 @@ public class Owner extends GeneralUser
 
     // registar qnt custou uma viagem -?????? a onde ??? no aluguer????
 
+
     // aceitar rejeitar o aluguer de um determinado cliente - base em que ? maus ratings?
+
+    public void acceptRent(Rent a,Vehicle r){
+        Iterator<Vehicle> it = this.arrListCar.iterator();
+        boolean flag = true;
+        while(flag && it.hasNext()){
+            Vehicle b = it.next();
+            if(b.equals(r)){
+                flag = false;
+                b.exacuteTrip(a);
+            }
+        }
+    }
 }

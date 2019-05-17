@@ -14,9 +14,8 @@ public class Client extends GeneralUser
 {
     // instance variables - replace the example below with your own
     private Posicao pos;
-    /**
-     * Constructor for objects of class Client
-     */
+
+
     public Client(String _email, String _name, String _password, String _morada, LocalDate _birthDate,String _nif)
     {
         super(_email,_name,_password,_morada,_birthDate,_nif);
