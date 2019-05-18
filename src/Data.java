@@ -12,7 +12,7 @@ import java.util.function.Function;
 
 public class Data implements  Serializable ,IData
 {
-   private Map<String, GeneralUser> users;//HashMap que contém todos os users, tendo o email como chave
+   private Map<String, GeneralUser> users; //HashMap que contém todos os users, tendo o email como chave
    private GeneralUser loggedInUser = null;
 
    public boolean isLoggedIn ( ) {

@@ -34,7 +34,6 @@ public abstract class GeneralUser implements Serializable
     }
 
     public GeneralUser(GeneralUser generalUser) {
-        this.nif = generalUser.getNif();
         this.email = generalUser.getEmail();
         this.name = generalUser.getName();
         this.password = generalUser.getPassword();
@@ -66,7 +65,6 @@ public abstract class GeneralUser implements Serializable
         return this.morada;
     }
 
-    public String getNif() { return this.nif;}
     public LocalDate getBirthDate() {
         return this.birthDate;
     }

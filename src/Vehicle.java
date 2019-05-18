@@ -123,7 +123,7 @@ public abstract class Vehicle implements Serializable {
     public abstract void updateAutonomy(Posicao x);
     public abstract void abastece();
 
-    public double exacuteTrip(Rent a){ // retorna qnd custa a viagem-> 0 se nao for possivel
+    public double executeTrip(Rent a){ // retorna qnd custa a viagem-> 0 se nao for possivel
         Posicao x = a.getPosicao();
         if(enoughAutonomy(x) == false) return 0; // verifica se o carro tem autonomia para realizar a viagem
         this.updateAutonomy(x); // update do combustivel
