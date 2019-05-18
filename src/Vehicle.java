@@ -32,7 +32,7 @@ public abstract class Vehicle implements Serializable {
         this.pos = mPos.clone();
         this.rating = 0;
         this.matricula = nome;
-        this.needFuel = fuel;
+        this.needFuel = false;
         this.alugueres = new ArrayList<>();
         for(Rent l :a){this.alugueres.add(l.clone());}
     }

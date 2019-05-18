@@ -44,13 +44,23 @@ public class Menus
     }
 
     private void ownerMenu() {
-        System.out.println("1 -> ETC");
+        System.out.println("1 -> Registar um carro");
+        System.out.println("2 -> Ver registos dos carros");
+        System.out.println("3 -> Ver histórico de aluguer");
+        System.out.println("4 -> Abastecer um carro");
         System.out.println("9 -> Sair");
         System.out.println("aceitar/rejeitar o aluguer de um determinado cliente");
         System.out.println("registar qnt custou a viagem");
         int res = sn.nextInt();
         switch (res) {
             case 1:
+                vehicleRegister();
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
                 break;
             case 9:
                 logout();
@@ -60,24 +70,104 @@ public class Menus
         }
     }
 
+    private void vehicleRegister() {
+        Vehicle _vehicle = null;
+        System.out.println("1 -> Carro hibrido");
+        System.out.println("2 -> Carro eletrico");
+        System.out.println("3 -> Carro a Gasóleo");
+        int res = sn.nextInt();
+        switch(res) {
+            case 1:
+                _vehicle = newHybridVehicleWithProperties();
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+        }
+        if(_vehicle != null)
+        data.addCar(_vehicle);
+    }
+    private HybridCar newHybridVehicleWithProperties() {
+        System.out.println("Registe o carro: ");
+
+        System.out.print("Matricula: ");
+        String matricula = sn.next();
+
+        System.out.print("Preço por km:");
+        double pricePerKm = sn.nextDouble();
+
+        System.out.print("Velocidade Media:");
+        int averageSpeed = sn.nextInt();
+
+        System.out.print("Consumo por KM: ");
+        double consumPerKm = sn.nextDouble();
+
+        System.out.print("Posicao (Ex: x,y ) : ");
+        String posString = sn.next();
+        String[] arrPosString = posString.split(",");
+        Posicao mPos = new Posicao(Double.parseDouble(arrPosString[0]),Double.parseDouble(arrPosString[1]));
+
+
+        System.out.print("Nome :");
+        String name = sn.next();
+
+        System.out.print("Precisa de abastecer (y)/(n) : ");
+        char needFuel = sn.next().charAt(0);
+        boolean needFuelBool = false;
+        if(needFuel == 'y' || needFuel == 'Y') needFuelBool = true;
+
+        System.out.print("Quantidade de combustivel : ");
+        double fuel = sn.nextDouble();
+
+        HybridCar _car = new HybridCar(averageSpeed,pricePerKm,consumPerKm,mPos,name,needFuelBool,fuel);
+        return _car;
+    }
+
     private void logout() {
         data.logout();
     }
 
     private void clientMenu() {
-        System.out.println("1 -> ETC");
+        System.out.println("1 -> Alugar um carro");
+        System.out.println("2 -> Consultar Histórico de aluguer");
+        System.out.println("3 -> ");
         System.out.println("9 -> Sair");
-        System.out.println("solicitar um aluguer de um carro mais prox das sua Posicao");
-        System.out.println("solicitar um aluguer de um carro mais barato");
-        System.out.println("solicitar um aluguer de um carro mais barato dentro uma dist q podem andar");
-        System.out.println("solicitar um aluguer de um carro especifico");
-        System.out.println("solicitar um aluguer de um carro com uma autonomia desejada");
+
+        int res = sn.nextInt();
+        switch (res) {
+            case 1:
+                aluguerMenu();
+                break;
+            case 2:
+                break;
+            case 9:
+                logout();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void aluguerMenu() {
+        System.out.println("1 -> Solicitar o aluguer de um carro mais prox das sua Posicao");
+        System.out.println("2 -> Solicitar o aluguer de um carro mais barato");
+        System.out.println("3 -> Solicitar o aluguer de um carro especifico");
+        System.out.println("4 -> Solicitar um aluguer de um carro com uma autonomia desejada");
+        System.out.println("5 -> Voltar a trás");
+
         int res = sn.nextInt();
         switch (res) {
             case 1:
                 break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
             case 9:
-                logout();
+                clientMenu();
                 break;
             default:
                 break;

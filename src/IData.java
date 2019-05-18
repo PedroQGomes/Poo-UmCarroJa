@@ -4,6 +4,7 @@ import java.io.ObjectInputStream;
 public interface IData {
     boolean loginOn(String username,String password);
     void addUser(GeneralUser owner);
+    void addCar(Vehicle mVehicle);
     void populateData();
     void saveState();
     static Data recoverState() {

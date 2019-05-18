@@ -94,7 +94,7 @@ public class Owner extends GeneralUser
             Vehicle b = it.next();
             if(b.equals(r)){
                 flag = false;
-                b.exacuteTrip(a);
+                b.executeTrip(a);
             }
         }
     }

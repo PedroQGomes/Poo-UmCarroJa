@@ -21,10 +21,10 @@ public class HybridCar extends Vehicle{
     }
 
 
-    public HybridCar(int averageSpeed,double pricePerKm, double consumptionPerKm,Posicao mPos,String nome,List<Rent> a,boolean nfuel,double fuel){
+    public HybridCar(int averageSpeed,double pricePerKm, double consumptionPerKm,Posicao mPos,String nome,boolean nfuel,double fuel){
         super(averageSpeed,pricePerKm,consumptionPerKm,mPos,nome,a,nfuel);
-        this.gasoleo = fuel/2;
-        this.bateria = fuel/2;
+        this.gasoleo = 2*(fuel/3);
+        this.bateria = fuel/3;
     }
 
     public HybridCar(HybridCar v){
