@@ -4,8 +4,8 @@ import java.util.stream.Collectors;
 
 
 public class HybridCar extends Vehicle{
-    private static double maxGasoleo = 15;
-    private static double maxBateria = 15;
+    private static double maxGasoleo = 500;
+    private static double maxBateria = 500;
 
     public static double getMaxBateria(){return maxBateria;}
     public static double getMaxGasoleo(){return maxGasoleo;}
@@ -21,10 +21,10 @@ public class HybridCar extends Vehicle{
     }
 
 
-    public HybridCar(int averageSpeed,double pricePerKm, double consumptionPerKm,Posicao mPos,String nome,List<Rent> a,boolean disp,boolean fuel,double bat,double gas){
-        super(averageSpeed,pricePerKm,consumptionPerKm,mPos,nome,a,disp,fuel);
-        this.gasoleo = gas;
-        this.bateria = bat;
+    public HybridCar(int averageSpeed,double pricePerKm, double consumptionPerKm,Posicao mPos,String nome,List<Rent> a,boolean nfuel,double fuel){
+        super(averageSpeed,pricePerKm,consumptionPerKm,mPos,nome,a,nfuel);
+        this.gasoleo = fuel/2;
+        this.bateria = fuel/2;
     }
 
     public HybridCar(HybridCar v){
@@ -48,7 +48,7 @@ public class HybridCar extends Vehicle{
     public boolean enoughAutonomy(Posicao x){
         double distancia = super.getPos().distancia(x);
         double autonomia = distancia*super.getConsumptionPerKm();
-        double total = gasoleo + bateria;
+        double total = this.gasoleo + this.bateria;
         if(autonomia > total){
             this.warningGas();
             return false;
@@ -80,6 +80,15 @@ public class HybridCar extends Vehicle{
         }else{
             this.gasoleo = this.gasoleo - gastaGota;
         }
+    }
+
+    public double getCurrentFuel(){
+        return (this.bateria + this.gasoleo);
+    }
+
+    public double getAutonomy(){
+        double total = this.bateria + this.gasoleo;
+        return total / super.getConsumptionPerKm();
     }
 
 

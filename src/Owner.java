@@ -50,28 +50,31 @@ public class Owner extends GeneralUser
     public void addVehicle(Vehicle a){
         this.arrListCar.add(a.clone());
     }
+
     public List<Vehicle> signalAvailable(Rent a){
-        return this.arrListCar.stream().filter(l -> l.enoughAutonomy(a.getPosicao())).collect(Collectors.toList());
+        return this.arrListCar.stream().filter(l -> l.enoughAutonomy(a.getPosicao())).map(Vehicle::clone).collect(Collectors.toList());
     }
 
+    // abastece o carro
     public void fuelCar(Vehicle a){
         Iterator<Vehicle> it = this.arrListCar.iterator();
         boolean flag = true;
         while(flag && it.hasNext()){
             Vehicle b = it.next();
-            if(b.equals(a) == true){
+            if(b.equals(a)){
                 flag = false;
                 b.abastece();
             }
         }
     }
 
+    //muda o preço por km de um carro
     public void changePrice(Vehicle a,double price){
         Iterator<Vehicle> it = this.arrListCar.iterator();
         boolean flag = true;
         while(flag && it.hasNext()){
             Vehicle b = it.next();
-            if(a.equals(b) == true){
+            if(a.equals(b)){
                 flag = false;
                 b.setPrice(price);
             }
@@ -79,7 +82,20 @@ public class Owner extends GeneralUser
     }
 
 
+    // registar qnt custou uma viagem -?????? a onde ??? no aluguer????
 
 
+    // aceitar rejeitar o aluguer de um determinado cliente - base em que ? maus ratings?
 
+    public void acceptRent(Rent a,Vehicle r){
+        Iterator<Vehicle> it = this.arrListCar.iterator();
+        boolean flag = true;
+        while(flag && it.hasNext()){
+            Vehicle b = it.next();
+            if(b.equals(r)){
+                flag = false;
+                b.exacuteTrip(a);
+            }
+        }
+    }
 }

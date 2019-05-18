@@ -15,7 +15,7 @@ public class Data implements  Serializable ,IData
    private Map<String, GeneralUser> users; //HashMap que contém todos os users, tendo o email como chave
    private GeneralUser loggedInUser = null;
 
-   public boolean isLoggedIn ( ) {
+   public boolean isLoggedIn () {
       return (loggedInUser != null);
    }
 
@@ -63,5 +63,7 @@ public class Data implements  Serializable ,IData
          System.out.println(e.getMessage());
       }
    }
+
+
 
 }
