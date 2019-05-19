@@ -125,6 +125,7 @@ public class Owner extends GeneralUser
         else {return false;}
     } */
 
-
+    // falta registar o preço de um aluguer
+    //
 
 }

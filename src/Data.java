@@ -10,6 +10,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Data implements  Serializable ,IData
 {
@@ -107,6 +108,8 @@ public class Data implements  Serializable ,IData
         return isSuccess;
     }
 
-
+    public List<Vehicle> getListOfCarType(Vehicle a){
+        return this.allVehicles.values().stream().filter(l-> l.getClass() == a.getClass()).map(Vehicle::clone).collect(Collectors.toList());
+    }
 
 }
