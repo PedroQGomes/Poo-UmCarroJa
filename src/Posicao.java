@@ -8,6 +8,7 @@ import java.io.Serializable;
  */
 public class Posicao implements Serializable
 {
+    private static final long serialVersionUID = 1334567219L;
     // instance variables
     private double x,y;
 
@@ -58,6 +59,15 @@ public class Posicao implements Serializable
         return (p.getPosX() == this.getPosX() && p.getPosY() == this.getPosY());
     }
 
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("(");
+        stringBuilder.append(this.getPosX());
+        stringBuilder.append(",");
+        stringBuilder.append(this.getPosY());
+        stringBuilder.append(")");
+        return stringBuilder.toString();
+    }
     public double distancia(Posicao x){
         double x1 = this.x;
         double y1 = this.y;

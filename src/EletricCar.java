@@ -13,8 +13,8 @@ public class EletricCar extends Vehicle {
         super();
         this.bateria = 0.0;
     }
-    public EletricCar(String marca,String nome,int averageSpeed,double pricePerKm, double consumptionPerKm,Posicao mPos,double bateria){
-        super(marca,nome,averageSpeed,pricePerKm,consumptionPerKm,mPos);
+    public EletricCar(String marca,String matricula,int averageSpeed,double pricePerKm, double consumptionPerKm,Posicao mPos,double bateria){
+        super(marca,matricula,averageSpeed,pricePerKm,consumptionPerKm,mPos);
         this.bateria = bateria;
     }
 
@@ -64,6 +64,12 @@ public class EletricCar extends Vehicle {
         double distancia = super.getPos().distancia(x);
         double gastaGota = distancia*super.getConsumptionPerKm();
         this.bateria = this.bateria - gastaGota;
+    }
+
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("Carro Eletrico");
+        return stringBuilder.toString();
     }
 
     public double getCurrentFuel(){

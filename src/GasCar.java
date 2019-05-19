@@ -16,8 +16,8 @@ public class GasCar extends Vehicle
     }
 
 
-    public GasCar(String marca,String nome,int averageSpeed,double pricePerKm, double consumptionPerKm,Posicao mPos,double gas){
-        super(marca,nome,averageSpeed,pricePerKm,consumptionPerKm,mPos);
+    public GasCar(String marca,String matricula,int averageSpeed,double pricePerKm, double consumptionPerKm,Posicao mPos,double gas){
+        super(marca,matricula,averageSpeed,pricePerKm,consumptionPerKm,mPos);
         this.gasoleo = gas;
     }
 
@@ -64,6 +64,12 @@ public class GasCar extends Vehicle
         double distancia = super.getPos().distancia(x);
         double gastaGota = distancia*super.getConsumptionPerKm();
         this.gasoleo = this.gasoleo - gastaGota;
+    }
+
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("Carro a Gasóleo");
+        return stringBuilder.toString();
     }
 
     public double getCurrentFuel(){
