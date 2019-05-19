@@ -7,12 +7,13 @@
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Data implements  Serializable ,IData
 {
     private static final long serialVersionUID = 123456789L;
     private Map<String, GeneralUser> users; // HashMap que contém todos os users, tendo o email como chave
-    private List<Vehicle> allVehicles;
+    private Map<String,Vehicle> allVehicles; // contem todos os carros, tendo a matricula como key
     private GeneralUser loggedInUser = null;
 
     public boolean isLoggedIn () {
@@ -22,7 +23,7 @@ public class Data implements  Serializable ,IData
 
     public Data() {
         users = new HashMap<>();
-        allVehicles = new ArrayList<>();
+        allVehicles = new HashMap<>();
     }
 
     public void logout() {
@@ -68,10 +69,12 @@ public class Data implements  Serializable ,IData
         Owner _own = (Owner) loggedInUser;
         boolean isSuccess = _own.addVehicle(mVehicle.getMatricula(),mVehicle);
         if(isSuccess)
-        allVehicles.add(mVehicle);
+        allVehicles.put(mVehicle.getMatricula(),mVehicle);
         return isSuccess;
     }
 
-
+    public List<Vehicle> getListOfCarType(Vehicle a){
+        return this.allVehicles.values().stream().filter(l-> l.getClass() == a.getClass()).map(Vehicle::clone).collect(Collectors.toList());
+    }
 
 }

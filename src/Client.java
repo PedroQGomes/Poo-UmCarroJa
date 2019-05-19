@@ -47,5 +47,35 @@ public class Client extends GeneralUser
         }
         return tmpNoRate;
     }
-    
+
+    public Vehicle getNearCar(List<Vehicle> list,Posicao p) throws semVeiculosException{
+    if(list.isEmpty()){throw new semVeiculosException("Sem veiculos");}
+    double tmpDist = 0;
+    double tmpfinal = (-1);
+    Vehicle end = null;
+
+    for(Vehicle tmp: list){
+        tmpDist = tmp.getPos().distancia(p);
+        if(tmpfinal < 0){
+            tmpfinal = tmpDist;
+            end = tmp;
+        }else {
+            if(tmpfinal > tmpDist){
+                tmpfinal = tmpDist;
+                end = tmp;
+            }
+        }
+    }
+    return end;
+}
+
+
+    public void RentNearCarOfType(Data p,Vehicle a){
+        List<Vehicle> tmp = p.getListOfCarType(a);
+        Vehicle chosen = getNearCar(tmp,this.pos);
+
+    }
+
+
+
 }
