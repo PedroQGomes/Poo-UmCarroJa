@@ -120,7 +120,7 @@ public class Menus
         System.out.print("Quantidade de combustivel : ");
         double fuel = sn.nextDouble();
 
-        HybridCar _car = new HybridCar(averageSpeed,pricePerKm,consumPerKm,mPos,name,needFuelBool,fuel);
+        HybridCar _car = new HybridCar(marca,name,averageSpeed,pricePerKm,consumPerKm,mPos,fuel);
         return _car;
     }
 

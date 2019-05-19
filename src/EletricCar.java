@@ -13,8 +13,8 @@ public class EletricCar extends Vehicle {
         super();
         this.bateria = 0.0;
     }
-    public EletricCar(int averageSpeed,double pricePerKm, double consumptionPerKm,Posicao mPos,String nome,List<Rent> a,boolean fuel,double bateria){
-        super(averageSpeed,pricePerKm,consumptionPerKm,mPos,nome,a,fuel);
+    public EletricCar(String marca,String nome,int averageSpeed,double pricePerKm, double consumptionPerKm,Posicao mPos,double bateria){
+        super(marca,nome,averageSpeed,pricePerKm,consumptionPerKm,mPos);
         this.bateria = bateria;
     }
 
@@ -32,9 +32,8 @@ public class EletricCar extends Vehicle {
         return new EletricCar(this);
     }
 
-    public boolean EletricCar(Object o){
+    public boolean equals(Object o){
         if(this == o) return true;
-
         if((o == null) || o.getClass() != this.getClass()) return false;
         EletricCar p = (EletricCar) o;
         return (super.equals(o) && this.bateria == p.getBateria());
