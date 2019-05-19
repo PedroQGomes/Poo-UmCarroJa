@@ -129,8 +129,7 @@ public abstract class Vehicle implements Serializable {
         this.setPos(x); // muda a posicao do carro
         this.addRent(a); // adiciona o aluguer a lista de alugueres do carro
         this.warningGas(); // verifica se o carro está com pouca autonomia
-        double preco = this.rentPrice(a); // calcula e retorna o preço a pagar
-        return preco;
+        return (this.rentPrice(a)); // calcula e retorna o preço a pagar
     }
 
 }

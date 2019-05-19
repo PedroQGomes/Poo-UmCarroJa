@@ -91,7 +91,17 @@ public class HybridCar extends Vehicle{
         return total / super.getConsumptionPerKm();
     }
 
+    public String toString(){
+        StringBuffer sb = new StringBuffer("Veiculo Hibrido ");
+        sb.append("Marca: ").append(super.getMarca()).append(", ");
+        sb.append("Matricula: ").append(super.getMatricula()).append(", ");
+        sb.append("Posição: ").append(super.getPos()).append(", ");
+        sb.append("Rating: ").append(super.getRating()).append(", ");
+        sb.append("Combustivel: ").append(this.getGasoleo()).append(", ");
+        sb.append("Bateria: ").append(this.getBateria()).append(", ");
 
+        return sb.toString();
+    }
 
 
 }

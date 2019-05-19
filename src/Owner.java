@@ -4,13 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.time.LocalDateTime;
-/**
- * Write a description of class Owner here.
- *
- * @author (your name)
- * @version (a version number or a date)
- */
 
 public class Owner extends GeneralUser
 {
@@ -86,7 +79,6 @@ public class Owner extends GeneralUser
 
 
     // aceitar rejeitar o aluguer de um determinado cliente - base em que ? maus ratings?
-
     public void acceptRent(Rent a,Vehicle r){
         Iterator<Vehicle> it = this.arrListCar.iterator();
         boolean flag = true;

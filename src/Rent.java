@@ -17,25 +17,28 @@ public class Rent implements Serializable
     private Duration rentTime;
     private double price;
     private double rating;
-    private Posicao pos;
-    private String nif;
+    private Posicao pos; // posicao final
+    private String nif; // pode ser de cliente ou do conduotor
+    private String matricula;
 
 
-    public Rent(Duration _rentTime, double _price,Posicao poss,String niff){
+    public Rent(Duration _rentTime, double _price,Posicao poss,String niff,String a){
         this.date = LocalDate.now();
         this.rentTime = _rentTime;
         this.price = _price;
         this.rating = 0;
         this.pos = poss;
         this.nif = niff;
+        this.matricula = a;
     }
     public Rent(Rent r) {
         this.rating = r.getRating();
         this.date = r.getDate();
         this.rentTime = r.getRentTime();
-        this.price = getPrice();
-        this.nif = getNif();
+        this.price = r.getPrice();
+        this.nif = r.getNif();
         this.pos = r.getPosicao().clone();
+        this.matricula= r.getMatricula();
     }
 
     public double getRating(){ return this.rating;}
@@ -54,9 +57,9 @@ public class Rent implements Serializable
 
     public Posicao getPosicao() { return this.pos.clone();}
 
-
     public String getNif() { return this.nif;}
 
+    public String getMatricula(){return this.matricula;}
 
     public void setRating(double a){this.rating = a;}
 
@@ -64,7 +67,7 @@ public class Rent implements Serializable
         if(this == o)return true;
         if((o == null) || this.getClass() != o.getClass())return false;
         Rent a = (Rent) o;
-        return(a.getNif() == this.getNif() && a.getDate() == this.getDate() && a.getRating() == this.getRating() && this.getPosicao() == a.getPosicao());
+        return(a.getNif() == this.getNif() && this.getMatricula() == a.getMatricula() && a.getDate() == this.getDate() && a.getRating() == this.getRating() && this.getPosicao() == a.getPosicao());
     }
 
     public Rent clone(){
