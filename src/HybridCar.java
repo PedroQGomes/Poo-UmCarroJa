@@ -21,8 +21,8 @@ public class HybridCar extends Vehicle{
     }
 
 
-    public HybridCar(String marca,String nome,int averageSpeed,double pricePerKm, double consumptionPerKm,Posicao mPos,double fuel){
-        super(marca,nome,averageSpeed,pricePerKm,consumptionPerKm,mPos);
+    public HybridCar(String marca,String matricula,int averageSpeed,double pricePerKm, double consumptionPerKm,Posicao mPos,double fuel){
+        super(marca,matricula,averageSpeed,pricePerKm,consumptionPerKm,mPos);
         this.gasoleo = 2*(fuel/3);
         this.bateria = fuel/3;
     }
@@ -80,6 +80,12 @@ public class HybridCar extends Vehicle{
         }else{
             this.gasoleo = this.gasoleo - gastaGota;
         }
+    }
+
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("Carro Híbrido");
+        return stringBuilder.toString();
     }
 
     public double getCurrentFuel(){

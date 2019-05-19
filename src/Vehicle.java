@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 
 public abstract class Vehicle implements Serializable {
+    private static final long serialVersionUID = 1214567219L;
     private int averageSpeed,rating;
     private double pricePerKm,consumptionPerKm;
     private Posicao pos;
@@ -23,18 +24,20 @@ public abstract class Vehicle implements Serializable {
         this.pos.setPosY(0);
         this.matricula = " ";
         this.needFuel = false;
+        this.warningGas();
         this.alugueres = new ArrayList<>();
     }
     
-    public Vehicle(String marcaa,String plat,int averageSpeed,double pricePerKm, double consumptionPerKm,Posicao mPos){
-        this.marca = marcaa;
+    public Vehicle(String marca,String matricula,int averageSpeed,double pricePerKm, double consumptionPerKm,Posicao mPos){
+        this.marca = marca;
         this.averageSpeed = averageSpeed;
         this.pricePerKm = pricePerKm;
         this.consumptionPerKm = consumptionPerKm;
         this.pos = mPos.clone();
         this.rating = 0;
-        this.matricula = plat;
+        this.matricula = matricula;
         this.needFuel = false;
+        this.warningGas();
         this.alugueres = new ArrayList<>();
     }
     public Vehicle(Vehicle v){
@@ -46,6 +49,7 @@ public abstract class Vehicle implements Serializable {
         this.pos = v.getPos();
         this.matricula = v.getMatricula();
         this.needFuel = getNeedFuel();
+        this.warningGas();
         this.alugueres = v.getAlugueres();
     }
 
@@ -121,6 +125,8 @@ public abstract class Vehicle implements Serializable {
     public abstract void abastece();
     public abstract double getAutonomy();
     public abstract double getCurrentFuel();
+
+
 
     public double executeTrip(Rent a){ // retorna qnd custa a viagem-> 0 se nao for possivel
         Posicao x = a.getPosicao();

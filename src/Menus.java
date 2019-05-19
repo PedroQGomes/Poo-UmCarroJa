@@ -1,5 +1,6 @@
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -37,9 +38,16 @@ public class Menus
             isOwner = false;
             str = "Cliente";
         }
-        System.out.printf("Nome: %s         Tipo de User: %s\n",data.getLoggedInUser().getName(), str);
-        if(isOwner) ownerMenu();
-        else clientMenu();
+
+        if(isOwner){
+            Owner own = (Owner) data.getLoggedInUser();
+            System.out.printf("Nome: %s  Rating: %d   Tipo de User: %s\n",own.getName(), own.getRating() ,str);
+            ownerMenu();
+        } else {
+            Client clt = (Client) data.getLoggedInUser();
+            System.out.printf("Nome: %s  Posicao: %s   Tipo de User: %s\n",clt.getName(), clt.getPos().toString() ,str);
+            clientMenu();
+        }
 
     }
 
@@ -48,17 +56,19 @@ public class Menus
         System.out.println("2 -> Ver registos dos carros");
         System.out.println("3 -> Ver histórico de aluguer");
         System.out.println("4 -> Abastecer um carro");
+        System.out.println("5 -> Aceitar/Rejeitar o aluguer de um determinado cliente");
+        System.out.println("6 -> Receitas da ultima Viagem");
         System.out.println("9 -> Sair");
-        System.out.println("aceitar/rejeitar o aluguer de um determinado cliente");
-        System.out.println("registar qnt custou a viagem");
         int res = sn.nextInt();
         switch (res) {
             case 1:
                 vehicleRegister();
                 break;
             case 2:
+                viewOwnerCars();
                 break;
             case 3:
+                viewRentHistory();
                 break;
             case 4:
                 break;
@@ -70,25 +80,34 @@ public class Menus
         }
     }
 
+    private void viewRentHistory() {
+        List<Rent> rentList = data.getLoggedInUser().getRentList();
+        for(Rent l: rentList) {
+            System.out.println(l.toString());
+        }
+        sn.next();
+    }
+
+    private void viewOwnerCars() {
+        Owner _owner = (Owner) data.getLoggedInUser();
+        List<Vehicle> vehicleList = _owner.getListOfCars();
+        for(Vehicle l : vehicleList) {
+            System.out.println(l.toString());
+        }
+        sn.next();
+    }
     private void vehicleRegister() {
         Vehicle _vehicle = null;
         System.out.println("1 -> Carro hibrido");
         System.out.println("2 -> Carro eletrico");
         System.out.println("3 -> Carro a Gasóleo");
         int res = sn.nextInt();
-        switch(res) {
-            case 1:
-                _vehicle = newHybridVehicleWithProperties();
-                break;
-            case 2:
-                break;
-            case 3:
-                break;
-        }
+        _vehicle = newVehicleWithProperties(res);
         if(_vehicle != null)
         data.addCar(_vehicle);
     }
-    private HybridCar newHybridVehicleWithProperties() {
+    private Vehicle newVehicleWithProperties(int vehicleType) {
+        Vehicle _car = null;
         System.out.println("Registe o carro: ");
 
         System.out.print("Matricula: ");
@@ -109,18 +128,24 @@ public class Menus
         Posicao mPos = new Posicao(Double.parseDouble(arrPosString[0]),Double.parseDouble(arrPosString[1]));
 
 
-        System.out.print("Nome :");
-        String name = sn.next();
+        System.out.print("Marca :");
+        String marca = sn.next();
 
-        System.out.print("Precisa de abastecer (y)/(n) : ");
-        char needFuel = sn.next().charAt(0);
-        boolean needFuelBool = false;
-        if(needFuel == 'y' || needFuel == 'Y') needFuelBool = true;
 
         System.out.print("Quantidade de combustivel : ");
         double fuel = sn.nextDouble();
 
-        HybridCar _car = new HybridCar(marca,name,averageSpeed,pricePerKm,consumPerKm,mPos,fuel);
+        switch(vehicleType) {
+            case 1:
+                _car = new HybridCar(marca,matricula,averageSpeed,pricePerKm,consumPerKm,mPos,fuel);
+                break;
+            case 2:
+                _car = new EletricCar(marca,matricula,averageSpeed,pricePerKm,consumPerKm,mPos,fuel);
+                break;
+            case 3:
+                _car = new GasCar(marca,matricula,averageSpeed,pricePerKm,consumPerKm,mPos,fuel);
+                break;
+        }
         return _car;
     }
 
@@ -131,7 +156,9 @@ public class Menus
     private void clientMenu() {
         System.out.println("1 -> Alugar um carro");
         System.out.println("2 -> Consultar Histórico de aluguer");
-        System.out.println("3 -> ");
+        System.out.println("3 -> Preço da ultima viagem");
+        System.out.println("4 -> Dar rating aos recentes alugueres");
+        System.out.println("5 -> Definir Posição");
         System.out.println("9 -> Sair");
 
         int res = sn.nextInt();
@@ -140,12 +167,29 @@ public class Menus
                 aluguerMenu();
                 break;
             case 2:
+                viewRentHistory();
                 break;
-            case 9:
-                logout();
+            case 3:
+                viewLastRentPrice();
+                break;
+            case 4:
+                break;
+            case 5:
                 break;
             default:
+                logout();
                 break;
+        }
+    }
+
+    private void viewLastRentPrice() {
+        List<Rent> rentList = data.getLoggedInUser().getRentList();
+        if(!rentList.isEmpty()){
+            Rent rent = rentList.get(rentList.size()-1);
+            System.out.println(rent.toString());
+            sn.next();
+        } else {
+            System.out.println("O cliente ainda não realizou alugueres");
         }
     }
 

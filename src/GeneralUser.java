@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 public abstract class GeneralUser implements Serializable
 {
     // instance variables - replace the example below with your own
+    private static final long serialVersionUID = 1234567219L;
     private String email,name,password,morada,nif;
     private LocalDate birthDate;
     private List<Rent> rentList;
