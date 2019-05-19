@@ -41,7 +41,7 @@ public class Menus
 
         if(isOwner){
             Owner own = (Owner) data.getLoggedInUser();
-            System.out.printf("Nome: %s  Rating: %d   Tipo de User: %s\n",own.getName(), own.getRating() ,str);
+            System.out.printf("Nome: %s  Rating: %.2f   Tipo de User: %s\n",own.getName(), own.getRating() ,str);
             ownerMenu();
         } else {
             Client clt = (Client) data.getLoggedInUser();

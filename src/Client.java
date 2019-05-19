@@ -8,6 +8,8 @@
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Client extends GeneralUser
@@ -37,5 +39,13 @@ public class Client extends GeneralUser
         return new Client(this);
     }
 
+    public List<Rent> getNoRatingList() {
+        List <Rent> tmp = getRentList();
+        List <Rent> tmpNoRate = new ArrayList<>();
+        for(Rent r:tmp) {
+            if(r.getRating() == 0.0) tmpNoRate.add(r);
+        }
+        return tmpNoRate;
+    }
     
 }

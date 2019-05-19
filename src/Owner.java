@@ -9,13 +9,13 @@ public class Owner extends GeneralUser
 {
     private static final long serialVersionUID = 1236567219L;
     // instance variables
-    private Rating rating;
+    private double rating;
     private Map<String,Vehicle> mapCar;
 
     public Owner(String _email, String _name, String _password, String _morada, LocalDate _birthDate,String _nif)
     {
         super(_email,_name,_password,_morada,_birthDate,_nif);
-        this.rating = new Rating();
+        this.rating = 0.0;
         mapCar = new HashMap<>();
     }
 
@@ -41,7 +41,7 @@ public class Owner extends GeneralUser
         return tmp;
     }
 
-    public Rating getRating() { return this.rating.clone();}
+    public double getRating() { return this.rating;}
 
     public Owner clone() {
         return new Owner(this);
@@ -56,7 +56,7 @@ public class Owner extends GeneralUser
 
     public int hashCode(){
         int hash = 5;
-        hash = 31*hash + (int)this.rating.getRating();
+        hash = 31*hash + (int)this.rating;
         hash = 31*hash + this.mapCar.values().stream().mapToInt(Vehicle::hashCode).sum();
         return hash;
 
@@ -91,26 +91,38 @@ public class Owner extends GeneralUser
         }
     }
 
-    /* NAO NECESSARIO
-    // o propriatario verifica se quer aceitar ou nao a proposta
-    public boolean manageOfer(Rent a,String matricula){
-        if(getRatingHistoryOfClient() > 30){
-            acceptRent(a,matricula);
-            return true;
-        }
-        else {return false;}
-    } */
+    public void updateRating(double rate) {
+        this.rating = calculateRating(rate);
+    }
+
+    private double calculateRating(double rate) {
+        double tmp = 0;
+        int nClientRate = getRentList().size();
+        tmp = rating * nClientRate;
+        tmp += rate;
+        return tmp/nClientRate;
+    }
+
+
+
 
     // aceita a proposta e executa-a
     public void acceptRent(Rent a,String matricula){
         this.mapCar.get(matricula).executeTrip(a);
     }
 
-    //vai buscar o rating dos clientes
-    /* FUNCAO AMBIGUA
+    /*//vai buscar o rating dos clientes NAO NECESSARIO
     public double getRatingHistoryOfClient(){
         //return this.mapCar.values().stream().mapToDouble(Vehicle::getRating).sum();
         return 100;
+    } */
+    /*// o propriatario verifica se quer aceitar ou nao a proposta
+    public boolean manageOfer(Rent a,String matricula){
+        if(getRatingHistoryOfClient() > 30){
+            acceptRent(a,matricula);
+            return true;
+        }
+        else {return false;}
     } */
 
 
