@@ -9,7 +9,7 @@ public abstract class Vehicle implements Serializable {
     private int averageSpeed,rating;
     private double pricePerKm,consumptionPerKm;
     private Posicao pos;
-    private String matricula,marca;
+    private String matricula,marca,nifOwner;
     private boolean needFuel;
     private List<Rent> alugueres;
 
@@ -23,14 +23,16 @@ public abstract class Vehicle implements Serializable {
         this.pos.setPosX(0);
         this.pos.setPosY(0);
         this.matricula = " ";
+        this.nifOwner = " ";
         this.needFuel = false;
         this.warningGas();
         this.alugueres = new ArrayList<>();
     }
     
-    public Vehicle(String marca,String matricula,int averageSpeed,double pricePerKm, double consumptionPerKm,Posicao mPos){
+    public Vehicle(String marca,String matricula,String nifOwner,int averageSpeed,double pricePerKm, double consumptionPerKm,Posicao mPos){
         this.marca = marca;
         this.averageSpeed = averageSpeed;
+        this.nifOwner = nifOwner;
         this.pricePerKm = pricePerKm;
         this.consumptionPerKm = consumptionPerKm;
         this.pos = mPos.clone();
@@ -42,6 +44,7 @@ public abstract class Vehicle implements Serializable {
     }
     public Vehicle(Vehicle v){
         this.marca = v.getMarca();
+        this.nifOwner = v.getNifOwner();
         this.averageSpeed = v.getAverageSpeed();
         this.rating = v.getRating();
         this.pricePerKm = v.getPricePerKm();
@@ -54,6 +57,8 @@ public abstract class Vehicle implements Serializable {
     }
 
     public String getMarca(){return this.marca;}
+
+    public String getNifOwner() { return this.nifOwner; }
 
     public boolean getNeedFuel(){return this.needFuel;}
 

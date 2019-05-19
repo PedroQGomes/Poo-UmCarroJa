@@ -43,7 +43,7 @@ public class Client extends GeneralUser
         List <Rent> tmp = getRentList();
         List <Rent> tmpNoRate = new ArrayList<>();
         for(Rent r:tmp) {
-            if(r.getRating() == 0.0) tmpNoRate.add(r);
+            if(r.getRating() < 0) tmpNoRate.add(r);
         }
         return tmpNoRate;
     }

@@ -16,8 +16,8 @@ public class GasCar extends Vehicle
     }
 
 
-    public GasCar(String marca,String matricula,int averageSpeed,double pricePerKm, double consumptionPerKm,Posicao mPos,double gas){
-        super(marca,matricula,averageSpeed,pricePerKm,consumptionPerKm,mPos);
+    public GasCar(String marca,String matricula,String nifOwner,int averageSpeed,double pricePerKm, double consumptionPerKm,Posicao mPos,double gas){
+        super(marca,matricula,nifOwner,averageSpeed,pricePerKm,consumptionPerKm,mPos);
         this.gasoleo = gas;
     }
 

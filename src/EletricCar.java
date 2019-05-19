@@ -13,8 +13,8 @@ public class EletricCar extends Vehicle {
         super();
         this.bateria = 0.0;
     }
-    public EletricCar(String marca,String matricula,int averageSpeed,double pricePerKm, double consumptionPerKm,Posicao mPos,double bateria){
-        super(marca,matricula,averageSpeed,pricePerKm,consumptionPerKm,mPos);
+    public EletricCar(String marca,String matricula,String nifOwner,int averageSpeed,double pricePerKm, double consumptionPerKm,Posicao mPos,double bateria){
+        super(marca,matricula,nifOwner,averageSpeed,pricePerKm,consumptionPerKm,mPos);
         this.bateria = bateria;
     }
 

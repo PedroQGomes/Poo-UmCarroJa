@@ -148,13 +148,13 @@ public class Menus
 
         switch(vehicleType) {
             case 1:
-                _car = new HybridCar(marca,matricula,averageSpeed,pricePerKm,consumPerKm,mPos,fuel);
+                _car = new HybridCar(marca,matricula,data.getLoggedInUser().getNif(),averageSpeed,pricePerKm,consumPerKm,mPos,fuel);
                 break;
             case 2:
-                _car = new EletricCar(marca,matricula,averageSpeed,pricePerKm,consumPerKm,mPos,fuel);
+                _car = new EletricCar(marca,matricula,data.getLoggedInUser().getNif(),averageSpeed,pricePerKm,consumPerKm,mPos,fuel);
                 break;
             case 3:
-                _car = new GasCar(marca,matricula,averageSpeed,pricePerKm,consumPerKm,mPos,fuel);
+                _car = new GasCar(marca,matricula,data.getLoggedInUser().getNif(),averageSpeed,pricePerKm,consumPerKm,mPos,fuel);
                 break;
         }
         return _car;
@@ -205,6 +205,7 @@ public class Menus
     }
 
     private void aluguerMenu() {
+        Vehicle _rentVehicle = null;
         System.out.println("1 -> Solicitar o aluguer de um carro mais prox das sua Posicao");
         System.out.println("2 -> Solicitar o aluguer de um carro mais barato");
         System.out.println("3 -> Solicitar o aluguer de um carro especifico");
@@ -214,6 +215,7 @@ public class Menus
         int res = sn.nextInt();
         switch (res) {
             case 1:
+
                 break;
             case 2:
                 break;
@@ -227,6 +229,8 @@ public class Menus
             default:
                 break;
         }
+        if(_rentVehicle != null)
+        data.createRent(_rentVehicle,new Posicao(0,0));
     }
 
     private void loginMenu() {
