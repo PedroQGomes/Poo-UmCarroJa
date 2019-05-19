@@ -85,8 +85,8 @@ public abstract class GeneralUser implements Serializable
     }
 
 
-    public void addHistoty(Rent a){
-        this.rentList.add(a.clone());
+    public void addRentToHistory(Rent rent){
+        this.rentList.add(rent.clone());
     }
     
     public List<Rent> getRentOfClient(String nif){

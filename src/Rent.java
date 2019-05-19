@@ -8,25 +8,26 @@
 import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Rent implements Serializable
 {
 
     // instance variables - replace the example below with your own
-    private LocalDate date;
+    private LocalDateTime date;
     private Duration rentTime;
     private double price;
     private double rating;
     private Posicao pos; // posicao final
-    private String nif; // pode ser de cliente ou do conduotor
+    private String nif;
     private String matricula;
 
 
     public Rent(Duration _rentTime, double _price,Posicao poss,String niff,String a){
-        this.date = LocalDate.now();
+        this.date = LocalDateTime.now();
         this.rentTime = _rentTime;
         this.price = _price;
-        this.rating = 0;
+        this.rating = -1;
         this.pos = poss;
         this.nif = niff;
         this.matricula = a;
@@ -43,7 +44,7 @@ public class Rent implements Serializable
 
     public double getRating(){ return this.rating;}
 
-    public LocalDate getDate() {
+    public LocalDateTime getDate() {
         return this.date;
     }
 

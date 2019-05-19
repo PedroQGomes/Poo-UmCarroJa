@@ -4,6 +4,9 @@ public interface IData {
     boolean loginOn(String username,String password);
     void addUser(GeneralUser owner);
     boolean addCar(Vehicle mVehicle);
+    void createRent(Vehicle rentVehicle, Posicao posicao);
+    void acceptRent(Rent rent);
+    void giveRate(Rent rent , double rating);
     void populateData();
     void saveState();
     static Data recoverState() {
