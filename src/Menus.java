@@ -76,19 +76,12 @@ public class Menus
         System.out.println("2 -> Carro eletrico");
         System.out.println("3 -> Carro a Gasóleo");
         int res = sn.nextInt();
-        switch(res) {
-            case 1:
-                _vehicle = newHybridVehicleWithProperties();
-                break;
-            case 2:
-                break;
-            case 3:
-                break;
-        }
+        _vehicle = newVehicleWithProperties(res);
         if(_vehicle != null)
         data.addCar(_vehicle);
     }
-    private HybridCar newHybridVehicleWithProperties() {
+    private Vehicle newVehicleWithProperties(int vehicleType) {
+        Vehicle _car = null;
         System.out.println("Registe o carro: ");
 
         System.out.print("Matricula: ");
@@ -120,7 +113,17 @@ public class Menus
         System.out.print("Quantidade de combustivel : ");
         double fuel = sn.nextDouble();
 
-        HybridCar _car = new HybridCar(averageSpeed,pricePerKm,consumPerKm,mPos,name,needFuelBool,fuel);
+        switch(vehicleType) {
+            case 1:
+                _car = new HybridCar(averageSpeed,pricePerKm,consumPerKm,mPos,name,needFuelBool,fuel);
+                break;
+            case 2:
+                _car = new EletricCar(averageSpeed,pricePerKm,consumPerKm,mPos,name,needFuelBool,fuel);
+                break;
+            case 3:
+                _car = new GasCar(averageSpeed,pricePerKm,consumPerKm,mPos,name,needFuelBool,fuel);
+                break;
+        }
         return _car;
     }
 
