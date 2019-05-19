@@ -6,53 +6,71 @@
  */
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.time.Duration;
+import java.time.LocalDate;
 
 public class Rent implements Serializable
 {
 
     // instance variables - replace the example below with your own
-    private LocalDateTime date;
+    private LocalDate date;
     private Duration rentTime;
     private double price;
+    private double rating;
     private Posicao pos;
     private String nif;
 
-    public LocalDateTime getDate ( ) {
-        return this.date;
-    }
 
-    public Duration getRentTime ( ) {
-        return this.rentTime;
-    }
-
-    public double getPrice ( ) {
-        return this.price;
-    }
-
-    public Posicao getPosicao() { return this.pos.clone();}
-    public String getNif() { return this.nif;}
-
-    /**
-     * Constructor for objects of class Rent
-     */
-    public Rent(Duration _rentTime, double _price, Vehicle _vehicle){
-        this.date = LocalDateTime.now();
+    public Rent(Duration _rentTime, double _price,Posicao poss,String niff){
+        this.date = LocalDate.now();
         this.rentTime = _rentTime;
         this.price = _price;
+        this.rating = 0;
+        this.pos = poss;
+        this.nif = niff;
     }
     public Rent(Rent r) {
-        this.date = getDate();
-        this.rentTime = getRentTime();
+        this.rating = r.getRating();
+        this.date = r.getDate();
+        this.rentTime = r.getRentTime();
         this.price = getPrice();
         this.nif = getNif();
         this.pos = r.getPosicao().clone();
     }
 
+    public double getRating(){ return this.rating;}
+
+    public LocalDate getDate() {
+        return this.date;
+    }
+
+    public Duration getRentTime() {
+        return this.rentTime;
+    }
+
+    public double getPrice() {
+        return this.price;
+    }
+
+    public Posicao getPosicao() { return this.pos.clone();}
+
+
+    public String getNif() { return this.nif;}
+
+
+    public void setRating(double a){this.rating = a;}
+
+    public boolean equals(Object o){
+        if(this == o)return true;
+        if((o == null) || this.getClass() != o.getClass())return false;
+        Rent a = (Rent) o;
+        return(a.getNif() == this.getNif() && a.getDate() == this.getDate() && a.getRating() == this.getRating() && this.getPosicao() == a.getPosicao());
+    }
+
     public Rent clone(){
         return new Rent(this);
     }
+
 
 
 

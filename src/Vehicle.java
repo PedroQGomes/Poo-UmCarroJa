@@ -8,12 +8,13 @@ public abstract class Vehicle implements Serializable {
     private int averageSpeed,rating;
     private double pricePerKm,consumptionPerKm;
     private Posicao pos;
-    private String matricula;
+    private String matricula,marca;
     private boolean needFuel;
     private List<Rent> alugueres;
 
     // construtores
     public  Vehicle(){
+        this.marca = " ";
         this.averageSpeed = 10;
         this.rating = 0;
         this.pricePerKm = 2;
@@ -25,18 +26,19 @@ public abstract class Vehicle implements Serializable {
         this.alugueres = new ArrayList<>();
     }
     
-    public Vehicle(int averageSpeed,double pricePerKm, double consumptionPerKm,Posicao mPos,String nome,List<Rent> a,boolean fuel){
+    public Vehicle(String marcaa,String plat,int averageSpeed,double pricePerKm, double consumptionPerKm,Posicao mPos){
+        this.marca = marcaa;
         this.averageSpeed = averageSpeed;
         this.pricePerKm = pricePerKm;
         this.consumptionPerKm = consumptionPerKm;
         this.pos = mPos.clone();
         this.rating = 0;
-        this.matricula = nome;
+        this.matricula = plat;
         this.needFuel = false;
         this.alugueres = new ArrayList<>();
-        for(Rent l :a){this.alugueres.add(l.clone());}
     }
     public Vehicle(Vehicle v){
+        this.marca = v.getMarca();
         this.averageSpeed = v.getAverageSpeed();
         this.rating = v.getRating();
         this.pricePerKm = v.getPricePerKm();
@@ -46,6 +48,8 @@ public abstract class Vehicle implements Serializable {
         this.needFuel = getNeedFuel();
         this.alugueres = v.getAlugueres();
     }
+
+    public String getMarca(){return this.marca;}
 
     public boolean getNeedFuel(){return this.needFuel;}
 

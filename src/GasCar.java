@@ -16,8 +16,8 @@ public class GasCar extends Vehicle
     }
 
 
-    public GasCar(int averageSpeed,double pricePerKm, double consumptionPerKm,Posicao mPos,String nome,List<Rent> a,boolean fuel,double gas){
-        super(averageSpeed,pricePerKm,consumptionPerKm,mPos,nome,a,fuel);
+    public GasCar(String marca,String nome,int averageSpeed,double pricePerKm, double consumptionPerKm,Posicao mPos,double gas){
+        super(marca,nome,averageSpeed,pricePerKm,consumptionPerKm,mPos);
         this.gasoleo = gas;
     }
 
@@ -28,6 +28,13 @@ public class GasCar extends Vehicle
 
     public double getGasoleo(){
         return this.gasoleo;
+    }
+
+    public boolean equals(Object o){
+        if(this == o) return true;
+        if((o == null) || o.getClass() != this.getClass()) return false;
+        GasCar p = (GasCar) o;
+        return(super.equals(o) && this.gasoleo == p.getGasoleo());
     }
 
     public GasCar clone(){ return new GasCar(this); }
