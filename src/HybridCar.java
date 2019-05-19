@@ -62,7 +62,7 @@ public class HybridCar extends Vehicle{
 
     public void warningGas(){
         double total = maxBateria + maxGasoleo;
-        double autonomia = bateria + gasoleo;
+        double autonomia = getAutonomy();
         double tmp = 0.1* total;
         if(autonomia < tmp){
             super.setNeedFuel(true);

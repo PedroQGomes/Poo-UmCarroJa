@@ -5,10 +5,25 @@
 
 public class Logs
 {
-    //No variables should be needed.
+    StringBuilder stringBuilder;
     public Logs()
     {
-        // initialise instance variables
- 
+        stringBuilder = new StringBuilder();
+    }
+
+    public void addToLogVehicle(Vehicle vehicle) {
+        stringBuilder.append(vehicle);
+    }
+
+    public void addToLogUser(GeneralUser user){
+        stringBuilder.append(user);
+    }
+
+    public void addToLogRent(Rent rent) {
+        stringBuilder.append(rent);
+    }
+
+    public String toString() {
+        return stringBuilder.toString();
     }
 }

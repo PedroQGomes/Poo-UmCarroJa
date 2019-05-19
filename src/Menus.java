@@ -1,6 +1,6 @@
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -72,6 +72,11 @@ public class Menus
                 break;
             case 4:
                 break;
+            case 5:
+                break;
+            case 6:
+                viewLastRentPrice();
+                break;
             case 9:
                 logout();
                 break;
@@ -90,21 +95,27 @@ public class Menus
 
     private void viewOwnerCars() {
         Owner _owner = (Owner) data.getLoggedInUser();
-        List<Vehicle> vehicleList = _owner.getListOfCars();
+        List <Vehicle> vehicleList = _owner.getListCar();
         for(Vehicle l : vehicleList) {
             System.out.println(l.toString());
         }
         sn.next();
     }
     private void vehicleRegister() {
-        Vehicle _vehicle = null;
-        System.out.println("1 -> Carro hibrido");
-        System.out.println("2 -> Carro eletrico");
-        System.out.println("3 -> Carro a Gasóleo");
-        int res = sn.nextInt();
-        _vehicle = newVehicleWithProperties(res);
-        if(_vehicle != null)
-        data.addCar(_vehicle);
+        boolean tmp = false;
+        while(!tmp){
+            Vehicle _vehicle = null;
+            System.out.println("1 -> Carro hibrido");
+            System.out.println("2 -> Carro eletrico");
+            System.out.println("3 -> Carro a Gasóleo");
+            int res = sn.nextInt();
+            if(res != 1 && res != 2 && res != 3) break;
+            _vehicle = newVehicleWithProperties(res);
+            if(_vehicle != null)
+                tmp = data.addCar(_vehicle);
+            if(!tmp) System.out.println("Já existe essa Matricula");
+        }
+
     }
     private Vehicle newVehicleWithProperties(int vehicleType) {
         Vehicle _car = null;
@@ -157,7 +168,7 @@ public class Menus
         System.out.println("1 -> Alugar um carro");
         System.out.println("2 -> Consultar Histórico de aluguer");
         System.out.println("3 -> Preço da ultima viagem");
-        System.out.println("4 -> Dar rating aos recentes alugueres");
+        System.out.println("4 -> Dar rating aos  alugueres");
         System.out.println("5 -> Definir Posição");
         System.out.println("9 -> Sair");
 

@@ -1,10 +1,9 @@
-import java.io.FileInputStream;
-import java.io.ObjectInputStream;
+import java.io.*;
 
 public interface IData {
     boolean loginOn(String username,String password);
     void addUser(GeneralUser owner);
-    void addCar(Vehicle mVehicle);
+    boolean addCar(Vehicle mVehicle);
     void populateData();
     void saveState();
     static Data recoverState() {
@@ -14,7 +13,16 @@ public interface IData {
             ObjectInputStream ois = new ObjectInputStream(fis);
             mData = (Data) ois.readObject();
             System.out.println("Dados Lidos");
-        } catch (Exception e) {
+        } catch (InvalidClassException e) {
+            System.out.println(e.getMessage());
+
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        } catch (ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+        } catch(Exception e) {
             System.out.println(e.getMessage());
         }
         if (mData == null) mData = new Data();

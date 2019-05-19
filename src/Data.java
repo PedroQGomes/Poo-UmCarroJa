@@ -64,10 +64,12 @@ public class Data implements  Serializable ,IData
         }
     }
 
-    public void addCar(Vehicle mVehicle) {
+    public boolean addCar(Vehicle mVehicle) {
         Owner _own = (Owner) loggedInUser;
-        _own.addVehicle(mVehicle.getMatricula(),mVehicle);
+        boolean isSuccess = _own.addVehicle(mVehicle.getMatricula(),mVehicle);
+        if(isSuccess)
         allVehicles.add(mVehicle);
+        return isSuccess;
     }
 
 

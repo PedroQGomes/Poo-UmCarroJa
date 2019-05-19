@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 
 public class Client extends GeneralUser
 {
+    private static final long serialVersionUID = 1934567219L;
     // instance variables - replace the example below with your own
     private Posicao pos;
 
