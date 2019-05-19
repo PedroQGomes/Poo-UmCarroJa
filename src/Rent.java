@@ -74,6 +74,21 @@ public class Rent implements Serializable
         return new Rent(this);
     }
 
+    public int hashCode(){
+        int hash = 5;
+        long aux1,aux2;
+        aux1 = Double.doubleToLongBits(this.price);
+        hash = 31*hash + (int)(aux1 ^ (aux1 >>> 32));
+        aux2 = Double.doubleToLongBits(this.rating);
+        hash = 31*hash + (int)(aux2 ^ (aux2 >>> 32));
+        hash = 31*hash + this.matricula.hashCode();
+        hash = 31*hash + this.nif.hashCode();
+        hash = 31*hash + this.pos.hashCode();
+        hash = 31*hash + this.date.hashCode();
+        hash = 31*hash + this.rentTime.hashCode();
+        
+        return hash;
+    }
 
 
 

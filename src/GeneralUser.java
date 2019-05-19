@@ -92,5 +92,8 @@ public abstract class GeneralUser implements Serializable
     public List<Rent> getRentOfClient(String nif){
         return this.rentList.stream().filter(l -> l.getNif().equals(nif)).map(Rent::clone).collect(Collectors.toList());
     }
-        
+
+    public void registerPriceTrip(double price){
+
+    }
 }

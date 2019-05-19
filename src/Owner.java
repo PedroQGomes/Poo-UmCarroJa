@@ -1,98 +1,109 @@
-import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.stream.Collectors;
 
 public class Owner extends GeneralUser
 {
     // instance variables
     private int rating;
-    private List<Vehicle> arrListCar;
-    /**
-     * Constructor for objects of class Client
-     */
+    private Map<String,Vehicle> ListCar;
+
     public Owner(String _email, String _name, String _password, String _morada, LocalDate _birthDate,String _nif)
     {
         super(_email,_name,_password,_morada,_birthDate,_nif);
         this.rating = 0;
-        arrListCar = new ArrayList<>();
+        ListCar = new HashMap<>();
     }
 
     public Owner(Owner own) {
         super(own);
         this.rating = own.getRating();
-        this.arrListCar = own.getListOfCars();
+        this.ListCar = own.getListOfCars();
     }
-    public List<Vehicle> getListOfCars() {
-        return this.arrListCar.stream().map(Vehicle::clone).collect(Collectors.toList());
+
+
+    public Map<String,Vehicle> getListOfCars() {
+        Map<String,Vehicle> temp = new HashMap<>();
+        for(Map.Entry<String,Vehicle> a : this.ListCar.entrySet()){
+            temp.put(a.getKey(),a.getValue().clone());
+        }
+        return temp;
     }
+
+
     public int getRating() { return this.rating;}
 
     public Owner clone() {
         return new Owner(this);
     }
 
-    private void updateRating(int mRating) { // ASSUMINDO QUE ISTO É CHAMADO ANTES DE ADICIONAR O RENT A LISTA
-        int tmp = rating * arrListCar.size();
-        tmp += mRating;
-        tmp /= arrListCar.size()+1;
-        this.rating = tmp;
-    }
-    public void addVehicle(Vehicle a){
-        this.arrListCar.add(a.clone());
+    public boolean equals(Object o){
+        if(this == o) return true;
+        if((o == null) || o.getClass() != this.getClass()) return false;
+        Owner p = (Owner) o;
+        return(super.equals(o) && p.getRating() == this.rating && p.getListOfCars().equals(this.getListOfCars()));
     }
 
+    public int hashCode(){
+        int hash = 5;
+        hash = 31*hash + this.rating;
+        hash = 31*hash + this.ListCar.values().stream().mapToInt(Vehicle::hashCode).sum();
+        return hash;
+
+    }
+
+
+    private void updateRating(int mRating) { // ASSUMINDO QUE ISTO É CHAMADO ANTES DE ADICIONAR O RENT A LISTA
+        int tmp = rating * ListCar.size();
+        tmp += mRating;
+        tmp /= ListCar.size()+1;
+        this.rating = tmp;
+    }
+    public void addVehicle(String mat,Vehicle a){
+        this.ListCar.put(mat,a.clone());
+    }
+
+    // da uma lista com todos os carros com autonomia para fazer o aluguer
     public List<Vehicle> signalAvailable(Rent a){
-        return this.arrListCar.stream().filter(l -> l.enoughAutonomy(a.getPosicao())).map(Vehicle::clone).collect(Collectors.toList());
+        return this.ListCar.values().stream().filter(l -> l.enoughAutonomy(a.getPosicao())).map(Vehicle::clone).collect(Collectors.toList());
     }
 
     // abastece o carro
-    public void fuelCar(Vehicle a){
-        Iterator<Vehicle> it = this.arrListCar.iterator();
-        boolean flag = true;
-        while(flag && it.hasNext()){
-            Vehicle b = it.next();
-            if(b.equals(a)){
-                flag = false;
-                b.abastece();
-            }
+    public void fuelCar(String matricula){
+        if(this.ListCar.containsKey(matricula)){
+            this.ListCar.get(matricula).abastece();
         }
     }
 
     //muda o preço por km de um carro
-    public void changePrice(Vehicle a,double price){
-        Iterator<Vehicle> it = this.arrListCar.iterator();
-        boolean flag = true;
-        while(flag && it.hasNext()){
-            Vehicle b = it.next();
-            if(a.equals(b)){
-                flag = false;
-                b.setPrice(price);
-            }
+    public void changePrice(String matricula,double price){
+        if(this.ListCar.containsKey(matricula)){
+            this.ListCar.get(matricula).setPrice(price);
         }
     }
 
 
-    // registar qnt custou uma viagem -?????? a onde ??? no aluguer????
-
-
-    // aceitar rejeitar o aluguer de um determinado cliente - base em que ? maus ratings?
-    public void acceptRent(Rent a,Vehicle r){
-        Iterator<Vehicle> it = this.arrListCar.iterator();
-        boolean flag = true;
-        while(flag && it.hasNext()){
-            Vehicle b = it.next();
-            if(b.equals(r)){
-                flag = false;
-                b.executeTrip(a);
-            }
+    // o propriatario verifica se quer aceitar ou nao a proposta
+    public boolean manageOfer(Rent a,String matricula){
+        if(getRatingHistoryOfClient() > 30){
+            acceptRent(a,matricula);
+            return true;
         }
+        else {return false;}
     }
 
+    // aceita a proposta e executa-a
+    public void acceptRent(Rent a,String matricula){
+        this.ListCar.get(matricula).executeTrip(a);
+    }
 
-
+    //vai buscar o rating dos clientes
+    public double getRatingHistoryOfClient(){
+        //return this.ListCar.values().stream().mapToDouble(Vehicle::getRating).sum();
+        return 100;
+    }
 
 
 

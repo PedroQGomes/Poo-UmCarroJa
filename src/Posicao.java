@@ -59,6 +59,17 @@ public class Posicao implements Serializable
         return (p.getPosX() == this.getPosX() && p.getPosY() == this.getPosY());
     }
 
+
+    public int hashCode(){
+        int hash = 5;
+        long aux1,aux2;
+        aux1 = Double.doubleToLongBits(this.x);
+        hash = 31*hash + (int)(aux1 ^ (aux1 >>> 32));
+        aux2 = Double.doubleToLongBits(this.y);
+        hash = 31*hash + (int)(aux2 ^ (aux2 >>> 32));
+        return hash;
+    }
+
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("(");

@@ -102,6 +102,22 @@ public abstract class Vehicle implements Serializable {
     }
     public abstract Vehicle clone();
 
+    public int hashCode(){
+        int hash = 5;
+        long aux1,aux2;
+        hash = 31*hash + this.averageSpeed;
+        hash = 31*hash + this.rating;
+        aux1 = Double.doubleToLongBits(pricePerKm);
+        hash = 31*hash + (int)(aux1 ^ (aux1 >>> 32));
+        aux2 = Double.doubleToLongBits(consumptionPerKm);
+        hash = 31*hash + (int)(aux2 ^ (aux2 >>> 32));
+        hash = 31*hash + marca.hashCode();
+        hash = 31*hash + matricula.hashCode();
+        hash = 31*hash + pos.hashCode();
+        hash = 31*hash + this.alugueres.stream().mapToInt(Rent::hashCode).sum();
+        return hash;
+    }
+
     public void addRent(Rent a){
         this.alugueres.add(a.clone());
     }

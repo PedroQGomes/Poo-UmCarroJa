@@ -66,7 +66,7 @@ public class Data implements  Serializable ,IData
 
     public void addCar(Vehicle mVehicle) {
         Owner _own = (Owner) loggedInUser;
-        _own.addVehicle(mVehicle);
+        _own.addVehicle(mVehicle.getMatricula(),mVehicle);
         allVehicles.add(mVehicle);
     }
 
