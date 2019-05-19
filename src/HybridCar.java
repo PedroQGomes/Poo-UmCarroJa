@@ -82,11 +82,6 @@ public class HybridCar extends Vehicle{
         }
     }
 
-    public String toString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("Carro Híbrido");
-        return stringBuilder.toString();
-    }
 
     public double getCurrentFuel(){
         return (this.bateria + this.gasoleo);

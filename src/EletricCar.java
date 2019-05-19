@@ -66,12 +66,6 @@ public class EletricCar extends Vehicle {
         this.bateria = this.bateria - gastaGota;
     }
 
-    public String toString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("Carro Eletrico");
-        return stringBuilder.toString();
-    }
-
     public double getCurrentFuel(){
         return this.bateria;
     }

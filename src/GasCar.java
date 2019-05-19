@@ -66,12 +66,6 @@ public class GasCar extends Vehicle
         this.gasoleo = this.gasoleo - gastaGota;
     }
 
-    public String toString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("Carro a Gasóleo");
-        return stringBuilder.toString();
-    }
-
     public double getCurrentFuel(){
         return this.gasoleo;
     }
