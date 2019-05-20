@@ -146,6 +146,7 @@ public abstract class Vehicle implements Serializable {
     public abstract void abastece();
     public abstract double getAutonomy();
     public abstract double getCurrentFuel();
+    public abstract double getAutonomia();
 
 
 

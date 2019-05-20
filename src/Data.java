@@ -10,6 +10,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class Data implements  Serializable ,IData
@@ -34,6 +35,10 @@ public class Data implements  Serializable ,IData
         pendingRating = new HashMap<>();
     }
 
+    public Map<String,Vehicle> getAllVehicles() {
+        return this.allVehicles.entrySet().stream().collect(Collectors.toMap(l-> l.getKey(),l->l.getValue().clone()));
+    }
+
     public void logout() {
         loggedInUser = null;
     }
@@ -50,9 +55,12 @@ public class Data implements  Serializable ,IData
         }
         return login;
     }
+
     public GeneralUser getLoggedInUser() {
         return this.loggedInUser.clone();
     }
+
+
     public void addUser (GeneralUser generalUser) {
         emailToNif.put(generalUser.getEmail(),generalUser.getNif());
         users.put(generalUser.getNif(),generalUser);
