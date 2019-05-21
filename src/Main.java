@@ -10,14 +10,18 @@ import java.time.LocalDateTime;
  */
 public class Main
 {
- 
+    double rating;
+    
     public static void main(String [] args)
     {
         Data mData = IData.recoverState();
+        mData.populateData();
         Menus menus = new Menus(mData);
         menus.initMenu();
         mData.saveState();
     }
+
+
     
    
 }

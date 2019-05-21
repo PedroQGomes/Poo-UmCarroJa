@@ -16,11 +16,11 @@ public class Menus
     public void initMenu() {
         sn = new Scanner(System.in);
         while(running) {
-            clearScreen();
             System.out.println("BEM VINDO A UMCARROJA");
             if(data.isLoggedIn()) {
                 activeMenu();
             } else loginMenu();
+            clearScreen();
         }
         sn.close();
     }
@@ -41,7 +41,7 @@ public class Menus
             ownerMenu();
         } else {
             Client clt = (Client) data.getLoggedInUser();
-            System.out.printf("Nome: %s  Posicao: %s   Tipo de User: %s\n",clt.getName(), clt.getPos().toString() ,str);
+            System.out.printf("Nome: %s Nif: %s  Posicao: %s   Tipo de User: %s\n",clt.getName(), clt.getNif() ,clt.getPos().toString() ,str);
             clientMenu();
         }
 
@@ -69,6 +69,7 @@ public class Menus
             case 4:
                 break;
             case 5:
+                acceptRent();
                 break;
             case 6:
                 viewLastRentPrice();
@@ -81,21 +82,36 @@ public class Menus
         }
     }
 
+    private void acceptRent() {
+        List<Rent> rentList = data.getPendingRentList();
+        showList(rentList);
+        int indexRent = sn.nextInt();
+        if(rentList.size() >= indexRent) {
+            data.acceptRent(rentList.get(indexRent-1));
+       } else {
+
+        }
+    }
+
     private void viewRentHistory() {
         List<Rent> rentList = data.getLoggedInUser().getRentList();
-        for(Rent l: rentList) {
-            System.out.println(l.toString());
-        }
+        showList(rentList);
         sn.next();
     }
 
     private void viewOwnerCars() {
         Owner _owner = (Owner) data.getLoggedInUser();
         List <Vehicle> vehicleList = _owner.getListCar();
-        for(Vehicle l : vehicleList) {
-            System.out.println(l.toString());
-        }
+        showList(vehicleList);
         sn.next();
+    }
+
+    private void showList(List<?> list) {
+        int i = 1;
+        for(Object l:list) {
+            System.out.println(i + " -> " + l.toString());
+            i++;
+        }
     }
     private void vehicleRegister() {
         boolean tmp = false;
@@ -104,18 +120,18 @@ public class Menus
             System.out.println("1 -> Carro hibrido");
             System.out.println("2 -> Carro eletrico");
             System.out.println("3 -> Carro a Gasóleo");
+            System.out.println("4 -> Sair");
             int res = sn.nextInt();
             if(res != 1 && res != 2 && res != 3) break;
             _vehicle = newVehicleWithProperties(res);
             if(_vehicle != null)
                 tmp = data.addCar(_vehicle);
-            if(!tmp) System.out.println("Já existe essa Matricula");
+            if(!tmp) System.out.println("\nJá existe essa Matricula\n");
         }
 
     }
     private Vehicle newVehicleWithProperties(int vehicleType) {
         Vehicle _car = null;
-        System.out.println("Registe o carro: ");
 
         System.out.print("Matricula: ");
         String matricula = sn.next();
@@ -180,8 +196,10 @@ public class Menus
                 viewLastRentPrice();
                 break;
             case 4:
+                giveRatingToRents();
                 break;
             case 5:
+                updateClientPositionMenu();
                 break;
             default:
                 logout();
@@ -189,11 +207,31 @@ public class Menus
         }
     }
 
-    private void viewLastRentPrice() {
+    private void updateClientPositionMenu() {
+        System.out.print("Posicao (Ex: x,y ) : ");
+        String posString = sn.next();
+        String[] arrPosString = posString.split(",");
+        Posicao mPos = new Posicao(Double.parseDouble(arrPosString[0]),Double.parseDouble(arrPosString[1]));
+        Client client = (Client) data.getLoggedInUser();
+        client.setPos(mPos);
+    }
+
+    private void giveRatingToRents() {
+        List<Rent> pendingRateList = data.getPendingRateList();
+        showList(pendingRateList);
+        int choice = sn.nextInt();
+        if(pendingRateList.size() >= choice) {
+            System.out.println("Rate (0.0-100.0): ");
+            double rate = sn.nextDouble();
+            data.giveRate(pendingRateList.get(choice-1),rate);
+        }
+
+    }
+    private void viewLastRentPrice() { // TODO : MELHORAR ISTO
         List<Rent> rentList = data.getLoggedInUser().getRentList();
         if(!rentList.isEmpty()){
             Rent rent = rentList.get(rentList.size()-1);
-            System.out.println(rent.toString());
+            System.out.println(rent.getPrice());
             sn.next();
         } else {
             System.out.println("O cliente ainda não realizou alugueres");
@@ -211,7 +249,12 @@ public class Menus
         int res = sn.nextInt();
         switch (res) {
             case 1:
-
+                try {
+                    _rentVehicle = Rent.RentCheapestCar(data);
+                } catch (semVeiculosException e) {
+                    System.out.println("Não existem veículos");
+                    sn.next();
+                }
                 break;
             case 2:
                 break;
@@ -225,8 +268,14 @@ public class Menus
             default:
                 break;
         }
-        if(_rentVehicle != null)
-        data.createRent(_rentVehicle,new Posicao(0,0));
+        if(_rentVehicle != null){
+            Posicao toWhere = getPosicaoMenu();
+            data.createRent(_rentVehicle,new Posicao(5,5));
+        }
+    }
+
+    private Posicao getPosicaoMenu() {
+        return null;
     }
 
     private void loginMenu() {
@@ -295,11 +344,11 @@ public class Menus
             default:
                 break;
         }
-        login();
     }
 
     public static void clearScreen() {
-        System.out.print("\033[H\033[2J");
+        //System.out.print("\033[H\033[2J");
+        System.out.print("\n\n\n\n\n\n\n\n\n\n\n");
         System.out.flush();
     }
 }

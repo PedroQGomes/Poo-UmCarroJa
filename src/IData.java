@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.List;
 
 public interface IData {
     boolean loginOn(String username,String password);
@@ -9,6 +10,10 @@ public interface IData {
     void giveRate(Rent rent , double rating);
     void populateData();
     void saveState();
+    void initLog();
+    public List<Vehicle> getAllAvailableVehicles ();
+    public List<Rent> getPendingRentList();
+    public List<Rent> getPendingRateList();
     static Data recoverState() {
         Data mData = null;
         try {
@@ -29,6 +34,7 @@ public interface IData {
             System.out.println(e.getMessage());
         }
         if (mData == null) mData = new Data();
+        else mData.initLog();
         return mData;
     }
     boolean isLoggedIn();
