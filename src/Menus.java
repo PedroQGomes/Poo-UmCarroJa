@@ -3,12 +3,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-/**
- * Class to handle the different menus of the Interface, so as to not overload Main.
- *
- * @author (your name)
- * @version (a version number or a date)
- */
+
+
 public class Menus
 {
     private static Scanner sn;
