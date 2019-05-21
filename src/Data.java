@@ -75,7 +75,7 @@ public class Data implements  Serializable ,IData
 
     public void createRent (Vehicle rentVehicle, Posicao posicao) {
         Duration duration = Duration.ZERO;
-        double _price = 0.0;
+        double _price = rentVehicle.rentPrice(posicao);
         Posicao pos = posicao;
         String nif = loggedInUser.getNif();
         String matricula = rentVehicle.getMatricula();
@@ -92,10 +92,11 @@ public class Data implements  Serializable ,IData
     public void giveRate(Rent rent , double rating) {
         pendingRating.remove(rent.getNif(),rent);
         rent.setRating(rating);
-        loggedInUser.addRentToHistory(rent);
+        loggedInUser.addRentToHistory(rent.clone());
         Vehicle _rentVehicle = allVehicles.get(rent.getMatricula());
+        _rentVehicle.addRent(rent.clone());
         Owner _ownerVehicle = (Owner) users.get(_rentVehicle.getNifOwner());
-        _ownerVehicle.addRentToHistory(rent);
+        _ownerVehicle.addRentToHistory(rent.clone());
         _ownerVehicle.updateRating(rating);
     }
 
@@ -108,8 +109,8 @@ public class Data implements  Serializable ,IData
         return isSuccess;
     }
 
-    public List<Vehicle> getListOfCarType(Vehicle a){
-        return this.allVehicles.values().stream().filter(l-> l.getClass() == a.getClass()).map(Vehicle::clone).collect(Collectors.toList());
+    public List<Vehicle> getListOfCarType(Class<? extends Vehicle> a){
+        return this.allVehicles.values().stream().filter(l-> l.getClass() == a).map(Vehicle::clone).collect(Collectors.toList());
     }
 
 }

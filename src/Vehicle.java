@@ -135,8 +135,8 @@ public abstract class Vehicle implements Serializable {
         this.rating = tmpRating/count;
     }
 
-    public double rentPrice(Rent a){
-        double distancia = this.pos.distancia(a.getPosicao());
+    public double rentPrice(Posicao mPos){
+        double distancia = this.pos.distancia(mPos);
         return (distancia*pricePerKm);
     }
 
@@ -156,7 +156,7 @@ public abstract class Vehicle implements Serializable {
         this.setPos(x); // muda a posicao do carro
         this.addRent(a); // adiciona o aluguer a lista de alugueres do carro
         this.warningGas(); // verifica se o carro está com pouca autonomia
-        return (this.rentPrice(a)); // calcula e retorna o preço a pagar
+        return (this.rentPrice(x)); // calcula e retorna o preço a pagar
     }
 
 }
