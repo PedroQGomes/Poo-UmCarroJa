@@ -203,11 +203,21 @@ public class Menus
                 giveRatingToRents();
                 break;
             case 5:
+                updateClientPositionMenu();
                 break;
             default:
                 logout();
                 break;
         }
+    }
+
+    private void updateClientPositionMenu() {
+        System.out.print("Posicao (Ex: x,y ) : ");
+        String posString = sn.next();
+        String[] arrPosString = posString.split(",");
+        Posicao mPos = new Posicao(Double.parseDouble(arrPosString[0]),Double.parseDouble(arrPosString[1]));
+        Client client = (Client) data.getLoggedInUser();
+        client.setPos(mPos);
     }
 
     private void giveRatingToRents() {
@@ -221,11 +231,11 @@ public class Menus
         }
 
     }
-    private void viewLastRentPrice() {
+    private void viewLastRentPrice() { // TODO : MELHORAR ISTO
         List<Rent> rentList = data.getLoggedInUser().getRentList();
         if(!rentList.isEmpty()){
             Rent rent = rentList.get(rentList.size()-1);
-            System.out.println(rent.toString());
+            System.out.println(rent.getPrice());
             sn.next();
         } else {
             System.out.println("O cliente ainda não realizou alugueres");
