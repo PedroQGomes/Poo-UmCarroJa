@@ -84,5 +84,7 @@ public class GasCar extends Vehicle
         return sb.toString();
     }
 
-
+    public double getAutonomia(){
+        return this.gasoleo;
+    }
 }

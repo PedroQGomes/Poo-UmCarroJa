@@ -27,12 +27,9 @@ public class Owner extends GeneralUser
 
 
     public Map<String,Vehicle> getMapCar () {
-        Map<String,Vehicle> temp = new HashMap<>();
-        for(Map.Entry<String,Vehicle> a : this.mapCar.entrySet()){
-            temp.put(a.getKey(),a.getValue().clone());
-        }
-        return temp;
+        return this.mapCar.entrySet().stream().collect(Collectors.toMap(l->l.getKey(),l->l.getValue().clone()));
     }
+
     public List<Vehicle> getListCar() {
         List<Vehicle> tmp = new ArrayList<>();
         for(Map.Entry<String,Vehicle> a : this.mapCar.entrySet()) {
