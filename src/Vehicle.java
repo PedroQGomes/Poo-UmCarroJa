@@ -11,6 +11,7 @@ public abstract class Vehicle implements Serializable {
     private Posicao pos;
     private String matricula,marca,nifOwner;
     private boolean needFuel;
+    private boolean inUse;
     private List<Rent> alugueres;
 
     // construtores
@@ -26,6 +27,7 @@ public abstract class Vehicle implements Serializable {
         this.nifOwner = " ";
         this.needFuel = false;
         this.warningGas();
+        this.inUse = true;
         this.alugueres = new ArrayList<>();
     }
     
@@ -40,6 +42,7 @@ public abstract class Vehicle implements Serializable {
         this.matricula = matricula;
         this.needFuel = false;
         this.warningGas();
+        this.inUse = true;
         this.alugueres = new ArrayList<>();
     }
     public Vehicle(Vehicle v){
@@ -54,8 +57,13 @@ public abstract class Vehicle implements Serializable {
         this.needFuel = getNeedFuel();
         this.warningGas();
         this.alugueres = v.getAlugueres();
+        this.inUse = v.isAvailable();
     }
+    
+    public boolean isAvailable() {return !this.inUse;}
 
+    public void setInUse() {this.inUse = true;}
+    public void setAvailable() {this.inUse = false;}
     public String getMarca(){return this.marca;}
 
     public String getNifOwner() { return this.nifOwner; }

@@ -8,9 +8,7 @@
 import java.io.*;
 import java.time.Duration;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class Data implements  Serializable ,IData
@@ -20,8 +18,9 @@ public class Data implements  Serializable ,IData
     private Map<String, GeneralUser> users; // HashMap que contém todos os users, tendo o nif como chave
     private Map<String,Vehicle> allVehicles;
     private GeneralUser loggedInUser = null;
-    private Map<String,Rent> pendingRent;
+    private Map<String,Rent> pendingRent; //TODO: MULTIPLE RENTS FROM THE SAME KEY
     private Map<String,Rent> pendingRating;
+    private transient Logs log;
     public boolean isLoggedIn () {
         return (loggedInUser != null);
     }
@@ -35,9 +34,7 @@ public class Data implements  Serializable ,IData
         pendingRating = new HashMap<>();
     }
 
-    public Map<String,Vehicle> getAllVehicles() {
-        return this.allVehicles.entrySet().stream().collect(Collectors.toMap(l-> l.getKey(),l->l.getValue().clone()));
-    }
+    public void initLog() { log = new Logs();}
 
     public void logout() {
         loggedInUser = null;
@@ -64,10 +61,23 @@ public class Data implements  Serializable ,IData
     public void addUser (GeneralUser generalUser) {
         emailToNif.put(generalUser.getEmail(),generalUser.getNif());
         users.put(generalUser.getNif(),generalUser);
+        log.addToLogUser(generalUser);
     }
 
     public void populateData ( ) {
-
+        LocalDate date = LocalDate.now();
+        Owner _owner = new Owner("own","own","asd","asd",date,"10");
+        Client _client = new Client("clt","clt","asd","asd",date,"1000");
+        Vehicle _vehicle = new GasCar("Opel","01-EH-33","10",100,1,1,new Posicao(1,1),500);
+        addUser(_owner);
+        addUser(_client);
+        loggedInUser = _owner;
+        addCar(_vehicle);
+        Rent rent = new Rent(Duration.ZERO,10.0,new Posicao(5,5),"1000","01-EH-33");
+        acceptRent(rent);
+        loggedInUser = _client;
+        giveRate(rent,50);
+        loggedInUser = null;
     }
 
     public void saveState ( ) {
@@ -79,9 +89,10 @@ public class Data implements  Serializable ,IData
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
+        log.flushLog();
     }
 
-    public void createRent (Vehicle rentVehicle, Posicao posicao) {
+    public void createRent (Vehicle rentVehicle,Posicao posicao) {
         Duration duration = Duration.ZERO;
         double _price = rentVehicle.rentPrice(posicao);
         Posicao pos = posicao;
@@ -89,12 +100,16 @@ public class Data implements  Serializable ,IData
         String matricula = rentVehicle.getMatricula();
         Rent rent = new Rent(duration,_price,pos,nif,matricula);
         pendingRent.put(matricula,rent);
-
     }
 
     public void acceptRent(Rent rent) {
-        pendingRent.remove(rent.getMatricula(),rent);
         pendingRating.put(rent.getNif(),rent);
+        Client _clientRent = (Client) users.get(rent.getNif());
+        _clientRent.setPos(rent.getPosicao());
+        Vehicle _rentVehicle = allVehicles.get(rent.getMatricula());
+        _rentVehicle.setInUse();
+        pendingRent.remove(rent.getMatricula(),rent);
+        log.addToLogRent(rent);
     }
 
     public void giveRate(Rent rent , double rating) {
@@ -103,6 +118,7 @@ public class Data implements  Serializable ,IData
         loggedInUser.addRentToHistory(rent.clone());
         Vehicle _rentVehicle = allVehicles.get(rent.getMatricula());
         _rentVehicle.addRent(rent.clone());
+        _rentVehicle.setAvailable();
         Owner _ownerVehicle = (Owner) users.get(_rentVehicle.getNifOwner());
         _ownerVehicle.addRentToHistory(rent.clone());
         _ownerVehicle.updateRating(rating);
@@ -112,13 +128,26 @@ public class Data implements  Serializable ,IData
     public boolean addCar(Vehicle mVehicle) {
         Owner _own = (Owner) loggedInUser;
         boolean isSuccess = _own.addVehicle(mVehicle.getMatricula(),mVehicle);
-        if(isSuccess)
-        allVehicles.put(mVehicle.getMatricula(),mVehicle);
+        if(isSuccess) {
+            allVehicles.put(mVehicle.getMatricula(),mVehicle);
+            log.addToLogVehicle(mVehicle);
+        }
         return isSuccess;
     }
 
+    public List<Rent> getPendingRentList() {
+        return new ArrayList<>(pendingRent.values());
+    }
+    public List<Rent> getPendingRateList() {
+        return new ArrayList<>(pendingRating.values());
+    }
+
+    public List<Vehicle> getAllAvailableVehicles () {
+        return this.allVehicles.values().stream().filter(Vehicle::isAvailable).map(Vehicle::clone).collect(Collectors.toList());
+    }
+
     public List<Vehicle> getListOfCarType(Class<? extends Vehicle> a){
-        return this.allVehicles.values().stream().filter(l-> l.getClass() == a).map(Vehicle::clone).collect(Collectors.toList());
+        return this.allVehicles.values().stream().filter(l-> l.getClass() == a && l.isAvailable()).map(Vehicle::clone).collect(Collectors.toList());
     }
 
 }

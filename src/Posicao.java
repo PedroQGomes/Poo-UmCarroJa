@@ -32,6 +32,7 @@ public class Posicao implements Serializable
         this.y = pos.getPosY();
     }
 
+
     public double getPosX() {
         return this.x;
     }

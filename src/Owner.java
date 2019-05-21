@@ -93,9 +93,9 @@ public class Owner extends GeneralUser
     }
 
     private double calculateRating(double rate) {
-        double tmp = 0;
+        double tmp = 0.0;
         int nClientRate = getRentList().size();
-        tmp = rating * nClientRate;
+        tmp = this.rating * (nClientRate-1);
         tmp += rate;
         return tmp/nClientRate;
     }
