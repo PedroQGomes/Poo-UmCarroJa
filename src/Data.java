@@ -18,8 +18,8 @@ public class Data implements  Serializable ,IData
     private Map<String, GeneralUser> users; // HashMap que contém todos os users, tendo o nif como chave
     private Map<String,Vehicle> allVehicles;
     private GeneralUser loggedInUser = null;
-    private Map<String,Rent> pendingRent; //TODO: MULTIPLE RENTS FROM THE SAME KEY
-    private Map<String,Rent> pendingRating;
+    private Map<String,Rent> pendingRent;
+    private Map<String,List<Rent>> pendingRating;
     private transient Logs log;
     public boolean isLoggedIn () {
         return (loggedInUser != null);
@@ -37,24 +37,25 @@ public class Data implements  Serializable ,IData
     public void initLog() { log = new Logs();}
 
     public void logout() {
-        loggedInUser = null;
+        updateUser(this.loggedInUser);
+        this.loggedInUser = null;
     }
 
     public boolean loginOn (String username, String pass) {
         GeneralUser generalUser = null;
-        boolean login = false;
+        boolean status = false;
         if(emailToNif.containsKey(username)){
             generalUser = users.get(emailToNif.get(username));
-            login = (generalUser.getEmail().equals(username) && generalUser.getPassword().equals(pass));
+            status = (generalUser.getEmail().equals(username) && generalUser.getPassword().equals(pass));
         }
-        if(login) {
+        if(status) {
             loggedInUser = generalUser;
         }
-        return login;
+        return status;
     }
 
     public GeneralUser getLoggedInUser() {
-        return this.loggedInUser.clone();
+        return this.loggedInUser;
     }
 
 
@@ -62,6 +63,11 @@ public class Data implements  Serializable ,IData
         emailToNif.put(generalUser.getEmail(),generalUser.getNif());
         users.put(generalUser.getNif(),generalUser);
         log.addToLogUser(generalUser);
+    }
+
+
+    public void updateUser (GeneralUser user ) {
+        users.put(user.getNif(),user.clone());
     }
 
     public void populateData ( ) {
@@ -103,25 +109,46 @@ public class Data implements  Serializable ,IData
     }
 
     public void acceptRent(Rent rent) {
-        pendingRating.put(rent.getNif(),rent);
+        addToPendingRating(rent);
         Client _clientRent = (Client) users.get(rent.getNif());
         _clientRent.setPos(rent.getPosicao());
         Vehicle _rentVehicle = allVehicles.get(rent.getMatricula());
-        _rentVehicle.setInUse();
         pendingRent.remove(rent.getMatricula(),rent);
         log.addToLogRent(rent);
     }
 
+    private void removeFromPendingRating(Rent rent) {
+        String nifRent = rent.getNif();
+        List<Rent> tmp = pendingRating.get(nifRent);
+        Iterator it = tmp.iterator();
+        while(it.hasNext()) {
+            Rent tmpRent = (Rent) it.next();
+            if(tmpRent.equals(rent)) {
+                it.remove();
+                break;
+            }
+        }
+    }
+
+    private void addToPendingRating(Rent rent) {
+        String nifRent = rent.getNif();
+        List<Rent> tmp = pendingRating.get(nifRent);
+        if(tmp == null) {
+            tmp = new ArrayList<>();
+        }
+        tmp.add(rent);
+        pendingRating.put(nifRent,tmp);
+    }
+
     public void giveRate(Rent rent , double rating) {
-        pendingRating.remove(rent.getNif(),rent);
         rent.setRating(rating);
         loggedInUser.addRentToHistory(rent.clone());
         Vehicle _rentVehicle = allVehicles.get(rent.getMatricula());
         _rentVehicle.addRent(rent.clone());
-        _rentVehicle.setAvailable();
         Owner _ownerVehicle = (Owner) users.get(_rentVehicle.getNifOwner());
         _ownerVehicle.addRentToHistory(rent.clone());
         _ownerVehicle.updateRating(rating);
+        removeFromPendingRating(rent);
     }
 
 
@@ -139,15 +166,16 @@ public class Data implements  Serializable ,IData
         return new ArrayList<>(pendingRent.values());
     }
     public List<Rent> getPendingRateList() {
-        return new ArrayList<>(pendingRating.values());
+        Collection<List<Rent>> tmp = pendingRating.values();
+        return tmp.stream().flatMap(List::stream).collect(Collectors.toList());
     }
 
     public List<Vehicle> getAllAvailableVehicles () {
-        return this.allVehicles.values().stream().filter(Vehicle::isAvailable).map(Vehicle::clone).collect(Collectors.toList());
+        return this.allVehicles.values().stream().map(Vehicle::clone).collect(Collectors.toList());
     }
 
     public List<Vehicle> getListOfCarType(Class<? extends Vehicle> a){
-        return this.allVehicles.values().stream().filter(l-> l.getClass() == a && l.isAvailable()).map(Vehicle::clone).collect(Collectors.toList());
+        return this.allVehicles.values().stream().filter(l-> l.getClass() == a).map(Vehicle::clone).collect(Collectors.toList());
     }
 
 }

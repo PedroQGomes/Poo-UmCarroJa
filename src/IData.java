@@ -11,6 +11,7 @@ public interface IData {
     void populateData();
     void saveState();
     void initLog();
+    void updateUser(GeneralUser user);
     public List<Vehicle> getAllAvailableVehicles ();
     public List<Rent> getPendingRentList();
     public List<Rent> getPendingRateList();
