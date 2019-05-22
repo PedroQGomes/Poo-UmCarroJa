@@ -1,6 +1,5 @@
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 
@@ -145,10 +144,7 @@ public class Menus
         System.out.print("Consumo por KM: ");
         double consumPerKm = sn.nextDouble();
 
-        System.out.print("Posicao (Ex: x,y ) : ");
-        String posString = sn.next();
-        String[] arrPosString = posString.split(",");
-        Posicao mPos = new Posicao(Double.parseDouble(arrPosString[0]),Double.parseDouble(arrPosString[1]));
+        Posicao mPos = getPositionMenu();
 
 
         System.out.print("Marca :");
@@ -199,7 +195,7 @@ public class Menus
                 giveRatingToRents();
                 break;
             case 5:
-                updateClientPositionMenu();
+                ((Client) data.getLoggedInUser()).setPos(getPositionMenu());
                 break;
             default:
                 logout();
@@ -207,13 +203,11 @@ public class Menus
         }
     }
 
-    private void updateClientPositionMenu() {
+    private Posicao getPositionMenu () {
         System.out.print("Posicao (Ex: x,y ) : ");
         String posString = sn.next();
         String[] arrPosString = posString.split(",");
-        Posicao mPos = new Posicao(Double.parseDouble(arrPosString[0]),Double.parseDouble(arrPosString[1]));
-        Client client = (Client) data.getLoggedInUser();
-        client.setPos(mPos);
+        return new Posicao(Double.parseDouble(arrPosString[0]),Double.parseDouble(arrPosString[1]));
     }
 
     private void giveRatingToRents() {
