@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 
 public abstract class Vehicle implements Serializable {
     private static final long serialVersionUID = 1214567219L;
-    private int averageSpeed,rating;
-    private double pricePerKm,consumptionPerKm;
+    private int averageSpeed;
+    private double pricePerKm,consumptionPerKm,rating;
     private Posicao pos;
     private String matricula,marca,nifOwner;
     private boolean needFuel;
@@ -18,7 +18,7 @@ public abstract class Vehicle implements Serializable {
     public  Vehicle(){
         this.marca = " ";
         this.averageSpeed = 10;
-        this.rating = 0;
+        this.rating = 0.0;
         this.pricePerKm = 2;
         this.consumptionPerKm = 2;
         this.pos.setPosX(0);
@@ -37,7 +37,7 @@ public abstract class Vehicle implements Serializable {
         this.pricePerKm = pricePerKm;
         this.consumptionPerKm = consumptionPerKm;
         this.pos = mPos.clone();
-        this.rating = 0;
+        this.rating = 0.0;
         this.matricula = matricula;
         this.needFuel = false;
         this.warningGas();
@@ -83,7 +83,7 @@ public abstract class Vehicle implements Serializable {
         return this.consumptionPerKm;
     }
     
-    public int getRating(){
+    public double getRating(){
         return rating;
     }
 
@@ -112,7 +112,7 @@ public abstract class Vehicle implements Serializable {
         int hash = 5;
         long aux1,aux2;
         hash = 31*hash + this.averageSpeed;
-        hash = 31*hash + this.rating;
+        hash = 31*hash + (int)this.rating;
         aux1 = Double.doubleToLongBits(pricePerKm);
         hash = 31*hash + (int)(aux1 ^ (aux1 >>> 32));
         aux2 = Double.doubleToLongBits(consumptionPerKm);
@@ -126,14 +126,19 @@ public abstract class Vehicle implements Serializable {
 
     public void addRent(Rent a){
         this.alugueres.add(a.clone());
+        updateRating(a.getRating());
     }
 
-    public void addRating(int a){
-        int count = this.alugueres.size();
-        int tmpRating = this.rating*count;
-        tmpRating = tmpRating + a;
-        count++;
-        this.rating = tmpRating/count;
+    public void updateRating(double rate) {
+        this.rating = calculateRating(rate);
+    }
+
+    private double calculateRating(double rate) {
+        double tmp = 0.0;
+        int nClientRate = getAlugueres().size();
+        tmp = this.rating * (nClientRate-1);
+        tmp += rate;
+        return tmp/nClientRate;
     }
 
     public double rentPrice(Posicao mPos){

@@ -17,6 +17,7 @@ public abstract class GeneralUser implements Serializable
     private static final long serialVersionUID = 1234567219L;
     private String email,name,password,morada,nif;
     private LocalDate birthDate;
+    private double rating;
     private List<Rent> rentList;
     /**
      * Constructor for objects of class Utilizador
@@ -31,6 +32,7 @@ public abstract class GeneralUser implements Serializable
         this.morada = morada;
         this.birthDate = birthDate;
         this.nif = nif;
+        this.rating = 0.0;
         this.rentList = new ArrayList<>();
     }
 
@@ -41,6 +43,7 @@ public abstract class GeneralUser implements Serializable
         this.morada = generalUser.getMorada();
         this.birthDate = generalUser.getBirthDate();
         this.nif = generalUser.getNif();
+        this.rating = generalUser.getRating();
         this.rentList = generalUser.getRentList();
     }
 
@@ -65,6 +68,9 @@ public abstract class GeneralUser implements Serializable
     public String getMorada() {
         return this.morada;
     }
+
+    public double getRating() {return this.rating;}
+
 
     public LocalDate getBirthDate() {
         return this.birthDate;
@@ -95,5 +101,17 @@ public abstract class GeneralUser implements Serializable
 
     public void registerPriceTrip(double price){
 
+    }
+
+    public void updateRating(double rate) {
+        this.rating = calculateRating(rate);
+    }
+
+    private double calculateRating(double rate) {
+        double tmp = 0.0;
+        int nClientRate = getRentList().size();
+        tmp = this.rating * (nClientRate-1);
+        tmp += rate;
+        return tmp/nClientRate;
     }
 }

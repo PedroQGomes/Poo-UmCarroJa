@@ -5,16 +5,22 @@ import java.util.stream.Collectors;
 public class Menus
 {
     private List<String> menuOptions;
-    private int choise;
+    private int choice;
 
     public Menus(){
         this.menuOptions = new ArrayList<>();
-        this.choise = 0;
+        this.choice = 0;
     }
 
+<<<<<<< HEAD
     public Menus(String[] opcoes){
         this.menuOptions = Arrays.asList(opcoes);
         this.choise = 0;
+=======
+    public Menus(List<String> a){
+        this.menuOptions = new ArrayList<>(a);
+        this.choice = 0;
+>>>>>>> 1738380f46896ded0fbe7422138fec62f3245671
     }
 
     public int readOption(){
@@ -37,7 +43,7 @@ public class Menus
         int count = 1;
         for(String s : this.menuOptions){
             System.out.print(count);
-            System.out.print("-");
+            System.out.print(" - ");
             System.out.println(s);
             count++;
         }
@@ -47,14 +53,14 @@ public class Menus
         System.out.print(this.menuOptions.get(x));
     }
 
-    public void exacuteMenu(){
+    public void executeMenu(){
         printMenu();
-        this.choise = readOption();
+        this.choice = readOption();
     }
 
 
-    public int getChoise(){
-        return this.choise;
+    public int getChoice(){
+        return this.choice;
     }
 }
 

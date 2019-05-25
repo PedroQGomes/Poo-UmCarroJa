@@ -1,7 +1,3 @@
-import java.io.*;
-import java.util.ArrayList;
-import java.time.LocalDateTime;
-
 /**
  * Write a description of class Main here.
  *
@@ -10,13 +6,14 @@ import java.time.LocalDateTime;
  */
 public class Main
 {
-    double rating;
     
     public static void main(String [] args)
     {
-        Data mData = IData.recoverState();
-        mData.populateData();
-        Controler con = new Controler(mData);
+        Menus menus = new Menus();
+        Data mData = Data.recoverState();
+        //mData.populateData();
+        //Data mData = Data.getDataFromBackupFile("logsPOO_carregamentoInicial.bak");
+        Controller con = new Controller(mData);
         con.initControler();
         mData.saveState();
     }
