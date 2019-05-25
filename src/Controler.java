@@ -15,11 +15,17 @@ public class Controler {
 
 
     public Controler(Data date){
-
-        this.menuPrincipal = new Menus(listmenuPrincipal());
-        this.client = new Menus(listClient());
-        this.owner = new Menus(listOwner());
-        this.aluguer = new Menus(listAluger());
+        String[] listmenuPrincipal = {"Login", "Registar"};
+        String[] listClient = {"Alugar um carro","Consultar Histórico de aluguer","Preço da ultima viagem",
+                "Dar rating aos  alugueres","Definir Posição","Sair"};
+        String[] listOwner = {"1 -> Registar um carro","2 -> Ver registos dos carros",
+                "3 -> Ver histórico de aluguer","4 -> Abastecer um carro","Receitas da ultima Viagem"};
+        String[] listAluger = {"Solicitar o aluguer de um carro mais prox das sua Posicao","Solicitar o aluguer de um carro mais barato",
+                "Solicitar o aluguer de um carro especifico","Solicitar um aluguer de um carro com uma autonomia desejada","Voltar a trás"};
+        this.menuPrincipal = new Menus(listmenuPrincipal);
+        this.client = new Menus(listClient);
+        this.owner = new Menus(listOwner);
+        this.aluguer = new Menus(listAluger);
         this.data = date;
     }
 
@@ -165,9 +171,6 @@ public class Controler {
                 break;
             case 4:
                 break;
-            /*case 5:
-                acceptRent();
-                break; */
             case 5:
                 viewLastRentPrice();
                 break;
@@ -350,39 +353,6 @@ public class Controler {
         System.out.flush();
     }
 
-    private List<String> listmenuPrincipal(){
-        ArrayList<String> a = new ArrayList<>();
-        a.add("Login");
-        a.add("Registar");
-        return a;
-    }
 
-    private List<String> listClient(){
-        ArrayList<String> a = new ArrayList<>();
-        a.add("Alugar um carro");
-        a.add("Consultar Histórico de aluguer");
-        a.add("Preço da ultima viagem");
-        a.add("Dar rating aos  alugueres");
-        a.add("Definir Posição");
-        a.add("Sair");
-        return a;
-    }
-    private List<String> listAluger(){
-        ArrayList<String> a = new ArrayList<>();
-        a.add("Solicitar o aluguer de um carro mais prox das sua Posicao");
-        a.add("Solicitar o aluguer de um carro mais barato");
-        a.add("Solicitar o aluguer de um carro especifico");
-        a.add("Solicitar um aluguer de um carro com uma autonomia desejada");
-        a.add("Voltar a trás");
-        return a;
-    }
 
-    private List<String> listOwner(){
-        ArrayList<String> a = new ArrayList<>();
-        a.add("Carro hibrido");
-        a.add("Carro eletrico");
-        a.add("Carro a Gasóleo");
-        a.add("Sair");
-        return a;
-    }
 }
