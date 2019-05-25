@@ -55,7 +55,6 @@ public class Menus
         System.out.println("2 -> Ver registos dos carros");
         System.out.println("3 -> Ver histórico de aluguer");
         System.out.println("4 -> Abastecer um carro");
-        //System.out.println("5 -> Aceitar/Rejeitar o aluguer de um determinado cliente");
         System.out.println("5 -> Receitas da ultima Viagem");
         System.out.println("9 -> Sair");
         int res = sn.nextInt();
@@ -71,9 +70,6 @@ public class Menus
                 break;
             case 4:
                 break;
-            /*case 5:
-                acceptRent();
-                break; */
             case 5:
                 viewLastRentPrice();
                 break;
@@ -85,16 +81,6 @@ public class Menus
         }
     }
 
-    /* private void acceptRent() {
-        List<Rent> rentList = data.getPendingRentList();
-        showList(rentList);
-        int indexRent = sn.nextInt();
-        if(rentList.size() >= indexRent) {
-            data.acceptRent(rentList.get(indexRent-1));
-       } else {
-
-        }
-    } */
 
     private void viewRentHistory() {
         List<Rent> rentList = data.getLoggedInUser().getRentList();
@@ -336,11 +322,15 @@ public class Menus
         switch(option) {
             case 1:
                 Owner owner = new Owner(email,name,password,morada,birthDate,nif);
-                data.addUser(owner);
+                try {
+                    data.addUser(owner);
+                }catch(utilizadorJaExiste e) {}
                 break;
             case 2:
                 Client client = new Client(email,name,password,morada,birthDate,nif);
-                data.addUser(client);
+                try {
+                    data.addUser(client);
+                }catch(utilizadorJaExiste e) {}
                 break;
             default:
                 break;

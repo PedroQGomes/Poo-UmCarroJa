@@ -9,19 +9,17 @@ public class Owner extends GeneralUser
 {
     private static final long serialVersionUID = 1236567219L;
     // instance variables
-    private double rating;
+
     private Map<String,Vehicle> mapCar;
 
     public Owner(String _email, String _name, String _password, String _morada, LocalDate _birthDate,String _nif)
     {
         super(_email,_name,_password,_morada,_birthDate,_nif);
-        this.rating = 0.0;
         mapCar = new HashMap<>();
     }
 
     public Owner(Owner own) {
         super(own);
-        this.rating = own.getRating();
         this.mapCar = own.getMapCar();
     }
 
@@ -38,7 +36,6 @@ public class Owner extends GeneralUser
         return tmp;
     }
 
-    public double getRating() { return this.rating;}
 
     public Owner clone() {
         return new Owner(this);
@@ -48,17 +45,15 @@ public class Owner extends GeneralUser
         if(this == o) return true;
         if((o == null) || o.getClass() != this.getClass()) return false;
         Owner p = (Owner) o;
-        return(super.equals(o) && p.getRating() == this.rating && p.getMapCar().equals(this.getMapCar()));
+        return(super.equals(o) && p.getMapCar().equals(this.getMapCar()));
     }
 
     public int hashCode(){
         int hash = 5;
-        hash = 31*hash + (int)this.rating;
+        hash = 31*hash + super.hashCode();
         hash = 31*hash + this.mapCar.values().stream().mapToInt(Vehicle::hashCode).sum();
         return hash;
     }
-
-
 
     public boolean addVehicle(String mat,Vehicle a){
         if(!(mapCar.containsKey(mat))) {
@@ -82,21 +77,6 @@ public class Owner extends GeneralUser
             this.mapCar.get(matricula).setPrice(price);
         }
     }
-
-    public void updateRating(double rate) {
-        this.rating = calculateRating(rate);
-    }
-
-    private double calculateRating(double rate) {
-        double tmp = 0.0;
-        int nClientRate = getRentList().size();
-        tmp = this.rating * (nClientRate-1);
-        tmp += rate;
-        return tmp/nClientRate;
-    }
-
-
-
 
     // aceita a proposta e executa-a
     public void acceptRent(Rent a){

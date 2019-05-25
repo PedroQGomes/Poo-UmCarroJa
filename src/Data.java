@@ -9,6 +9,7 @@ import java.io.*;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Data implements  Serializable ,IData
@@ -18,7 +19,6 @@ public class Data implements  Serializable ,IData
     private Map<String, GeneralUser> users; // HashMap que contém todos os users, tendo o nif como chave
     private Map<String,Vehicle> allVehicles;
     private GeneralUser loggedInUser = null;
-    //private Map<String,Rent> pendingRent; // TODO: Para a mesma matricula por varios pedidos? Falar com grupo
     private Map<String,List<Rent>> pendingRating;
     private transient Logs log;
     public boolean isLoggedIn () {
@@ -30,7 +30,6 @@ public class Data implements  Serializable ,IData
         users = new HashMap<>();
         allVehicles = new HashMap<>();
         emailToNif = new HashMap<>();
-        //pendingRent = new HashMap<>();
         pendingRating = new HashMap<>();
         initLog();
     }
@@ -40,6 +39,136 @@ public class Data implements  Serializable ,IData
     public void logout() {
         updateUser(this.loggedInUser);
         this.loggedInUser = null;
+    }
+
+
+    public static Data getDataFromBackupFile(String fileName) {
+        if(fileName == null) return null;
+        Data mData = null;
+        try {
+            List<String> dataString = Data.readFromFile(fileName);
+            mData = new Data();
+            Data finalMData = mData;
+            dataString.forEach(s -> parseStringAndAddToData(finalMData,s));
+        } catch (FileNotFoundException e) {
+            System.out.println("File Not Found" + e.getMessage());
+        } catch (IOException e) {
+            System.out.println("IO EXCEPTION" + e.getMessage());
+        }
+        return mData;
+
+    }
+
+    private static void parseStringAndAddToData(Data mData, String s) {
+        String[] typeString = s.split(":");
+        switch(typeString[0]) {
+            case "NovoProp":
+                addOwnerFromString(mData,typeString[1]);
+                break;
+            case "NovoCliente":
+                addClientFromString(mData,typeString[1]);
+                break;
+            case "NovoCarro":
+                addVehicleFromString(mData,typeString[1]);
+                break;
+            case "Aluguer":
+                addAluguerFromString(mData,typeString[1]);
+                break;
+            case "Classificar":
+                addRateFromString(mData,typeString[1]);
+                break;
+            default:
+                break;
+        }
+
+    }
+    private static void addRateFromString(Data mData,String string) {
+        String[] fields = string.split(",");
+
+    }
+
+    private static void addOwnerFromString(Data mData , String string) {
+        String[] fields = string.split(",");
+        Owner own = new Owner(fields[2],fields[0],"asd",fields[3],LocalDate.now(),fields[1]);
+        try {
+            mData.addUser(own);
+        } catch(utilizadorJaExiste e) {}
+    }
+    private static void addClientFromString(Data mData , String string) {
+        String[] fields = string.split(",");
+        Client clt = new Client(fields[2],fields[0],"asd",fields[3],LocalDate.now(),fields[1]);
+        try {
+            clt.setPos(new Posicao(Double.parseDouble(fields[4]),Double.parseDouble(fields[5])));
+        } catch (NumberFormatException | NullPointerException e){
+            System.out.println(e.getMessage());
+        }
+        try {
+            mData.addUser(clt);
+        } catch (utilizadorJaExiste e) {}
+    }
+
+    private static void addAluguerFromString(Data mData, String string) {
+        String[] fields = string.split(",");
+        Class<? extends Vehicle> carType = null;
+        Vehicle _vehicle = null;
+        Posicao p = new Posicao(Double.parseDouble(fields[1]),Double.parseDouble(fields[2]));
+        try {
+            switch(fields[3]) {
+                case "Gasolina":
+                    carType = GasCar.class;
+                    break;
+                case "Eletrico":
+                    carType = EletricCar.class;
+                    break;
+                default:
+                    carType = HybridCar.class;
+                    break;
+            }
+            if(fields[4].equals("MaisPerto"))  _vehicle = Rent.getNearCar(mData.getListOfCarType(carType),p);
+            else if(fields[4].equals("MaisBarato")) _vehicle = Rent.getCheapestCar(mData.getListOfCarType(carType));
+        } catch(semVeiculosException e) {
+            return;
+        }
+        if(_vehicle != null) {
+            mData.loggedInUser = mData.users.get(fields[0]);
+            if(mData.getLoggedInUser() != null)
+            mData.createRent(_vehicle,p);
+        }
+            mData.loggedInUser = null;
+
+    }
+
+    private static void addVehicleFromString(Data mData , String string) {
+        String[] fields = string.split(",");
+        Vehicle _mVehicle;
+        int averagespeed = Integer.parseInt(fields[4]);
+        double pricePerKm = Double.parseDouble(fields[5]);
+        double consumptionPerKm = Double.parseDouble(fields[6]);
+        double fuel = Double.parseDouble(fields[7]);
+        Posicao mpos = new Posicao(Double.parseDouble(fields[8]),Double.parseDouble(fields[9]));
+        switch(fields[0]) {
+            case "Electrico" :
+                _mVehicle = new EletricCar(fields[1],fields[2],fields[3],averagespeed,pricePerKm,consumptionPerKm,mpos,fuel);
+                break;
+            case "Gasolina":
+                _mVehicle = new GasCar(fields[1],fields[2],fields[3],averagespeed,pricePerKm,consumptionPerKm,mpos,fuel);
+                break;
+            default:
+                _mVehicle = new HybridCar(fields[1],fields[2],fields[3],averagespeed,pricePerKm,consumptionPerKm,mpos,fuel);
+                break;
+        }
+        mData.loggedInUser = mData.users.get(fields[3]);
+        mData.addCar(_mVehicle);
+        mData.loggedInUser = null;
+    }
+
+    private static List<String> readFromFile(String fileName) throws FileNotFoundException, IOException {
+        List<String> linhas = new ArrayList<>();
+        BufferedReader br = new BufferedReader(new FileReader(fileName));
+        String linha;
+        while ((linha = br.readLine()) != null) linhas.add(linha);
+        br.close();
+        return linhas;
     }
 
     public boolean loginOn (String username, String pass) {
@@ -56,11 +185,13 @@ public class Data implements  Serializable ,IData
     }
 
     public GeneralUser getLoggedInUser() {
+        if(this.loggedInUser == null) return null;
         return this.loggedInUser.clone();
     }
 
 
-    public void addUser (GeneralUser generalUser) {
+    public void addUser (GeneralUser generalUser) throws utilizadorJaExiste {
+        if(emailToNif.get(generalUser.getEmail()) != null) throw new utilizadorJaExiste("Utilizador já existe");
         emailToNif.put(generalUser.getEmail(),generalUser.getNif());
         users.put(generalUser.getNif(),generalUser);
         log.addToLogUser(generalUser);
@@ -71,7 +202,7 @@ public class Data implements  Serializable ,IData
         users.put(user.getNif(),user.clone());
     }
 
-    public void populateData ( ) {
+    /*public void populateData ( ) {
         LocalDate date = LocalDate.now();
         Owner _owner = new Owner("own","own","asd","asd",date,"10");
         Client _client = new Client("clt","clt","asd","asd",date,"1000");
@@ -83,7 +214,7 @@ public class Data implements  Serializable ,IData
         loggedInUser = _client;
         createRent(_vehicle,new Posicao(5,5));
         loggedInUser = null;
-    }
+    } */
 
     public void saveState ( ) {
         try {
@@ -119,14 +250,6 @@ public class Data implements  Serializable ,IData
         vehicleOwner.acceptRent(rent.clone());
     }
 
-    public void acceptRent(Rent rent) {
-    /*    addToPendingRating(rent);
-        Client _clientRent = (Client) users.get(rent.getNif());
-        _clientRent.setPos(rent.getPosicao());
-        Vehicle _rentVehicle = allVehicles.get(rent.getMatricula());
-        pendingRent.remove(rent.getMatricula(),rent);
-        log.addToLogRent(rent); */
-    }
 
     private void removeFromPendingRating(Rent rent) {
         String nifRent = rent.getNif();
@@ -172,10 +295,29 @@ public class Data implements  Serializable ,IData
         }
         return isSuccess;
     }
+    public static Data recoverState() {
+        Data mData = null;
+        try {
+            FileInputStream fis = new FileInputStream("data.tmp");
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            mData = (Data) ois.readObject();
+            System.out.println("Dados Lidos");
+        } catch (InvalidClassException e) {
+            System.out.println(e.getMessage());
+        } catch (FileNotFoundException e) {
+            System.out.println("Ficheiro de carregamento de dados não existe");
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        } catch (ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+        }
+        if (mData == null) mData = new Data();
+        else mData.initLog();
+        return mData;
+    }
 
-    /*public List<Rent> getPendingRentList() {
-        return new ArrayList<>(pendingRent.values());
-    } */
     public List<Rent> getPendingRateList() {
         Collection<List<Rent>> tmp = pendingRating.values();
         return tmp.stream().flatMap(List::stream).collect(Collectors.toList());
