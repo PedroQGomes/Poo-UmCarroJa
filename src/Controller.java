@@ -1,10 +1,9 @@
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 import java.time.LocalDate;
 
-public class Controler {
+public class Controller {
     private Menus menuPrincipal;
     private Menus client;
     private Menus owner;
@@ -14,7 +13,7 @@ public class Controler {
     private Scanner sn;
 
 
-    public Controler(Data date){
+    public Controller(Data date){
 
         this.menuPrincipal = new Menus(listmenuPrincipal());
         this.client = new Menus(listClient());
@@ -59,8 +58,8 @@ public class Controler {
 
 
     private void mainMenu(){
-        this.menuPrincipal.exacuteMenu();
-        switch (this.menuPrincipal.getChoise()){
+        this.menuPrincipal.executeMenu();
+        switch (this.menuPrincipal.getChoice()){
             case 1:
                 loginUser();
                 break;
@@ -112,11 +111,19 @@ public class Controler {
         switch(option) {
             case 1:
                 Owner owner = new Owner(email,name,password,morada,birthDate,nif);
-                data.addUser(owner);
+                try {
+                    data.addUser(owner);
+                } catch (utilizadorJaExiste e) {
+                    System.out.println(e.getMessage());
+                }
                 break;
             case 2:
                 Client client = new Client(email,name,password,morada,birthDate,nif);
-                data.addUser(client);
+                try {
+                    data.addUser(client);
+                } catch (utilizadorJaExiste e) {
+                    System.out.println(e.getMessage());
+                }
                 break;
             default:
                 break;
@@ -125,8 +132,8 @@ public class Controler {
 
 
     private void clientMenu(){
-        this.client.exacuteMenu();
-        switch (this.client.getChoise()) {
+        this.client.executeMenu();
+        switch (this.client.getChoice()) {
             case 1:
                 aluguerMenu();
                 break;
@@ -152,8 +159,8 @@ public class Controler {
 
 
     private void ownerMenu(){
-        this.owner.exacuteMenu();
-        switch (this.owner.getChoise()) {
+        this.owner.executeMenu();
+        switch (this.owner.getChoice()) {
             case 1:
                 vehicleRegister();
                 break;
@@ -165,9 +172,6 @@ public class Controler {
                 break;
             case 4:
                 break;
-            /*case 5:
-                acceptRent();
-                break; */
             case 5:
                 viewLastRentPrice();
                 break;
@@ -184,9 +188,9 @@ public class Controler {
 
     private void aluguerMenu(){
         Vehicle _rentVehicle = null;
-        this.aluguer.exacuteMenu();
+        this.aluguer.executeMenu();
         Client clt = (Client) data.getLoggedInUser();
-        switch (this.aluguer.getChoise()) {
+        switch (this.aluguer.getChoice()) {
             case 1:
                 try {
                     _rentVehicle = Rent.getNearCar(data.getAllAvailableVehicles(),clt.getPos());
