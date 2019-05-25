@@ -97,20 +97,15 @@ public class Rent implements Serializable
     // da o carro mais perto de um dado ponto de uma dada lista
     public static Vehicle getNearCar(List<Vehicle> list, Posicao p) throws semVeiculosException{
         if(list.isEmpty()){throw new semVeiculosException("Sem veiculos");}
-        double tmpDist = 0;
-        double tmpfinal = (-1);
+        double tmpDist = 0.0;
+        double tmpfinal = Double.MAX_VALUE;
         Vehicle end = null;
 
         for(Vehicle tmp: list){
             tmpDist = tmp.getPos().distancia(p);
-            if(tmpfinal < 0){
+            if(tmpfinal > tmpDist){
                 tmpfinal = tmpDist;
                 end = tmp;
-            }else {
-                if(tmpfinal > tmpDist){
-                    tmpfinal = tmpDist;
-                    end = tmp;
-                }
             }
         }
         return end;
@@ -120,18 +115,13 @@ public class Rent implements Serializable
     public static Vehicle getCheapestCar(List<Vehicle> list) throws semVeiculosException{
         if(list.isEmpty()){throw new semVeiculosException("Sem veiculos");}
         double tmpPrice =0;
-        double finalPrice = -1;
+        double finalPrice = Double.MAX_VALUE;
         Vehicle chosen = null;
         for(Vehicle v: list){
             tmpPrice = v.getPricePerKm();
-            if(finalPrice < 0){
+            if(finalPrice > tmpPrice){
                 finalPrice = tmpPrice;
                 chosen = v;
-            }else{
-                if(finalPrice > tmpPrice){
-                    finalPrice = tmpPrice;
-                    chosen = v;
-                }
             }
         }
         return chosen;

@@ -12,9 +12,9 @@ public class Menus
         this.choice = 0;
     }
 
-    public Menus(String[] opcoes) {
+    public Menus(String[] opcoes){
         this.menuOptions = Arrays.asList(opcoes);
-        this.choise = 0;
+        this.choice = 0;
     }
 
     public int readOption(){

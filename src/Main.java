@@ -9,7 +9,6 @@ public class Main
     
     public static void main(String [] args)
     {
-        Menus menus = new Menus();
         Data mData = Data.recoverState();
         //mData.populateData();
         //Data mData = Data.getDataFromBackupFile("logsPOO_carregamentoInicial.bak");
