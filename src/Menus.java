@@ -12,15 +12,11 @@ public class Menus
         this.choice = 0;
     }
 
-<<<<<<< HEAD
+
     public Menus(String[] opcoes){
         this.menuOptions = Arrays.asList(opcoes);
-        this.choise = 0;
-=======
-    public Menus(List<String> a){
-        this.menuOptions = new ArrayList<>(a);
         this.choice = 0;
->>>>>>> 1738380f46896ded0fbe7422138fec62f3245671
+
     }
 
     public int readOption(){
