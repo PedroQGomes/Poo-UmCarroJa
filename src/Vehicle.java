@@ -155,7 +155,6 @@ public abstract class Vehicle implements Serializable {
         if(!enoughAutonomy(x)) return 0; // verifica se o carro tem autonomia para realizar a viagem
         this.updateAutonomy(x); // update do combustivel
         this.setPos(x); // muda a posicao do carro
-        this.addRent(a); // adiciona o aluguer a lista de alugueres do carro
         this.warningGas(); // verifica se o carro está com pouca autonomia
         return (this.rentPrice(x)); // calcula e retorna o preço a pagar
     }

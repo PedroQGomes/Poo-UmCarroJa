@@ -27,7 +27,7 @@ public class Owner extends GeneralUser
 
 
     public Map<String,Vehicle> getMapCar () {
-        return this.mapCar.entrySet().stream().collect(Collectors.toMap(l->l.getKey(),l->l.getValue().clone()));
+        return this.mapCar.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, l->l.getValue().clone()));
     }
 
     public List<Vehicle> getListCar() {
@@ -56,7 +56,6 @@ public class Owner extends GeneralUser
         hash = 31*hash + (int)this.rating;
         hash = 31*hash + this.mapCar.values().stream().mapToInt(Vehicle::hashCode).sum();
         return hash;
-
     }
 
 
@@ -69,10 +68,6 @@ public class Owner extends GeneralUser
         return false;
     }
 
-    // da uma lista com todos os carros com autonomia para fazer o aluguer
-    public List<Vehicle> signalAvailable(Rent a){
-        return this.mapCar.values().stream().filter(l -> l.enoughAutonomy(a.getPosicao())).map(Vehicle::clone).collect(Collectors.toList());
-    }
 
     // abastece o carro
     public void fuelCar(String matricula){
@@ -104,25 +99,10 @@ public class Owner extends GeneralUser
 
 
     // aceita a proposta e executa-a
-    public void acceptRent(Rent a,String matricula){
-        this.mapCar.get(matricula).executeTrip(a);
+    public void acceptRent(Rent a){
+        if(a != null)
+        this.mapCar.get(a.getMatricula()).executeTrip(a);
     }
 
-    /*//vai buscar o rating dos clientes NAO NECESSARIO
-    public double getRatingHistoryOfClient(){
-        //return this.mapCar.values().stream().mapToDouble(Vehicle::getRating).sum();
-        return 100;
-    } */
-    /*// o propriatario verifica se quer aceitar ou nao a proposta
-    public boolean manageOfer(Rent a,String matricula){
-        if(getRatingHistoryOfClient() > 30){
-            acceptRent(a,matricula);
-            return true;
-        }
-        else {return false;}
-    } */
-
-    // falta registar o preço de um aluguer
-    //
 
 }
