@@ -1,4 +1,5 @@
 import java.io.Serializable;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -146,7 +147,7 @@ public abstract class Vehicle implements Serializable {
     }
 
     public abstract void warningGas();
-    public abstract boolean enoughAutonomy(Posicao x);
+      public abstract boolean enoughAutonomy(Posicao x);
     public abstract void updateAutonomy(Posicao x);
     public abstract void abastece();
     public abstract double getAutonomy();
@@ -162,6 +163,13 @@ public abstract class Vehicle implements Serializable {
         this.setPos(x); // muda a posicao do carro
         this.warningGas(); // verifica se o carro está com pouca autonomia
         return (this.rentPrice(x)); // calcula e retorna o preço a pagar
+    }
+
+    public Duration rentTime(Posicao x){
+        double dist = this.pos.distancia(x);
+        double tempo = dist / this.averageSpeed;
+        long a = (long) tempo;
+        return(Duration.ofHours(a));
     }
 
 }
