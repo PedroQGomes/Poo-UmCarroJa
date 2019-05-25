@@ -25,6 +25,10 @@ public class Owner extends GeneralUser
         return this.mapCar.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, l->l.getValue().clone()));
     }
 
+    public List<Vehicle> getListOfCarsFuelNeeded() {
+        return this.mapCar.values().stream().filter(Vehicle::getNeedFuel).collect(Collectors.toList());
+    }
+
     public List<Vehicle> getListCar() {
         List<Vehicle> tmp = new ArrayList<>();
         for(Map.Entry<String,Vehicle> a : this.mapCar.entrySet()) {

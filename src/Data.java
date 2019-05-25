@@ -200,6 +200,7 @@ public class Data implements  Serializable ,IData
 
     public void updateUser (GeneralUser user ) {
         users.put(user.getNif(),user.clone());
+        loggedInUser = user;
     }
 
     /*public void populateData ( ) {
