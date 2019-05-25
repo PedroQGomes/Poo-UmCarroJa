@@ -14,6 +14,7 @@ public class Controller {
     private Scanner sn;
 
 
+
     public Controller(Data date){
         String[] listmenuPrincipal = {"Login", "Registar"};
         String[] listClient = {"Alugar um carro","Consultar Histórico de aluguer","Preço da ultima viagem",
@@ -41,7 +42,6 @@ public class Controller {
         }
 
     }
-
     private void activeMenu() {
         String str;
         boolean isOwner = true;
@@ -136,7 +136,19 @@ public class Controller {
                 break;
         }
     }
-
+    /*
+    private void registaUUser(){
+        System.out.print("Registar como Owner (1) ou como Cliente(2) ");
+        int option = this.aluguer.readOption();
+        int i;
+        List<String> tmp = new ArrayList<>();
+        for(i=0;i > this.regista.size();i++){
+            System.out.print(this.regista.get(i));
+            String a = sn.next();
+            tmp.add(a);
+        }
+        String[] arrStrBirth =tmp.get(tmp.size()-1).split("-");
+    }*/
 
     private void clientMenu(){
         this.client.executeMenu();
@@ -151,7 +163,7 @@ public class Controller {
                 viewLastRentPrice();
                 break;
             case 4:
-                giveRatingToRents();
+                giveRatingToRentsMenu();
                 break;
             case 5:
                 Client user = ((Client) data.getLoggedInUser());
@@ -160,6 +172,21 @@ public class Controller {
                 break;
             default:
                 logout();
+                break;
+        }
+    }
+
+    private void giveRatingToRentsMenu(){
+        System.out.println("1-Separado");
+        System.out.println("2-Junto");
+        int a = sn.nextInt();
+        switch (a){
+            case 1:
+                giveRatingToOwner();
+                giveRatingToVehicle();
+                break;
+            case 2:
+                giveRatingToRents();
                 break;
         }
     }
@@ -181,6 +208,9 @@ public class Controller {
                 break;
             case 5:
                 viewLastRentPrice();
+                break;
+            case 6:
+                rateClient();
                 break;
             case 9:
                 logout();
