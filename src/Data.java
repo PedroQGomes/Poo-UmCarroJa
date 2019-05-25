@@ -9,7 +9,6 @@ import java.io.*;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Data implements  Serializable ,IData
@@ -84,82 +83,100 @@ public class Data implements  Serializable ,IData
     }
     private static void addRateFromString(Data mData,String string) {
         String[] fields = string.split(",");
-
+        if(fields.length == 2) {
+            if (fields[0].split("-").length > 1) {
+                Vehicle vehicle = mData.allVehicles.get(fields[0]);
+                vehicle.updateRating(Double.parseDouble(fields[1]));
+            } else {
+                GeneralUser user = mData.users.get(fields[0]);
+                user.updateRating(Double.parseDouble(fields[1]));
+            }
+        }
     }
 
     private static void addOwnerFromString(Data mData , String string) {
         String[] fields = string.split(",");
-        Owner own = new Owner(fields[2],fields[0],"asd",fields[3],LocalDate.now(),fields[1]);
-        try {
-            mData.addUser(own);
-        } catch(utilizadorJaExiste e) {}
+        if(fields.length == 4) {
+            Owner own = new Owner(fields[2], fields[0], "asd", fields[3], LocalDate.now(), fields[1]);
+            try {
+                mData.addUser(own);
+            } catch (utilizadorJaExiste e) {
+            }
+        }
     }
     private static void addClientFromString(Data mData , String string) {
         String[] fields = string.split(",");
-        Client clt = new Client(fields[2],fields[0],"asd",fields[3],LocalDate.now(),fields[1]);
-        try {
-            clt.setPos(new Posicao(Double.parseDouble(fields[4]),Double.parseDouble(fields[5])));
-        } catch (NumberFormatException | NullPointerException e){
-            System.out.println(e.getMessage());
+        if(fields.length == 6) {
+            Client clt = new Client(fields[2], fields[0], "asd", fields[3], LocalDate.now(), fields[1]);
+            try {
+                clt.setPos(new Posicao(Double.parseDouble(fields[4]), Double.parseDouble(fields[5])));
+            } catch (NumberFormatException | NullPointerException e) {
+                System.out.println(e.getMessage());
+            }
+            try {
+                mData.addUser(clt);
+            } catch (utilizadorJaExiste e) {
+            }
         }
-        try {
-            mData.addUser(clt);
-        } catch (utilizadorJaExiste e) {}
     }
 
     private static void addAluguerFromString(Data mData, String string) {
         String[] fields = string.split(",");
-        Class<? extends Vehicle> carType = null;
-        Vehicle _vehicle = null;
-        Posicao p = new Posicao(Double.parseDouble(fields[1]),Double.parseDouble(fields[2]));
-        try {
-            switch(fields[3]) {
-                case "Gasolina":
-                    carType = GasCar.class;
-                    break;
-                case "Eletrico":
-                    carType = EletricCar.class;
-                    break;
-                default:
-                    carType = HybridCar.class;
-                    break;
+        if(fields.length == 5) {
+            Class<? extends Vehicle> carType = null;
+            Vehicle _vehicle = null;
+            Posicao p = new Posicao(Double.parseDouble(fields[1]), Double.parseDouble(fields[2]));
+            try {
+                switch (fields[3]) {
+                    case "Gasolina":
+                        carType = GasCar.class;
+                        break;
+                    case "Eletrico":
+                        carType = EletricCar.class;
+                        break;
+                    default:
+                        carType = HybridCar.class;
+                        break;
+                }
+                if (fields[4].equals("MaisPerto")) _vehicle = Rent.getNearCar(mData.getListOfCarType(carType), p);
+                else if (fields[4].equals("MaisBarato"))
+                    _vehicle = Rent.getCheapestCar(mData.getListOfCarType(carType));
+            } catch (semVeiculosException e) {
+                return;
             }
-            if(fields[4].equals("MaisPerto"))  _vehicle = Rent.getNearCar(mData.getListOfCarType(carType),p);
-            else if(fields[4].equals("MaisBarato")) _vehicle = Rent.getCheapestCar(mData.getListOfCarType(carType));
-        } catch(semVeiculosException e) {
-            return;
-        }
-        if(_vehicle != null) {
-            mData.loggedInUser = mData.users.get(fields[0]);
-            if(mData.getLoggedInUser() != null)
-            mData.createRent(_vehicle,p);
-        }
+            if (_vehicle != null) {
+                mData.loggedInUser = mData.users.get(fields[0]);
+                if (mData.getLoggedInUser() != null)
+                    mData.createRent(_vehicle, p);
+            }
             mData.loggedInUser = null;
-
+        }
     }
 
     private static void addVehicleFromString(Data mData , String string) {
         String[] fields = string.split(",");
-        Vehicle _mVehicle;
-        int averagespeed = Integer.parseInt(fields[4]);
-        double pricePerKm = Double.parseDouble(fields[5]);
-        double consumptionPerKm = Double.parseDouble(fields[6]);
-        double fuel = Double.parseDouble(fields[7]);
-        Posicao mpos = new Posicao(Double.parseDouble(fields[8]),Double.parseDouble(fields[9]));
-        switch(fields[0]) {
-            case "Electrico" :
-                _mVehicle = new EletricCar(fields[1],fields[2],fields[3],averagespeed,pricePerKm,consumptionPerKm,mpos,fuel);
-                break;
-            case "Gasolina":
-                _mVehicle = new GasCar(fields[1],fields[2],fields[3],averagespeed,pricePerKm,consumptionPerKm,mpos,fuel);
-                break;
-            default:
-                _mVehicle = new HybridCar(fields[1],fields[2],fields[3],averagespeed,pricePerKm,consumptionPerKm,mpos,fuel);
-                break;
+        if(fields.length == 10) {
+            Vehicle _mVehicle;
+            int averagespeed = Integer.parseInt(fields[4]);
+            double pricePerKm = Double.parseDouble(fields[5]);
+            double consumptionPerKm = Double.parseDouble(fields[6]);
+            double fuel = Double.parseDouble(fields[7]);
+            Posicao mpos = new Posicao(Double.parseDouble(fields[8]), Double.parseDouble(fields[9]));
+            switch (fields[0]) {
+                case "Electrico":
+                    _mVehicle = new EletricCar(fields[1], fields[2], fields[3], averagespeed, pricePerKm, consumptionPerKm, mpos, fuel);
+                    break;
+                case "Gasolina":
+                    _mVehicle = new GasCar(fields[1], fields[2], fields[3], averagespeed, pricePerKm, consumptionPerKm, mpos, fuel);
+                    break;
+                default:
+                    _mVehicle = new HybridCar(fields[1], fields[2], fields[3], averagespeed, pricePerKm, consumptionPerKm, mpos, fuel);
+                    break;
+            }
+            mData.loggedInUser = mData.users.get(fields[3]);
+            mData.addCar(_mVehicle);
+            mData.loggedInUser = null;
         }
-        mData.loggedInUser = mData.users.get(fields[3]);
-        mData.addCar(_mVehicle);
-        mData.loggedInUser = null;
     }
 
     private static List<String> readFromFile(String fileName) throws FileNotFoundException, IOException {
@@ -237,7 +254,8 @@ public class Data implements  Serializable ,IData
         String matricula = rentVehicle.getMatricula();
         Rent rent = new Rent(duration,_price,pos,nif,matricula);
         updateVehicle(rentVehicle,rent.clone());
-        addToPendingRating(rent.clone());
+        addToPendingRating(rent.clone(),rentVehicle.getNifOwner());
+        addToPendingRating(rent.clone(),nif);
         ((Client)loggedInUser).setPos(rent.getPosicao().clone());
         log.addToLogRent(rent);
     }
@@ -265,14 +283,13 @@ public class Data implements  Serializable ,IData
         }
     }
 
-    private void addToPendingRating(Rent rent) {
-        String nifRent = rent.getNif();
-        List<Rent> tmp = pendingRating.get(nifRent);
+    private void addToPendingRating(Rent rent, String nif) {
+        List<Rent> tmp = pendingRating.get(nif);
         if(tmp == null) {
             tmp = new ArrayList<>();
         }
         tmp.add(rent);
-        pendingRating.put(nifRent,tmp);
+        pendingRating.put(nif,tmp);
     }
 
     public void giveRate(Rent rent , double rating) {
@@ -283,6 +300,19 @@ public class Data implements  Serializable ,IData
         Owner _ownerVehicle = (Owner) users.get(_rentVehicle.getNifOwner());
         _ownerVehicle.addRentToHistory(rent.clone());
         _ownerVehicle.updateRating(rating);
+        removeFromPendingRating(rent);
+    }
+
+    public void giveRateVehicle(Rent rent , double rating) {
+        rent.setRating(rating);
+        //loggedInUser.addRentToHistory(rent.clone());
+        Vehicle _rentVehicle = allVehicles.get(rent.getMatricula());
+        _rentVehicle.addRent(rent.clone());
+        Owner _ownerVehicle = (Owner) users.get(_rentVehicle.getNifOwner());
+        _ownerVehicle.updateVehicle(_rentVehicle);
+
+        //_ownerVehicle.addRentToHistory(rent.clone());
+        //_ownerVehicle.updateRating(rating);
         removeFromPendingRating(rent);
     }
 
