@@ -56,5 +56,7 @@ public class Menus
     public int getChoice(){
         return this.choice;
     }
+
+    public int getSizeMenu(){return this.menuOptions.size();}
 }
 

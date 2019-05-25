@@ -9,6 +9,7 @@ public class Controller {
     private Menus client;
     private Menus owner;
     private Menus aluguer;
+    private Menus registar;
     private boolean running = true;
     private Data data;
     private Scanner sn;
@@ -23,10 +24,12 @@ public class Controller {
                 "Ver histórico de aluguer","Abastecer um carro","Receitas da ultima Viagem"};
         String[] listAluger = {"Solicitar o aluguer de um carro mais prox das sua Posicao","Solicitar o aluguer de um carro mais barato",
                 "Solicitar o aluguer de um carro especifico","Solicitar um aluguer de um carro com uma autonomia desejada","Voltar a trás"};
+        String[] listRegistar = {"Email:","Nome:","Password","Morada","Nif","Data de Nascimento (Formato: 15-01-2005):"};
         this.menuPrincipal = new Menus(listmenuPrincipal);
         this.client = new Menus(listClient);
         this.owner = new Menus(listOwner);
         this.aluguer = new Menus(listAluger);
+        this.registar = new Menus(listRegistar);
         this.data = date;
     }
 
@@ -87,37 +90,29 @@ public class Controller {
         }
     }
 
-
     private void registaUser(){
-
         System.out.print("Registar como Owner (1) ou como Cliente(2) ");
-        int option = 0;
-        option = this.aluguer.readOption();
-        System.out.print("Email:");
-        String email = sn.next();
-        System.out.print("Name:");
-        String name = sn.next();
-        System.out.print("Password:");
-        String password = sn.next();
-        System.out.print("Morada:");
-        String morada = sn.next();
-        System.out.print("Nif:");
-        String nif = sn.next();
-        System.out.print("Data de Nascimento (Formato: 15-01-2005):");
-        String birthDateString = sn.next();
-        String[] arrStrBirth = birthDateString.split("-");
+        int option = this.aluguer.readOption();
+        int i;
+        List<String> tmp = new ArrayList<>();
+        for(i=0;i < this.registar.getSizeMenu();i++){
+            this.registar.printMenu(i);
+            String a = sn.next();
+            tmp.add(a);
+        }
+        String[] arrStrBirth = tmp.get(tmp.size()-1).split("-");
         while(!(option == 1 || option == 2)) {
-            option = sn.nextInt();
+            option = this.aluguer.readOption();
         }
         while(arrStrBirth.length < 3) {
             System.out.println("Data de nascimento inválida , insira neste formato (15-01-2005):");
-            birthDateString = sn.next();
+            String birthDateString = sn.next();
             arrStrBirth = birthDateString.split("-");
         }
         LocalDate birthDate = LocalDate.of(Integer.parseInt(arrStrBirth[2]),Integer.parseInt(arrStrBirth[1]),Integer.parseInt(arrStrBirth[0]));
         switch(option) {
             case 1:
-                Owner owner = new Owner(email,name,password,morada,birthDate,nif);
+                Owner owner = new Owner(tmp.get(0),tmp.get(1),tmp.get(2),tmp.get(3),birthDate,tmp.get(4));
                 try{
                     data.addUser(owner);
                 } catch(utilizadorJaExiste e) {
@@ -125,7 +120,7 @@ public class Controller {
                 }
                 break;
             case 2:
-                Client client = new Client(email,name,password,morada,birthDate,nif);
+                Client client = new Client((tmp.get(0),tmp.get(1),tmp.get(2),tmp.get(3),birthDate,tmp.get(4));
                 try{
                     data.addUser(client);
                 } catch(utilizadorJaExiste e) {
@@ -135,20 +130,9 @@ public class Controller {
             default:
                 break;
         }
+
     }
-    /*
-    private void registaUUser(){
-        System.out.print("Registar como Owner (1) ou como Cliente(2) ");
-        int option = this.aluguer.readOption();
-        int i;
-        List<String> tmp = new ArrayList<>();
-        for(i=0;i > this.regista.size();i++){
-            System.out.print(this.regista.get(i));
-            String a = sn.next();
-            tmp.add(a);
-        }
-        String[] arrStrBirth =tmp.get(tmp.size()-1).split("-");
-    }*/
+
 
     private void clientMenu(){
         this.client.executeMenu();
