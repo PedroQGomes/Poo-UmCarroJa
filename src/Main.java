@@ -16,8 +16,8 @@ public class Main
     {
         Data mData = IData.recoverState();
         mData.populateData();
-        Menus menus = new Menus(mData);
-        menus.initMenu();
+        Controler con = new Controler(mData);
+        con.initControler();
         mData.saveState();
     }
 
