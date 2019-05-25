@@ -16,11 +16,11 @@ public class Controller {
 
 
     public Controller(Data date){
-        String[] listmenuPrincipal = {"Login", "Registar"};
+        String[] listmenuPrincipal = {"Login", "Registar","Sair"};
         String[] listClient = {"Alugar um carro","Consultar Histórico de aluguer","Preço da ultima viagem",
                 "Dar rating aos  alugueres","Definir Posição","Sair"};
         String[] listOwner = {"Registar um carro","Ver registos dos carros",
-                "Ver histórico de aluguer","Abastecer um carro","Receitas da ultima Viagem"};
+                "Ver histórico de aluguer","Abastecer um carro","Receitas da ultima Viagem","Dar rating aos clientes","Sair"};
         String[] listAluger = {"Solicitar o aluguer de um carro mais prox das sua Posicao","Solicitar o aluguer de um carro mais barato",
                 "Solicitar o aluguer de um carro especifico","Solicitar um aluguer de um carro com uma autonomia desejada","Voltar a trás"};
         this.menuPrincipal = new Menus(listmenuPrincipal);
@@ -66,13 +66,17 @@ public class Controller {
 
     private void mainMenu(){
         this.menuPrincipal.executeMenu();
-        switch (this.menuPrincipal.getChoice()){
+        switch (this.menuPrincipal.getChoice()) {
             case 1:
                 loginUser();
                 break;
             case 2:
                 registaUser();
                 break;
+                default:
+                    running = false;
+                    break;
+
         }
 
     }
@@ -182,8 +186,8 @@ public class Controller {
         int a = sn.nextInt();
         switch (a){
             case 1:
-                giveRatingToOwner();
-                giveRatingToVehicle();
+                //giveRatingToOwner();
+                //giveRatingToVehicle();
                 break;
             case 2:
                 giveRatingToRents();
@@ -210,7 +214,7 @@ public class Controller {
                 viewLastRentPrice();
                 break;
             case 6:
-                rateClient();
+                //rateClient();
                 break;
             case 9:
                 logout();
