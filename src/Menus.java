@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class Menus
 {
-    private static Scanner sn;
+    private Scanner sn;
     private Data data;
     private boolean running = true;
     public Menus(Data data) {
@@ -51,8 +51,8 @@ public class Menus
         System.out.println("2 -> Ver registos dos carros");
         System.out.println("3 -> Ver histórico de aluguer");
         System.out.println("4 -> Abastecer um carro");
-        System.out.println("5 -> Aceitar/Rejeitar o aluguer de um determinado cliente");
-        System.out.println("6 -> Receitas da ultima Viagem");
+        //System.out.println("5 -> Aceitar/Rejeitar o aluguer de um determinado cliente");
+        System.out.println("5 -> Receitas da ultima Viagem");
         System.out.println("9 -> Sair");
         int res = sn.nextInt();
         switch (res) {
@@ -67,10 +67,10 @@ public class Menus
                 break;
             case 4:
                 break;
-            case 5:
+            /*case 5:
                 acceptRent();
-                break;
-            case 6:
+                break; */
+            case 5:
                 viewLastRentPrice();
                 break;
             case 9:
@@ -81,7 +81,7 @@ public class Menus
         }
     }
 
-    private void acceptRent() {
+    /* private void acceptRent() {
         List<Rent> rentList = data.getPendingRentList();
         showList(rentList);
         int indexRent = sn.nextInt();
@@ -90,7 +90,7 @@ public class Menus
        } else {
 
         }
-    }
+    } */
 
     private void viewRentHistory() {
         List<Rent> rentList = data.getLoggedInUser().getRentList();
@@ -195,7 +195,9 @@ public class Menus
                 giveRatingToRents();
                 break;
             case 5:
-                ((Client) data.getLoggedInUser()).setPos(getPositionMenu());
+                Client user = ((Client) data.getLoggedInUser());
+                user.setPos(getPositionMenu());
+                data.updateUser(user);
                 break;
             default:
                 logout();
@@ -238,39 +240,40 @@ public class Menus
         System.out.println("2 -> Solicitar o aluguer de um carro mais barato");
         System.out.println("3 -> Solicitar o aluguer de um carro especifico");
         System.out.println("4 -> Solicitar um aluguer de um carro com uma autonomia desejada");
-        System.out.println("5 -> Voltar a trás");
-
+        System.out.println("9 -> Voltar a trás");
         int res = sn.nextInt();
+        Client clt = (Client) data.getLoggedInUser();
         switch (res) {
             case 1:
                 try {
-                    _rentVehicle = Rent.RentCheapestCar(data);
+                    _rentVehicle = Rent.getNearCar(data.getAllAvailableVehicles(),clt.getPos());
                 } catch (semVeiculosException e) {
                     System.out.println("Não existem veículos");
                     sn.next();
                 }
                 break;
             case 2:
+                try {
+                    _rentVehicle = Rent.getCheapestCar(data.getAllAvailableVehicles());
+                } catch(semVeiculosException e) {
+                    System.out.println("Não existem veículos");
+                    sn.next();
+                }
                 break;
             case 3:
                 break;
             case 4:
                 break;
-            case 9:
-                clientMenu();
-                break;
             default:
                 break;
         }
         if(_rentVehicle != null){
-            Posicao toWhere = getPosicaoMenu();
-            data.createRent(_rentVehicle,new Posicao(5,5));
+            Posicao toWhere = getPositionMenu();
+            data.createRent(_rentVehicle,toWhere);
         }
     }
 
-    private Posicao getPosicaoMenu() {
-        return null;
-    }
+
 
     private void loginMenu() {
 

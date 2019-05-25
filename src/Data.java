@@ -18,7 +18,7 @@ public class Data implements  Serializable ,IData
     private Map<String, GeneralUser> users; // HashMap que contém todos os users, tendo o nif como chave
     private Map<String,Vehicle> allVehicles;
     private GeneralUser loggedInUser = null;
-    private Map<String,Rent> pendingRent;
+    //private Map<String,Rent> pendingRent; // TODO: Para a mesma matricula por varios pedidos? Falar com grupo
     private Map<String,List<Rent>> pendingRating;
     private transient Logs log;
     public boolean isLoggedIn () {
@@ -30,8 +30,9 @@ public class Data implements  Serializable ,IData
         users = new HashMap<>();
         allVehicles = new HashMap<>();
         emailToNif = new HashMap<>();
-        pendingRent = new HashMap<>();
+        //pendingRent = new HashMap<>();
         pendingRating = new HashMap<>();
+        initLog();
     }
 
     public void initLog() { log = new Logs();}
@@ -55,7 +56,7 @@ public class Data implements  Serializable ,IData
     }
 
     public GeneralUser getLoggedInUser() {
-        return this.loggedInUser;
+        return this.loggedInUser.clone();
     }
 
 
@@ -79,10 +80,8 @@ public class Data implements  Serializable ,IData
         addUser(_client);
         loggedInUser = _owner;
         addCar(_vehicle);
-        Rent rent = new Rent(Duration.ZERO,10.0,new Posicao(5,5),"1000","01-EH-33");
-        acceptRent(rent);
         loggedInUser = _client;
-        giveRate(rent,50);
+        createRent(_vehicle,new Posicao(5,5));
         loggedInUser = null;
     }
 
@@ -105,16 +104,28 @@ public class Data implements  Serializable ,IData
         String nif = loggedInUser.getNif();
         String matricula = rentVehicle.getMatricula();
         Rent rent = new Rent(duration,_price,pos,nif,matricula);
-        pendingRent.put(matricula,rent);
+        updateVehicle(rentVehicle,rent.clone());
+        addToPendingRating(rent.clone());
+        ((Client)loggedInUser).setPos(rent.getPosicao().clone());
+        log.addToLogRent(rent);
+    }
+
+
+
+    public void updateVehicle (Vehicle mVehicle, Rent rent) {
+        mVehicle.executeTrip(rent);
+        allVehicles.put(mVehicle.getMatricula(),mVehicle.clone());
+        Owner vehicleOwner = (Owner) users.get(mVehicle.getNifOwner());
+        vehicleOwner.acceptRent(rent.clone());
     }
 
     public void acceptRent(Rent rent) {
-        addToPendingRating(rent);
+    /*    addToPendingRating(rent);
         Client _clientRent = (Client) users.get(rent.getNif());
         _clientRent.setPos(rent.getPosicao());
         Vehicle _rentVehicle = allVehicles.get(rent.getMatricula());
         pendingRent.remove(rent.getMatricula(),rent);
-        log.addToLogRent(rent);
+        log.addToLogRent(rent); */
     }
 
     private void removeFromPendingRating(Rent rent) {
@@ -162,9 +173,9 @@ public class Data implements  Serializable ,IData
         return isSuccess;
     }
 
-    public List<Rent> getPendingRentList() {
+    /*public List<Rent> getPendingRentList() {
         return new ArrayList<>(pendingRent.values());
-    }
+    } */
     public List<Rent> getPendingRateList() {
         Collection<List<Rent>> tmp = pendingRating.values();
         return tmp.stream().flatMap(List::stream).collect(Collectors.toList());

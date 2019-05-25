@@ -6,14 +6,15 @@ public interface IData {
     void addUser(GeneralUser owner);
     boolean addCar(Vehicle mVehicle);
     void createRent(Vehicle rentVehicle, Posicao posicao);
-    void acceptRent(Rent rent);
+    //void acceptRent(Rent rent);
     void giveRate(Rent rent , double rating);
     void populateData();
     void saveState();
     void initLog();
     void updateUser(GeneralUser user);
+    void updateVehicle(Vehicle mVehicle,Rent rent);
     public List<Vehicle> getAllAvailableVehicles ();
-    public List<Rent> getPendingRentList();
+    //public List<Rent> getPendingRentList();
     public List<Rent> getPendingRateList();
     static Data recoverState() {
         Data mData = null;
