@@ -9,6 +9,7 @@ public abstract class Vehicle implements Serializable {
     private static final long serialVersionUID = 1214567219L;
     private int averageSpeed;
     private double pricePerKm,consumptionPerKm,rating;
+    private int nRate;
     private Posicao pos;
     private String matricula,marca,nifOwner;
     private boolean needFuel;
@@ -27,6 +28,7 @@ public abstract class Vehicle implements Serializable {
         this.nifOwner = " ";
         this.needFuel = false;
         this.warningGas();
+        this.nRate = 0;
         this.alugueres = new ArrayList<>();
     }
     
@@ -42,6 +44,7 @@ public abstract class Vehicle implements Serializable {
         this.needFuel = false;
         this.warningGas();
         this.alugueres = new ArrayList<>();
+        this.nRate = 0;
     }
     public Vehicle(Vehicle v){
         this.marca = v.getMarca();
@@ -55,7 +58,10 @@ public abstract class Vehicle implements Serializable {
         this.needFuel = getNeedFuel();
         this.warningGas();
         this.alugueres = v.getAlugueres();
+        this.nRate = getNRate();
     }
+
+    public int getNRate() {return this.nRate;}
 
     public String getMarca(){return this.marca;}
 
@@ -129,15 +135,15 @@ public abstract class Vehicle implements Serializable {
     }
 
     public void updateRating(double rate) {
+        this.nRate++;
         this.rating = calculateRating(rate);
     }
 
     private double calculateRating(double rate) {
         double tmp = 0.0;
-        int nClientRate = getAlugueres().size();
-        tmp = this.rating * (nClientRate-1);
+        tmp = this.rating * (this.nRate-1);
         tmp += rate;
-        return tmp/nClientRate;
+        return tmp/this.nRate;
     }
 
     public double rentPrice(Posicao mPos){

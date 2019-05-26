@@ -18,6 +18,7 @@ public abstract class GeneralUser implements Serializable
     private String email,name,password,morada,nif;
     private LocalDate birthDate;
     private double rating;
+    private int nRate;
     private List<Rent> rentList;
     /**
      * Constructor for objects of class Utilizador
@@ -33,6 +34,7 @@ public abstract class GeneralUser implements Serializable
         this.birthDate = birthDate;
         this.nif = nif;
         this.rating = 0.0;
+        this.nRate = 0;
         this.rentList = new ArrayList<>();
     }
 
@@ -44,9 +46,12 @@ public abstract class GeneralUser implements Serializable
         this.birthDate = generalUser.getBirthDate();
         this.nif = generalUser.getNif();
         this.rating = generalUser.getRating();
+        this.nRate = generalUser.getNRate();
         this.rentList = generalUser.getRentList();
     }
 
+    public int getNRate() { return  this.nRate;}
+    public void setNRate(int nRate) { this.nRate = nRate;}
     public List<Rent> getRentList() {
         return this.rentList.stream().map(Rent::clone).collect(Collectors.toList());
     }
@@ -104,14 +109,14 @@ public abstract class GeneralUser implements Serializable
     }
 
     public void updateRating(double rate) {
+        this.nRate++;
         this.rating = calculateRating(rate);
     }
 
     private double calculateRating(double rate) {
         double tmp = 0.0;
-        int nClientRate = getRentList().size();
-        tmp = this.rating * (nClientRate-1);
+        tmp = this.rating * (this.nRate-1);
         tmp += rate;
-        return tmp/nClientRate;
+        return tmp/this.nRate;
     }
 }

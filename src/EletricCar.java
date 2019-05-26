@@ -81,7 +81,7 @@ public class EletricCar extends Vehicle {
         sb.append("Matricula: ").append(super.getMatricula()).append(", ");
         sb.append("Posição: ").append(super.getPos()).append(", ");
         sb.append("Rating: ").append(super.getRating()).append(", ");
-        sb.append("Bateria: ").append(this.getBateria()).append(", ");
+        sb.append("Bateria: ").append(this.getBateria());
 
         return sb.toString();
     }
