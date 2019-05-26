@@ -112,10 +112,19 @@ public class UMCarroJa implements  Serializable ,IUMCarroJa
         if(fields.length == 2) {
             if (fields[0].split("-").length > 1) {
                 Vehicle vehicle = mUMCarroJa.allVehicles.get(fields[0]);
-                vehicle.updateRating(Double.parseDouble(fields[1]));
+                try{
+                    vehicle.updateRating(Double.parseDouble(fields[1]));
+                }catch (NumberFormatException | NullPointerException e) {
+                    System.out.println(e.getMessage());
+                }
             } else {
                 GeneralUser user = mUMCarroJa.users.get(fields[0]);
-                user.updateRating(Double.parseDouble(fields[1]));
+                try{
+                    user.updateRating(Double.parseDouble(fields[1]));
+                }catch (NumberFormatException | NullPointerException e) {
+                    System.out.println(e.getMessage());
+                }
+
             }
         }
     }
@@ -167,7 +176,12 @@ public class UMCarroJa implements  Serializable ,IUMCarroJa
         if(fields.length == 5) {
             Class<? extends Vehicle> carType = null;
             Vehicle _vehicle = null;
-            Posicao p = new Posicao(Double.parseDouble(fields[1]), Double.parseDouble(fields[2]));
+            Posicao p = null;
+            try{
+                p = new Posicao(Double.parseDouble(fields[1]), Double.parseDouble(fields[2]));
+            }catch (NumberFormatException | NullPointerException e) {
+                System.out.println(e.getMessage());
+            }
             Client clt;
             mUMCarroJa.loggedInUser = mUMCarroJa.users.get(fields[0]);
             if(mUMCarroJa.getLoggedInUser() instanceof  Client) {
@@ -208,11 +222,36 @@ public class UMCarroJa implements  Serializable ,IUMCarroJa
         String[] fields = string.split(",");
         if(fields.length == 10) {
             Vehicle _mVehicle;
-            int averagespeed = Integer.parseInt(fields[4]);
-            double pricePerKm = Double.parseDouble(fields[5]);
-            double consumptionPerKm = Double.parseDouble(fields[6]);
-            double fuel = Double.parseDouble(fields[7]);
-            Posicao mpos = new Posicao(Double.parseDouble(fields[8]), Double.parseDouble(fields[9]));
+            int averagespeed = 0;
+            double pricePerKm = 0.0;
+            double consumptionPerKm = 0.0;
+            double fuel = 0.0;
+            Posicao mpos = null;
+            try{
+                averagespeed = Integer.parseInt(fields[4]);
+            }catch (NumberFormatException | NullPointerException e) {
+                System.out.println(e.getMessage());
+            }
+            try{
+                pricePerKm = Double.parseDouble(fields[5]);
+            }catch (NumberFormatException | NullPointerException e) {
+                System.out.println(e.getMessage());
+            }
+            try{
+                consumptionPerKm = Double.parseDouble(fields[6]);
+            }catch (NumberFormatException | NullPointerException e) {
+                System.out.println(e.getMessage());
+            }
+            try{
+                fuel = Double.parseDouble(fields[7]);
+            }catch (NumberFormatException | NullPointerException e) {
+                System.out.println(e.getMessage());
+            }
+            try{
+                mpos = new Posicao(Double.parseDouble(fields[8]), Double.parseDouble(fields[9]));
+            }catch (NumberFormatException | NullPointerException e) {
+                System.out.println(e.getMessage());
+            }
             switch (fields[0]) {
                 case "Electrico":
                     _mVehicle = new EletricCar(fields[1], fields[2], fields[3], averagespeed, pricePerKm, consumptionPerKm, mpos, fuel);

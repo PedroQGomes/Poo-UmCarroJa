@@ -176,11 +176,11 @@ public class Controller {
     private void giveRatingToRentsMenu() {
         List<Rent> pendingRateList = mUMCarroJa.getPendingRateList(mUMCarroJa.getLoggedInUser().getNif());
         showList(pendingRateList);
-        int choice = sn.nextInt();
+        int choice = getIntImput();
         if (pendingRateList.size() >= choice) {
             System.out.println("1-Separado");
             System.out.println("2-Junto");
-            int a = sn.nextInt();
+            int a = getIntImput();
             Rent _rent = pendingRateList.get(choice-1);
             switch (a) {
                 case 1:
@@ -228,7 +228,7 @@ public class Controller {
         List<Rent> pendingRateList = mUMCarroJa.getPendingRateList(mUMCarroJa.getLoggedInUser().getNif());
         showList(pendingRateList);
         if(pendingRateList == null) return;
-        int choice = sn.nextInt();
+        int choice = getIntImput();
         if (pendingRateList.size() >= choice) {
             double rate = giveRateMenu();
             mUMCarroJa.giveRateClient(pendingRateList.get(choice-1),rate);
@@ -242,7 +242,7 @@ public class Controller {
             System.out.println("2 -> Carro eletrico");
             System.out.println("3 -> Carro a Gasóleo");
             System.out.println("4 -> Sair");
-            int res = sn.nextInt();
+            int res = getIntImput();
             if(res != 1 && res != 2 && res != 3) break;
             _vehicle = newVehicleWithProperties(res);
             if(_vehicle != null)
@@ -264,7 +264,7 @@ public class Controller {
 
     private void detailedInfo(List <Vehicle> vehicleList){
         System.out.println("Insira o numero correspondente do carro para mais informaçao");
-        int a = sn.nextInt();
+        int a = getIntImput();
         if(a <= vehicleList.size()){
             if(vehicleList.get(a-1).getAlugueres().isEmpty()){
                 System.out.println("Este carro ainda nao realizou alugueres");
@@ -280,12 +280,7 @@ public class Controller {
         String a = sn.next();
         System.out.println("Insira o preço desejado para o carro");
         List <Vehicle> vehicleList = mUMCarroJa.getListOfCarOwned();
-        double p;
-        try{p = sn.nextDouble();
-        }catch (InputMismatchException e){
-            System.out.println("Formato errado");
-            p = -1;
-        }
+        double p = getDoubleImput();
         for(Vehicle r : vehicleList){
             if(r.getMatricula().equals(a) && p > 0){
                 r.setPrice(p);
@@ -378,7 +373,7 @@ public class Controller {
 
     private double giveRateMenu() {
         System.out.println("Rate (0.0-100.0): ");
-        return sn.nextDouble();
+        return (getDoubleImput());
     }
 
     private void giveRatingToRents(Rent mRent) {
@@ -440,13 +435,13 @@ public class Controller {
             matriculaFormat = isMatriculaRightFormated(matricula);
         }
         System.out.print("Preço por km:");
-        double pricePerKm = sn.nextDouble();
+        double pricePerKm = getDoubleImput();
 
         System.out.print("Velocidade Media:");
-        int averageSpeed = sn.nextInt();
+        int averageSpeed = getIntImput();
 
         System.out.print("Consumo por KM: ");
-        double consumPerKm = sn.nextDouble();
+        double consumPerKm = getDoubleImput();
 
         Posicao mPos = getPositionMenu();
 
@@ -456,7 +451,7 @@ public class Controller {
 
 
         System.out.print("Quantidade de combustivel : ");
-        double fuel = sn.nextDouble();
+        double fuel = getDoubleImput();
 
         switch(vehicleType) {
             case 1:
@@ -482,6 +477,31 @@ public class Controller {
         System.out.flush();
     }
 
+    public double getDoubleImput() {
+        boolean flag = false;
+        double a = 0;
+        while (!flag) {
+           try {
+                a = sn.nextDouble();
+               flag = true;
+           }catch (InputMismatchException e){
+               System.out.println("Formato errado,insira um double");
+           }
+        }
+        return a;
+    }
 
-
+    public int getIntImput() {
+        boolean flag = false;
+        int a = 0;
+        while (!flag) {
+            try {
+                a = sn.nextInt();
+                flag = true;
+            }catch (InputMismatchException e){
+                System.out.println("Formato errado,insira um inteiro");
+            }
+        }
+        return a;
+    }
 }
