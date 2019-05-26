@@ -12,7 +12,7 @@ public class Main
         UMCarroJa mUMCarroJa = UMCarroJa.recoverState();
         //mUMCarroJa.populateData();
         if(!mUMCarroJa.isBackupDataRead()) {
-            mUMCarroJa = UMCarroJa.getDataFromBackupFile("logsPOO_carregamentoInicial.bak");
+            mUMCarroJa = UMCarroJa.getDataFromBackupFile("logsPOO_carregamentoInicial.bak",mUMCarroJa);
             mUMCarroJa.setBackupDataRead();
         }
         Controller con = new Controller(mUMCarroJa);
