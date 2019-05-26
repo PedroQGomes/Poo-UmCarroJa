@@ -227,6 +227,7 @@ public class Controller {
     private void rateClient() {
         List<Rent> pendingRateList = mUMCarroJa.getPendingRateList(mUMCarroJa.getLoggedInUser().getNif());
         showList(pendingRateList);
+        if(pendingRateList == null) return;
         int choice = sn.nextInt();
         if (pendingRateList.size() >= choice) {
             double rate = giveRateMenu();
@@ -259,16 +260,18 @@ public class Controller {
             System.out.println("Não tem carros associados!");
         }
         detailedInfo(vehicleList);
-        sn.next();
     }
 
     private void detailedInfo(List <Vehicle> vehicleList){
         System.out.println("Insira o numero correspondente do carro para mais informaçao");
         int a = sn.nextInt();
-        if(a < vehicleList.size()){
+        if(a <= vehicleList.size()){
             if(vehicleList.get(a-1).getAlugueres().isEmpty()){
                 System.out.println("Este carro ainda nao realizou alugueres");
-            }else{vehicleList.get(a-1).showinfo();}
+            }else{
+                vehicleList.get(a-1).showinfo();
+            }
+            sn.next();
         }
     }
 
@@ -398,15 +401,20 @@ public class Controller {
         if(!rentList.isEmpty()){
             Rent rent = rentList.get(rentList.size()-1);
             System.out.println(rent.getPrice());
-            sn.next();
         } else {
             System.out.println("O cliente ainda não realizou alugueres");
         }
+        sn.next();
     }
 
 
 
     private void showList(List<?> list) {
+        if(list == null || list.isEmpty()){
+            System.out.println("Não há informaçao para mostrar");
+            sn.next();
+            return;
+        }
         int i = 1;
         for(Object l:list) {
             System.out.println(i + " - " + l.toString());

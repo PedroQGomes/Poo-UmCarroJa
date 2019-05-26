@@ -346,7 +346,6 @@ public class UMCarroJa implements  Serializable ,IUMCarroJa
         String matricula = rentVehicle.getMatricula();
         double distancia = rentVehicle.getPos().distancia(posicao);
         Rent rent = new Rent(duration,_price,pos,nif,matricula,distancia);
-
         updateVehicleRent(rentVehicle,rent.clone());
         addToPendingRating(rent.clone(),rentVehicle.getNifOwner());
         addToPendingRating(rent.clone(),nif);
