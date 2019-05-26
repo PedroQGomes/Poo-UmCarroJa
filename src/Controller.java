@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 import java.time.LocalDate;
@@ -20,7 +21,7 @@ public class Controller {
         String[] listClient = {"Alugar um carro","Consultar Histórico de aluguer","Preço da ultima viagem",
                 "Dar rating aos  alugueres","Definir Posição","Sair"};
         String[] listOwner = {"Registar um carro","Ver registos dos carros",
-                "Ver histórico de aluguer","Abastecer um carro","Receitas da ultima Viagem","Dar rating aos clientes","Sair"};
+                "Ver histórico de aluguer","Abastecer um carro","Receitas da ultima Viagem","Dar rating aos clientes","Mudar o preço de um carro","Sair"};
         String[] listAluger = {"Solicitar o aluguer de um carro mais prox das sua Posicao","Solicitar o aluguer de um carro mais barato",
                 "Solicitar o aluguer de um carro especifico","Solicitar um aluguer de um carro com uma autonomia desejada","Voltar a trás"};
         String[] listRegistar = {"Email:","Nome:","Password:","Morada:","Nif:","Data de Nascimento (Formato: 15-01-2005):"};
@@ -206,6 +207,7 @@ public class Controller {
                 break;
             case 7:
                 changePrice();
+                break;
             default:
                 logout();
                 break;
@@ -265,13 +267,19 @@ public class Controller {
         String a = sn.next();
         System.out.println("Insira o preço desejado para o carro");
         List <Vehicle> vehicleList = mUMCarroJa.getListOfCarOwned();
-        double p = sn.nextDouble();
+        double p;
+        try{p = sn.nextDouble();
+        }catch (InputMismatchException e){
+            System.out.println("Formato errado");
+            p = -1;
+        }
         for(Vehicle r : vehicleList){
-            if(r.getMatricula().equals(a)){
+            if(r.getMatricula().equals(a) && p > 0){
                 r.setPrice(p);
                 this.mUMCarroJa.updateVehicle(r);
-
+                System.out.println("Preço atualizado");
             }
+            else{System.out.println("Erro matricula inexistente");}
         }
 
 
