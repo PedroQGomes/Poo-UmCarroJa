@@ -11,7 +11,7 @@ public interface IData {
     void saveState();
     void initLog();
     void updateUser(GeneralUser user);
-    void updateVehicle(Vehicle mVehicle,Rent rent);
+    void updateVehicle(Vehicle mVehicle);
     List<Vehicle> getAllAvailableVehicles ();
     List<Rent> getPendingRateList();
     boolean isLoggedIn();

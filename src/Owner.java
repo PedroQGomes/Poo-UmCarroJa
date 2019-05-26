@@ -5,37 +5,25 @@ import java.util.stream.Collectors;
 public class Owner extends GeneralUser
 {
     private static final long serialVersionUID = 1236567219L;
-    // instance variables
-
-    private Map<String,Vehicle> mapCar;
+    private List<String> listCar;
 
     public Owner(String _email, String _name, String _password, String _morada, LocalDate _birthDate,String _nif)
     {
         super(_email,_name,_password,_morada,_birthDate,_nif);
-        mapCar = new HashMap<>();
+        listCar = new ArrayList<>();
     }
 
     public Owner(Owner own) {
         super(own);
-        this.mapCar = own.getMapCar();
+        this.listCar = own.getListOfMatricula();
     }
 
 
-    public Map<String,Vehicle> getMapCar () {
-        return this.mapCar.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, l->l.getValue().clone()));
+    public List<String> getListOfMatricula () {
+        return new ArrayList<>(listCar);
     }
 
-    public List<Vehicle> getListOfCarsFuelNeeded() {
-        return this.mapCar.values().stream().filter(Vehicle::getNeedFuel).collect(Collectors.toList());
-    }
 
-    public List<Vehicle> getListCar() {
-        List<Vehicle> tmp = new ArrayList<>();
-        for(Map.Entry<String,Vehicle> a : this.mapCar.entrySet()) {
-            tmp.add(a.getValue().clone());
-        }
-        return tmp;
-    }
 
 
     public Owner clone() {
@@ -46,47 +34,21 @@ public class Owner extends GeneralUser
         if(this == o) return true;
         if((o == null) || o.getClass() != this.getClass()) return false;
         Owner p = (Owner) o;
-        return(super.equals(o) && p.getMapCar().equals(this.getMapCar()));
+        return(super.equals(o) && p.getListOfMatricula().equals(this.listCar));
     }
 
     public int hashCode(){
         int hash = 5;
         hash = 31*hash + super.hashCode();
-        hash = 31*hash + this.mapCar.values().stream().mapToInt(Vehicle::hashCode).sum();
+        hash = 31*hash + this.listCar.stream().mapToInt(String::hashCode).sum();
         return hash;
     }
 
-    public boolean addVehicle(String mat,Vehicle a){
-        if(!(mapCar.containsKey(mat))) {
-            this.mapCar.put(mat,a.clone());
-            return true;
-        }
+    public boolean addVehicle(String mat){
+        if(listCar.contains(mat)) return false;
+        this.listCar.add(mat);
         return false;
     }
-
-
-    // abastece o carro
-    public void fuelCar(String matricula){
-        if(this.mapCar.containsKey(matricula)){
-            this.mapCar.get(matricula).abastece();
-        }
-    }
-
-    //muda o preço por km de um carro
-    public void changePrice(String matricula,double price){
-        if(this.mapCar.containsKey(matricula)){
-            this.mapCar.get(matricula).setPrice(price);
-        }
-    }
-
-    // aceita a proposta e executa-a
-    public void acceptRent(Rent a){
-        if(a != null)
-        this.mapCar.get(a.getMatricula()).executeTrip(a);
-    }
-
-
-
 
 }
 

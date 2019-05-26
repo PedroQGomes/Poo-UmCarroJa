@@ -253,7 +253,7 @@ public class Data implements  Serializable ,IData
         String nif = loggedInUser.getNif();
         String matricula = rentVehicle.getMatricula();
         Rent rent = new Rent(duration,_price,pos,nif,matricula);
-        updateVehicle(rentVehicle,rent.clone());
+        updateVehicleRent(rentVehicle,rent.clone());
         addToPendingRating(rent.clone(),rentVehicle.getNifOwner());
         addToPendingRating(rent.clone(),nif);
         ((Client)loggedInUser).setPos(rent.getPosicao().clone());
@@ -261,12 +261,12 @@ public class Data implements  Serializable ,IData
     }
 
 
-
-    public void updateVehicle (Vehicle mVehicle, Rent rent) {
-        mVehicle.executeTrip(rent);
+    public void updateVehicle(Vehicle mVehicle) {
         allVehicles.put(mVehicle.getMatricula(),mVehicle.clone());
-        Owner vehicleOwner = (Owner) users.get(mVehicle.getNifOwner());
-        vehicleOwner.acceptRent(rent.clone());
+    }
+    public void updateVehicleRent (Vehicle mVehicle, Rent rent) {
+        mVehicle.executeTrip(rent);
+        updateVehicle(mVehicle);
     }
 
 
@@ -308,9 +308,7 @@ public class Data implements  Serializable ,IData
         //loggedInUser.addRentToHistory(rent.clone());
         Vehicle _rentVehicle = allVehicles.get(rent.getMatricula());
         _rentVehicle.addRent(rent.clone());
-        Owner _ownerVehicle = (Owner) users.get(_rentVehicle.getNifOwner());
-        _ownerVehicle.updateVehicle(_rentVehicle);
-
+        updateVehicleRent(_rentVehicle,rent);
         //_ownerVehicle.addRentToHistory(rent.clone());
         //_ownerVehicle.updateRating(rating);
         removeFromPendingRating(rent);
@@ -319,13 +317,14 @@ public class Data implements  Serializable ,IData
 
     public boolean addCar(Vehicle mVehicle) {
         Owner _own = (Owner) loggedInUser;
-        boolean isSuccess = _own.addVehicle(mVehicle.getMatricula(),mVehicle);
+        boolean isSuccess = _own.addVehicle(mVehicle.getMatricula());
         if(isSuccess) {
             allVehicles.put(mVehicle.getMatricula(),mVehicle);
             log.addToLogVehicle(mVehicle);
         }
         return isSuccess;
     }
+
     public static Data recoverState() {
         Data mData = null;
         try {
