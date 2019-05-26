@@ -59,20 +59,17 @@ public class UMCarroJa implements  Serializable ,IUMCarroJa
      * @param fileName
      * @return UMCarroJa com a informação do ficheiro csv já parsed.
      */
-    public static UMCarroJa getDataFromBackupFile(String fileName) {
+    public static UMCarroJa getDataFromBackupFile(String fileName,UMCarroJa umCarroJa) {
         if(fileName == null) return null;
-        UMCarroJa mUMCarroJa = null;
         try {
             List<String> dataString = UMCarroJa.readFromFile(fileName);
-            mUMCarroJa = new UMCarroJa();
-            UMCarroJa finalMUMCarroJa = mUMCarroJa;
-            dataString.forEach(s -> parseStringAndAddToData(finalMUMCarroJa,s));
+            dataString.forEach(s -> parseStringAndAddToData(umCarroJa,s));
         } catch (FileNotFoundException e) {
             System.out.println("File Not Found" + e.getMessage());
         } catch (IOException e) {
             System.out.println("IO EXCEPTION" + e.getMessage());
         }
-        return mUMCarroJa;
+        return umCarroJa;
 
     }
 
