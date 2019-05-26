@@ -98,6 +98,10 @@ public class Controller {
         return (fields.length == 2);
     }
 
+    private boolean nifIsValid(String nif) {
+        boolean nifIsNumeric = nif.chars().allMatch(Character::isDigit);
+        return (nifIsNumeric && nif.length() == 9);
+    }
     private void registaUser(){
         System.out.print("Registar como Owner (1) ou como Cliente(2) ");
         int option = this.aluguer.readOption();
@@ -109,6 +113,11 @@ public class Controller {
             while(i == 0  && (!emailIsValid(a))) {
                 System.out.print("Email Invalido\n");
                 System.out.print("Email:");
+                a = sn.next();
+            }
+            while(i == 4 && !nifIsValid(a))  {
+                System.out.print("Nif invalido\n");
+                System.out.print("Nif:");
                 a = sn.next();
             }
             tmp.add(a);
@@ -281,7 +290,7 @@ public class Controller {
         System.out.println("Insira o preço desejado para o carro");
         List <Vehicle> vehicleList = mUMCarroJa.getListOfCarOwned();
         double p;
-        try{p = sn.nextDouble();
+        try{ p  = sn.nextDouble();
         }catch (InputMismatchException e){
             System.out.println("Formato errado");
             p = -1;
