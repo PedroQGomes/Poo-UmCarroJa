@@ -175,7 +175,7 @@ public class Controller {
             case 5:
                 Client user = ((Client) mUMCarroJa.getLoggedInUser());
                 user.setPos(getPositionMenu());
-                mUMCarroJa.updateUser(user); //TODO: verificar se é necessario , acho que nao pq o logout ja vai dar update quando o user sair da sessao
+                mUMCarroJa.updateUser(user);
                 break;
             default:
                 logout();
@@ -326,7 +326,7 @@ public class Controller {
     private void fuelCarOfList(List<Vehicle> cars){
         if(cars.isEmpty())return;
         System.out.println("Insira o respetivo numero do carro para o abastecer");
-        int op = getIntImput();
+        int op = getIntInput();
         if(op <= cars.size() && op > 0) {
             this.mUMCarroJa.abasteceCarro(cars.get(op - 1).getMatricula());
             System.out.println("Carro abastecido");
@@ -338,7 +338,7 @@ public class Controller {
     }
 
 
-    private void fuelCar(){ //TODO: através da lista de abastecer pegar no carro
+    private void fuelCar(){
         Owner a = (Owner) mUMCarroJa.getLoggedInUser();
         String r = sn.next();
         if(a.containsMatricula(r)){

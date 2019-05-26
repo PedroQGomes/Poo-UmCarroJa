@@ -20,7 +20,7 @@ public class UMCarroJa implements  Serializable ,IUMCarroJa
     private GeneralUser loggedInUser = null;
     private Map<String,List<Rent>> pendingRating;
     private transient Logs log;
-    private boolean backupDataRead = true; //TODO: POR A FALSE PARA ENTREGAR AO PROF
+    private boolean backupDataRead = false;
 
 
     /**
