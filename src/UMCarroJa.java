@@ -20,9 +20,8 @@ public class UMCarroJa implements  Serializable ,IUMCarroJa
     private GeneralUser loggedInUser = null;
     private Map<String,List<Rent>> pendingRating;
     private transient Logs log;
-    public boolean isLoggedIn () {
-        return (loggedInUser != null);
-    }
+    private boolean backupDataRead = false;
+
 
     /**
      * Construtor da UMCarroJa
@@ -38,7 +37,13 @@ public class UMCarroJa implements  Serializable ,IUMCarroJa
     /**
      * Inicia o Log
      */
-    public void initLog() { log = new Logs();}
+    public void initLog() {
+        try{
+            log = new Logs();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 
 
     /**
@@ -277,6 +282,7 @@ public class UMCarroJa implements  Serializable ,IUMCarroJa
         if(emailToNif.get(generalUser.getEmail()) != null || users.get(generalUser.getNif()) != null) throw new utilizadorJaExiste("Utilizador já existe");
         emailToNif.put(generalUser.getEmail(),generalUser.getNif());
         users.put(generalUser.getNif(),generalUser);
+        if(log != null)
         log.addToLogUser(generalUser);
     }
 
@@ -287,6 +293,25 @@ public class UMCarroJa implements  Serializable ,IUMCarroJa
     public void updateUser (GeneralUser user ) {
         users.put(user.getNif(),user.clone());
         loggedInUser = user;
+    }
+
+    /**
+     * Verifica se já foi lida a data do ficheiro .bak
+     * @return true se sim, falso se não
+     */
+    public boolean isBackupDataRead() {return this.backupDataRead;}
+
+    /**
+     * Mete a true se a data do ficheiro .bak já foi lida
+     */
+    public void setBackupDataRead() {this.backupDataRead = true;}
+
+    /**
+     * Verifica se há algum user logado
+     * @return true, se sim, false se não
+     */
+    public boolean isLoggedIn () {
+        return (loggedInUser != null);
     }
 
     /*public void populateData ( ) {
@@ -316,6 +341,7 @@ public class UMCarroJa implements  Serializable ,IUMCarroJa
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
+        if(log != null)
         log.flushLog();
     }
 
@@ -336,6 +362,7 @@ public class UMCarroJa implements  Serializable ,IUMCarroJa
         addToPendingRating(rent.clone(),nif);
         addRentToHistory(rent,rentVehicle.getNifOwner());
         ((Client)loggedInUser).setPos(rent.getPosicao().clone());
+        if(log != null)
         log.addToLogRent(rent);
     }
 
@@ -447,6 +474,7 @@ public class UMCarroJa implements  Serializable ,IUMCarroJa
         boolean isSuccess = _own.addVehicle(mVehicle.getMatricula());
         if(isSuccess) {
             allVehicles.put(mVehicle.getMatricula(),mVehicle);
+            if(log != null)
             log.addToLogVehicle(mVehicle);
         }
         return isSuccess;

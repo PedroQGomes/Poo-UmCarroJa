@@ -52,11 +52,11 @@ public class Controller {
             isOwner = false;
             str = "Cliente";
         }
-        if(isOwner){ // pode ser melhorado
+        if(isOwner){
             Owner own = (Owner) mUMCarroJa.getLoggedInUser();
             System.out.printf("Nome: %s  Rating: %.2f Nif: %s  Tipo de User: %s\n",own.getName(), own.getRating(), own.getNif() ,str);
             ownerMenu();
-        } else { // pode ser melhoraoo
+        } else {
             Client clt = (Client) mUMCarroJa.getLoggedInUser();
             System.out.printf("Nome: %s Rating: %.2f Nif: %s  Posicao: %s   Tipo de User: %s\n",clt.getName(),clt.getRating() , clt.getNif() ,clt.getPos().toString() ,str);
             clientMenu();
@@ -391,9 +391,14 @@ public class Controller {
     private void showList(List<?> list) {
         int i = 1;
         for(Object l:list) {
-            System.out.println(i + " -> " + l.toString());
+            System.out.println(i + " - " + l.toString());
             i++;
         }
+    }
+
+    private boolean isMatriculaRightFormated(String matricula) {
+        String[] isValid = matricula.split("-");
+        return (isValid.length == 3);
     }
 
     private Vehicle newVehicleWithProperties(int vehicleType) {
@@ -401,7 +406,13 @@ public class Controller {
 
         System.out.print("Matricula: ");
         String matricula = sn.next();
-
+        boolean matriculaFormat = isMatriculaRightFormated(matricula);
+        while(!matriculaFormat) {
+            System.out.println("Matricula no formato errado");
+            System.out.print("Matricula: ");
+            matricula = sn.next();
+            matriculaFormat = isMatriculaRightFormated(matricula);
+        }
         System.out.print("Preço por km:");
         double pricePerKm = sn.nextDouble();
 

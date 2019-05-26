@@ -106,7 +106,7 @@ public class Rent implements Serializable
     // da o carro mais barato de uma dada lista
     public static Vehicle getCheapestCar(List<Vehicle> list) throws semVeiculosException{
         if(list.isEmpty()){throw new semVeiculosException("Sem veiculos");}
-        double tmpPrice =0;
+        double tmpPrice = 0;
         double finalPrice = Double.MAX_VALUE;
         Vehicle chosen = null;
         for(Vehicle v: list){
@@ -160,10 +160,12 @@ public class Rent implements Serializable
     }
 
     public String toString() {
-        StringBuilder sb = new StringBuilder("Aluguer <- Matricula: ");
-        sb.append(this.matricula);
-        sb.append(" Nif: ");
-        sb.append(this.getNif());
+        StringBuilder sb = new StringBuilder("Aluguer: ");
+        sb.append("Matricula: ").append(this.matricula).append(", ");
+        sb.append("Nif do cliente: ").append(this.getNif()).append(", ");
+        sb.append("Duração: ").append(this.getRentTime().toMinutes()).append("min , ");
+        sb.append("Preço: ").append(this.getPrice()).append(", ");
+        sb.append("em ").append(this.getDate());
         return sb.toString();
     }
 

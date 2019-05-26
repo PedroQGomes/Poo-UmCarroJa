@@ -1,7 +1,4 @@
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.time.LocalDateTime;
 
 /**
@@ -11,18 +8,22 @@ import java.time.LocalDateTime;
 public class Logs
 {
     private PrintWriter printWriter;
-    private String filename;
 
-    public Logs()
-    {
-        filename = LocalDateTime.now().toString();
-        try {
-            FileWriter fw = new FileWriter(filename, true);
-            BufferedWriter bw = new BufferedWriter(fw);
-            printWriter = new PrintWriter(bw);
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
+
+    public Logs() throws IOException {
+        String filename = LocalDateTime.now().toString();
+        //String filename = "log";
+        FileWriter fw;
+        File file = new File(filename);
+        if(file.exists()) {
+            fw = new FileWriter(file,true);
+        } else {
+            file.createNewFile();
+            fw = new FileWriter(file);
         }
+        BufferedWriter bw = new BufferedWriter(fw);
+        printWriter = new PrintWriter(bw);
+
     }
 
     public void addToLogVehicle(Vehicle vehicle) {
