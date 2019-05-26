@@ -20,9 +20,8 @@ public class UMCarroJa implements  Serializable ,IUMCarroJa
     private GeneralUser loggedInUser = null;
     private Map<String,List<Rent>> pendingRating;
     private transient Logs log;
-    public boolean isLoggedIn () {
-        return (loggedInUser != null);
-    }
+    private boolean backupDataRead = false;
+
 
     /**
      * Construtor da UMCarroJa
@@ -294,6 +293,25 @@ public class UMCarroJa implements  Serializable ,IUMCarroJa
     public void updateUser (GeneralUser user ) {
         users.put(user.getNif(),user.clone());
         loggedInUser = user;
+    }
+
+    /**
+     * Verifica se já foi lida a data do ficheiro .bak
+     * @return true se sim, falso se não
+     */
+    public boolean isBackupDataRead() {return this.backupDataRead;}
+
+    /**
+     * Mete a true se a data do ficheiro .bak já foi lida
+     */
+    public void setBackupDataRead() {this.backupDataRead = true;}
+
+    /**
+     * Verifica se há algum user logado
+     * @return true, se sim, false se não
+     */
+    public boolean isLoggedIn () {
+        return (loggedInUser != null);
     }
 
     /*public void populateData ( ) {
