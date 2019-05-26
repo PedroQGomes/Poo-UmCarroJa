@@ -96,7 +96,7 @@ public class Rent implements Serializable
     }
 
     // da o carro mais perto de um dado ponto de uma dada lista
-    public static Vehicle getNearCar(List<Vehicle> list, Posicao p) throws semVeiculosException{
+    private static Vehicle getNearCar(List<Vehicle> list, Posicao p) throws semVeiculosException{
         if(list.isEmpty()){throw new semVeiculosException("Sem veiculos");}
         double tmpDist = 0.0;
         double tmpfinal = Double.MAX_VALUE;
@@ -113,7 +113,7 @@ public class Rent implements Serializable
     }
 
     // da o carro mais barato de uma dada lista
-    public static Vehicle getCheapestCar(List<Vehicle> list) throws semVeiculosException{
+    private static Vehicle getCheapestCar(List<Vehicle> list) throws semVeiculosException{
         if(list.isEmpty()){throw new semVeiculosException("Sem veiculos");}
         double tmpPrice = 0;
         double finalPrice = Double.MAX_VALUE;
@@ -128,44 +128,75 @@ public class Rent implements Serializable
         return chosen;
     }
 
-    //solicitar o vaiculo mais perto de um certo tipo de carro
-    public static Vehicle RentNearCarOfType(Class<? extends Vehicle> a, UMCarroJa d) throws semVeiculosException{
-        List<Vehicle> tmp = d.getListOfCarType(a);
-        Client clt = (Client) d.getLoggedInUser();
-        Vehicle chosen = getNearCar(tmp,clt.getPos());
-        return chosen;
-    }
 
-    // solicitar o carro com autonomia desejada
-    // se tiver varios escolhe o mais perto do cliente
-    public static Vehicle RentCarwithAutonomy(double autonomia, UMCarroJa d) throws semVeiculosException{
-        List<Vehicle> tmp;
-        tmp = d.getAllAvailableVehicles();
-        Client clt = (Client) d.getLoggedInUser();
-        return (getNearCar(tmp,clt.getPos()));
+    public static Vehicle RentCheapestCarOfType(UMCarroJa m , Posicao toWhere, Class<? extends Vehicle> a) throws semVeiculosException {
+    Client clt = null;
+    if(m.getLoggedInUser() instanceof Client) {
+        clt = (Client) m.getLoggedInUser();
     }
-
-
-    // solicita o carro mais barato de um certo tipo de combustivel
-    public static Vehicle RentCheapestCarOfType(Class<? extends Vehicle> a, UMCarroJa d) throws semVeiculosException{
-        List<Vehicle> tmp = d.getListOfCarType(a);
-        Client clt = (Client) d.getLoggedInUser();
-        return (getNearCar(tmp,clt.getPos()));
+    if(clt != null){
+        Posicao mPos = clt.getPos();
+        return Rent.getCheapestCar(m.getListOfCarType(a,toWhere,mPos));
     }
+    return null;
+}
 
 
     //solicita o carro mais barato de qualquer tipo
-    public static Vehicle RentCheapestCar(UMCarroJa p) throws semVeiculosException {
-        List<Vehicle> tmp = p.getAllAvailableVehicles();
-        return getCheapestCar(tmp);
+    public static Vehicle RentCheapestCar(UMCarroJa m , Posicao toWhere) throws semVeiculosException {
+        Client clt = null;
+        if(m.getLoggedInUser() instanceof Client) {
+            clt = (Client) m.getLoggedInUser();
+        }
+        if(clt != null){
+            return Rent.getCheapestCar(m.getAllAvailableVehiclesWithFuelToTripAndCloseToClientThanToPosition(toWhere,clt.getPos()));
+        }
+        return null;
+
+    }
+
+    public static Vehicle RentNearCar(UMCarroJa m , Posicao toWhere) throws semVeiculosException {
+        Client clt = null;
+        if(m.getLoggedInUser() instanceof Client) {
+            clt = (Client) m.getLoggedInUser();
+        }
+        if(clt != null){
+            Posicao mPos = clt.getPos();
+            return Rent.getNearCar(m.getAllAvailableVehiclesWithFuelToTripAndCloseToClientThanToPosition(toWhere,mPos),mPos);
+        }
+        return null;
+    }
+
+    public static Vehicle RentNearCarOfType(UMCarroJa m , Posicao toWhere, Class<? extends Vehicle> a) throws semVeiculosException {
+        Client clt = null;
+        if(m.getLoggedInUser() instanceof Client) {
+            clt = (Client) m.getLoggedInUser();
+        }
+        if(clt != null){
+            Posicao mPos = clt.getPos();
+            return Rent.getNearCar(m.getListOfCarType(a,toWhere,mPos),mPos);
+        }
+        return null;
+    }
+
+    public static Vehicle RentCarwithAutonomy(UMCarroJa m ,double autonomy , Posicao toWhere) throws semVeiculosException {
+        Client clt = null;
+        if(m.getLoggedInUser() instanceof Client) {
+            clt = (Client) m.getLoggedInUser();
+        }
+        if(clt != null){
+
+            return Rent.getRentCarWithAutonomy(m.getAllAvailableVehiclesWithFuelToTripAndCloseToClientThanToPosition(toWhere,clt.getPos()),autonomy,toWhere);
+        }
+        return null;
     }
 
 
     // Solicita o carro mais barato dentro de uma certa distancia
-    public static Vehicle RentCheapestCarOfDistance(double dist, UMCarroJa d) throws  semVeiculosException{
-        List<Vehicle> tmp = d.getAllAvailableVehicles();
-        Client clt = (Client) d.getLoggedInUser();
-        return getCheapestCar(tmp.stream().filter(l->l.getPos().distancia(clt.getPos()) < dist).collect(Collectors.toList()));
+    public static Vehicle getRentCarWithAutonomy(List<Vehicle> list , double autonomy, Posicao toWhere) throws  semVeiculosException{
+        List<Vehicle> carsWithAutonomy = list.stream().filter(v -> v.getAutonomy() > autonomy).collect(Collectors.toList());
+        return getNearCar(carsWithAutonomy, toWhere);
+
     }
 
     public String toString() {

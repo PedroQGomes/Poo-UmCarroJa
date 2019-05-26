@@ -22,7 +22,7 @@ public class Controller {
                 "Dar rating aos  alugueres","Definir Posição","Sair"};
         String[] listOwner = {"Registar um carro","Ver registos dos carros",
                 "Ver histórico de aluguer","Abastecer um carro","Receitas da ultima Viagem","Dar rating aos clientes","Mudar o preço de um carro","Sair"};
-        String[] listAluger = {"Solicitar o aluguer de um carro mais prox das sua Posicao","Solicitar o aluguer de um carro mais barato",
+        String[] listAluger = {"Solicitar o aluguer de um carro mais prox da sua Posicao","Solicitar o aluguer de um carro mais barato",
                 "Solicitar o aluguer de um carro especifico","Solicitar um aluguer de um carro com uma autonomia desejada","Voltar a trás"};
         String[] listRegistar = {"Email:","Nome:","Password:","Morada:","Nif:","Data de Nascimento (Formato: 15-01-2005):"};
         this.menuPrincipal = new Menus(listmenuPrincipal);
@@ -102,6 +102,7 @@ public class Controller {
         boolean nifIsNumeric = nif.chars().allMatch(Character::isDigit);
         return (nifIsNumeric && nif.length() == 9);
     }
+
     private void registaUser(){
         System.out.print("Registar como Owner (1) ou como Cliente(2) ");
         int option = this.aluguer.readOption();
@@ -350,7 +351,7 @@ public class Controller {
         switch (this.aluguer.getChoice()) {
             case 1:
                 try {
-                    _rentVehicle = Rent.getNearCar(mUMCarroJa.getAllAvailableVehiclesWithFuelToTripAndCloseToClientThanToPosition(toWhere,clt.getPos()),clt.getPos());
+                    _rentVehicle = Rent.RentNearCar(mUMCarroJa,toWhere);
                 } catch (semVeiculosException e) {
                     System.out.println("Não existem veículos");
                     sn.next();
@@ -358,15 +359,24 @@ public class Controller {
                 break;
             case 2:
                 try {
-                    _rentVehicle = Rent.getCheapestCar(mUMCarroJa.getAllAvailableVehiclesWithFuelToTripAndCloseToClientThanToPosition(toWhere,clt.getPos()));
+                    _rentVehicle = Rent.RentCheapestCar(mUMCarroJa,toWhere);
                 } catch(semVeiculosException e) {
                     System.out.println("Não existem veículos");
                     sn.next();
                 }
                 break;
             case 3:
+
                 break;
             case 4:
+                System.out.println("Insira a autonomia desejada:");
+                double autonomy = getDoubleInput();
+                try {
+                    _rentVehicle = Rent.RentCarwithAutonomy(mUMCarroJa,autonomy,toWhere);
+                } catch(semVeiculosException e) {
+                    System.out.println("Não existem veículos");
+                    sn.next();
+                }
                 break;
             default:
                 break;

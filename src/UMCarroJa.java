@@ -168,11 +168,6 @@ public class UMCarroJa implements  Serializable ,IUMCarroJa
             Class<? extends Vehicle> carType = null;
             Vehicle _vehicle = null;
             Posicao p = new Posicao(Double.parseDouble(fields[1]), Double.parseDouble(fields[2]));
-            Client clt;
-            mUMCarroJa.loggedInUser = mUMCarroJa.users.get(fields[0]);
-            if(mUMCarroJa.getLoggedInUser() instanceof  Client) {
-                clt = (Client) mUMCarroJa.getLoggedInUser();
-            } else return;
             try {
                 switch (fields[3]) {
                     case "Gasolina":
@@ -185,9 +180,9 @@ public class UMCarroJa implements  Serializable ,IUMCarroJa
                         carType = HybridCar.class;
                         break;
                 }
-                if (fields[4].equals("MaisPerto")) _vehicle = Rent.getNearCar(mUMCarroJa.getListOfCarType(carType,p,clt.getPos()), p);
+                if (fields[4].equals("MaisPerto")) _vehicle = Rent.RentNearCarOfType(mUMCarroJa, p,carType);
                 else if (fields[4].equals("MaisBarato"))
-                    _vehicle = Rent.getCheapestCar(mUMCarroJa.getListOfCarType(carType,p,clt.getPos()));
+                    _vehicle = Rent.RentCheapestCarOfType(mUMCarroJa,p,carType);
             } catch (semVeiculosException e) {
                 return;
             }
