@@ -204,6 +204,8 @@ public class Controller {
             case 6:
                 rateClient();
                 break;
+            case 7:
+                changePrice();
             default:
                 logout();
                 break;
@@ -238,14 +240,42 @@ public class Controller {
     }
 
     private void viewOwnerCars() {
-        Owner _owner = (Owner) mUMCarroJa.getLoggedInUser();
         List <Vehicle> vehicleList = mUMCarroJa.getListOfCarOwned();
         if(!vehicleList.isEmpty())
         showList(vehicleList);
         else {
             System.out.println("Não tem carros associados!");
         }
+        detailedInfo(vehicleList);
         sn.next();
+    }
+
+    private void detailedInfo(List <Vehicle> vehicleList){
+        System.out.println("Insira o numero correspondente do carro para mais informaçao");
+        int a = sn.nextInt();
+        if(a < vehicleList.size()){
+            if(vehicleList.get(a-1).getAlugueres().isEmpty()){
+                System.out.println("Este carro ainda nao realizou alugueres");
+            }else{vehicleList.get(a-1).showinfo();}
+        }
+    }
+
+    private void changePrice(){
+        System.out.println("Insira a matricula do carro a mudar o preço");
+        String a = sn.next();
+        System.out.println("Insira o preço desejado para o carro");
+        List <Vehicle> vehicleList = mUMCarroJa.getListOfCarOwned();
+        double p = sn.nextDouble();
+        for(Vehicle r : vehicleList){
+            if(r.getMatricula().equals(a)){
+                r.setPrice(p);
+                this.mUMCarroJa.updateVehicle(r);
+
+            }
+        }
+
+
+
     }
 
     private void fuelCarMenu(){
@@ -267,13 +297,12 @@ public class Controller {
     private void fuelCar(){ //TODO: através da lista de abastecer pegar no carro
         Owner a = (Owner) mUMCarroJa.getLoggedInUser();
         String r = sn.next();
-       /* if(a.containsMatricula(r)){
-            a.fuelCar(r);
-            this.mUMCarroJa.updateUser(a);
+        if(a.containsMatricula(r)){
+            this.mUMCarroJa.abasteceCarro(r);
             System.out.println("Carro abastecido");
         }else{
             System.out.println("Nao contem nenhum carro com essa matricula");
-        } */
+        }
     }
 
     private void viewRentHistory() {

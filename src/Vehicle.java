@@ -170,4 +170,10 @@ public abstract class Vehicle implements Serializable {
         return(Duration.ofHours(a));
     }
 
+    public void showinfo(){
+        for(Rent a : this.alugueres){
+            System.out.println(a.toString());
+        }
+    }
+
 }
