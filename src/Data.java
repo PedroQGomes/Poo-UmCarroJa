@@ -352,9 +352,8 @@ public class Data implements  Serializable ,IData
         return mData;
     }
 
-    public List<Rent> getPendingRateList() {
-        Collection<List<Rent>> tmp = pendingRating.values();
-        return tmp.stream().flatMap(List::stream).collect(Collectors.toList());
+    public List<Rent> getPendingRateList(String nif) {
+        return this.pendingRating.get(nif);
     }
 
     public List<Vehicle> getAllAvailableVehicles () {

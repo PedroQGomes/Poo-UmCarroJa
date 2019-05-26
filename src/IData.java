@@ -13,7 +13,7 @@ public interface IData {
     void updateUser(GeneralUser user);
     void updateVehicle(Vehicle mVehicle);
     List<Vehicle> getAllAvailableVehicles ();
-    List<Rent> getPendingRateList();
+    List<Rent> getPendingRateList(String nif);
     boolean isLoggedIn();
     void logout();
     GeneralUser getLoggedInUser();

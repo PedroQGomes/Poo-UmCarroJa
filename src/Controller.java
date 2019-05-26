@@ -317,7 +317,7 @@ public class Controller {
     }
 
     private void giveRatingToRents() {
-        List<Rent> pendingRateList = data.getPendingRateList();
+        List<Rent> pendingRateList = data.getPendingRateList(data.getLoggedInUser().getNif());
         showList(pendingRateList);
         int choice = sn.nextInt();
         if(pendingRateList.size() >= choice) {
