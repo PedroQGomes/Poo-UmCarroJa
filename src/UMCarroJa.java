@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Data implements  Serializable ,IData
+public class UMCarroJa implements  Serializable ,IData
 {
     private static final long serialVersionUID = 123456789L;
     private Map<String,String> emailToNif;
@@ -24,8 +24,10 @@ public class Data implements  Serializable ,IData
         return (loggedInUser != null);
     }
 
-
-    public Data() {
+    /**
+     * Construtor da UMCarroJa
+     */
+    public UMCarroJa() {
         users = new HashMap<>();
         allVehicles = new HashMap<>();
         emailToNif = new HashMap<>();
@@ -33,78 +35,111 @@ public class Data implements  Serializable ,IData
         initLog();
     }
 
+    /**
+     * Inicia o Log
+     */
     public void initLog() { log = new Logs();}
 
+
+    /**
+     * Dá logout do utilizador
+     */
     public void logout() {
         updateUser(this.loggedInUser);
         this.loggedInUser = null;
     }
 
-
-    public static Data getDataFromBackupFile(String fileName) {
+    /**
+     * Lê o ficheiro csv e faz o parse retornando o Objeto UMCarroJa já populado com a informação que o ficheiro csv tiver
+     * @param fileName
+     * @return UMCarroJa com a informação do ficheiro csv já parsed.
+     */
+    public static UMCarroJa getDataFromBackupFile(String fileName) {
         if(fileName == null) return null;
-        Data mData = null;
+        UMCarroJa mUMCarroJa = null;
         try {
-            List<String> dataString = Data.readFromFile(fileName);
-            mData = new Data();
-            Data finalMData = mData;
-            dataString.forEach(s -> parseStringAndAddToData(finalMData,s));
+            List<String> dataString = UMCarroJa.readFromFile(fileName);
+            mUMCarroJa = new UMCarroJa();
+            UMCarroJa finalMUMCarroJa = mUMCarroJa;
+            dataString.forEach(s -> parseStringAndAddToData(finalMUMCarroJa,s));
         } catch (FileNotFoundException e) {
             System.out.println("File Not Found" + e.getMessage());
         } catch (IOException e) {
             System.out.println("IO EXCEPTION" + e.getMessage());
         }
-        return mData;
+        return mUMCarroJa;
 
     }
 
-    private static void parseStringAndAddToData(Data mData, String s) {
+    /**
+     * Dá parse da string tendo em conta o primeiro parâmetro do ficheiro csv
+     * @param mUMCarroJa
+     * @param s
+     */
+    private static void parseStringAndAddToData(UMCarroJa mUMCarroJa, String s) {
         String[] typeString = s.split(":");
         switch(typeString[0]) {
             case "NovoProp":
-                addOwnerFromString(mData,typeString[1]);
+                addOwnerFromString(mUMCarroJa,typeString[1]);
                 break;
             case "NovoCliente":
-                addClientFromString(mData,typeString[1]);
+                addClientFromString(mUMCarroJa,typeString[1]);
                 break;
             case "NovoCarro":
-                addVehicleFromString(mData,typeString[1]);
+                addVehicleFromString(mUMCarroJa,typeString[1]);
                 break;
             case "Aluguer":
-                addAluguerFromString(mData,typeString[1]);
+                addAluguerFromString(mUMCarroJa,typeString[1]);
                 break;
             case "Classificar":
-                addRateFromString(mData,typeString[1]);
+                addRateFromString(mUMCarroJa,typeString[1]);
                 break;
             default:
                 break;
         }
 
     }
-    private static void addRateFromString(Data mData,String string) {
+
+    /**
+     *  Adiciona o Rating à aplicação através dos parâmetros do ficheiro csv.
+     * @param mUMCarroJa
+     * @param string
+     */
+    private static void addRateFromString(UMCarroJa mUMCarroJa, String string) {
         String[] fields = string.split(",");
         if(fields.length == 2) {
             if (fields[0].split("-").length > 1) {
-                Vehicle vehicle = mData.allVehicles.get(fields[0]);
+                Vehicle vehicle = mUMCarroJa.allVehicles.get(fields[0]);
                 vehicle.updateRating(Double.parseDouble(fields[1]));
             } else {
-                GeneralUser user = mData.users.get(fields[0]);
+                GeneralUser user = mUMCarroJa.users.get(fields[0]);
                 user.updateRating(Double.parseDouble(fields[1]));
             }
         }
     }
 
-    private static void addOwnerFromString(Data mData , String string) {
+    /**
+     * Adiciona o Proprietário à aplicação através dos parâmetros do ficheiro csv.
+     * @param mUMCarroJa
+     * @param string
+     */
+    private static void addOwnerFromString(UMCarroJa mUMCarroJa, String string) {
         String[] fields = string.split(",");
         if(fields.length == 4) {
             Owner own = new Owner(fields[2], fields[0], "asd", fields[3], LocalDate.now(), fields[1]);
             try {
-                mData.addUser(own);
+                mUMCarroJa.addUser(own);
             } catch (utilizadorJaExiste e) {
             }
         }
     }
-    private static void addClientFromString(Data mData , String string) {
+
+    /**
+     * Adiciona o cliente à aplicação através dos parâmetros do ficheiro csv.
+     * @param mUMCarroJa
+     * @param string
+     */
+    private static void addClientFromString(UMCarroJa mUMCarroJa, String string) {
         String[] fields = string.split(",");
         if(fields.length == 6) {
             Client clt = new Client(fields[2], fields[0], "asd", fields[3], LocalDate.now(), fields[1]);
@@ -114,13 +149,18 @@ public class Data implements  Serializable ,IData
                 System.out.println(e.getMessage());
             }
             try {
-                mData.addUser(clt);
+                mUMCarroJa.addUser(clt);
             } catch (utilizadorJaExiste e) {
             }
         }
     }
 
-    private static void addAluguerFromString(Data mData, String string) {
+    /**
+     * Adiciona o aluguer à aplicação tendo em conta os parâmetros do ficheiro csv.
+     * @param mUMCarroJa
+     * @param string
+     */
+    private static void addAluguerFromString(UMCarroJa mUMCarroJa, String string) {
         String[] fields = string.split(",");
         if(fields.length == 5) {
             Class<? extends Vehicle> carType = null;
@@ -138,22 +178,27 @@ public class Data implements  Serializable ,IData
                         carType = HybridCar.class;
                         break;
                 }
-                if (fields[4].equals("MaisPerto")) _vehicle = Rent.getNearCar(mData.getListOfCarType(carType), p);
+                if (fields[4].equals("MaisPerto")) _vehicle = Rent.getNearCar(mUMCarroJa.getListOfCarType(carType), p);
                 else if (fields[4].equals("MaisBarato"))
-                    _vehicle = Rent.getCheapestCar(mData.getListOfCarType(carType));
+                    _vehicle = Rent.getCheapestCar(mUMCarroJa.getListOfCarType(carType));
             } catch (semVeiculosException e) {
                 return;
             }
             if (_vehicle != null) {
-                mData.loggedInUser = mData.users.get(fields[0]);
-                if (mData.getLoggedInUser() != null)
-                    mData.createRent(_vehicle, p);
+                mUMCarroJa.loggedInUser = mUMCarroJa.users.get(fields[0]);
+                if (mUMCarroJa.getLoggedInUser() != null)
+                    mUMCarroJa.createRent(_vehicle, p);
             }
-            mData.loggedInUser = null;
+            mUMCarroJa.loggedInUser = null;
         }
     }
 
-    private static void addVehicleFromString(Data mData , String string) {
+    /**
+     * Adiciona o veiculo à aplicação tendo em conta os parâmetros no ficheiro csv
+     * @param mUMCarroJa
+     * @param string
+     */
+    private static void addVehicleFromString(UMCarroJa mUMCarroJa, String string) {
         String[] fields = string.split(",");
         if(fields.length == 10) {
             Vehicle _mVehicle;
@@ -173,12 +218,19 @@ public class Data implements  Serializable ,IData
                     _mVehicle = new HybridCar(fields[1], fields[2], fields[3], averagespeed, pricePerKm, consumptionPerKm, mpos, fuel);
                     break;
             }
-            mData.loggedInUser = mData.users.get(fields[3]);
-            mData.addCar(_mVehicle);
-            mData.loggedInUser = null;
+            mUMCarroJa.loggedInUser = mUMCarroJa.users.get(fields[3]);
+            mUMCarroJa.addCar(_mVehicle);
+            mUMCarroJa.loggedInUser = null;
         }
     }
 
+    /**
+     * Lê de um ficheiro para uma List<String>
+     * @param fileName
+     * @return List<String> que leu do ficheiro
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
     private static List<String> readFromFile(String fileName) throws FileNotFoundException, IOException {
         List<String> linhas = new ArrayList<>();
         BufferedReader br = new BufferedReader(new FileReader(fileName));
@@ -188,6 +240,12 @@ public class Data implements  Serializable ,IData
         return linhas;
     }
 
+    /**
+     * Faz login na aplicação confirmando o username e a password.
+     * @param username
+     * @param pass
+     * @return true caso o login seja bem sucedido , false caso contrário.
+     */
     public boolean loginOn (String username, String pass) {
         GeneralUser generalUser = null;
         boolean status = false;
@@ -201,12 +259,20 @@ public class Data implements  Serializable ,IData
         return status;
     }
 
+    /**
+     * Retorna o utilizador que está logado.
+     * @return o utilizador
+     */
     public GeneralUser getLoggedInUser() {
         if(this.loggedInUser == null) return null;
         return this.loggedInUser.clone();
     }
 
-
+    /**
+     * Adiciona um utilizador à aplicação
+     * @param generalUser
+     * @throws utilizadorJaExiste
+     */
     public void addUser (GeneralUser generalUser) throws utilizadorJaExiste {
         if(emailToNif.get(generalUser.getEmail()) != null) throw new utilizadorJaExiste("Utilizador já existe");
         emailToNif.put(generalUser.getEmail(),generalUser.getNif());
@@ -214,7 +280,10 @@ public class Data implements  Serializable ,IData
         log.addToLogUser(generalUser);
     }
 
-
+    /**
+     * Da update ao map dos users de forma a guardar a informação que se modificou
+     * @param user
+     */
     public void updateUser (GeneralUser user ) {
         users.put(user.getNif(),user.clone());
         loggedInUser = user;
@@ -234,6 +303,10 @@ public class Data implements  Serializable ,IData
         loggedInUser = null;
     } */
 
+
+    /**
+     * Guarda o estado num object file
+     */
     public void saveState ( ) {
         try {
             FileOutputStream fos = new FileOutputStream("data.tmp");
@@ -246,30 +319,57 @@ public class Data implements  Serializable ,IData
         log.flushLog();
     }
 
+    /**
+     * Cria o aluguer e executa-o no carro e adiciona aos respetivos históricos, atualiza a posição do cliente para onde ele vai , e adiciona o aluguer ao log
+     * @param rentVehicle
+     * @param posicao
+     */
     public void createRent (Vehicle rentVehicle,Posicao posicao) {
         Duration duration = rentVehicle.rentTime(posicao);
         double _price = rentVehicle.rentPrice(posicao);
         Posicao pos = posicao;
-        String nif = loggedInUser.getNif();
+        String nif = this.loggedInUser.getNif();
         String matricula = rentVehicle.getMatricula();
         Rent rent = new Rent(duration,_price,pos,nif,matricula);
         updateVehicleRent(rentVehicle,rent.clone());
         addToPendingRating(rent.clone(),rentVehicle.getNifOwner());
         addToPendingRating(rent.clone(),nif);
+        addRentToHistory(rent,rentVehicle.getNifOwner());
         ((Client)loggedInUser).setPos(rent.getPosicao().clone());
         log.addToLogRent(rent);
     }
 
+    private void addRentToHistory(Rent rent, String nifOwner) {
+        Client clt = (Client) this.users.get(rent.getNif());
+        Owner own = (Owner) this.users.get(nifOwner);
+        clt.addRentToHistory(rent);
+        own.addRentToHistory(rent);
+    }
 
+    /**
+     * Atualiza no allVehicles o carro
+     * @param mVehicle
+     */
     public void updateVehicle(Vehicle mVehicle) {
         allVehicles.put(mVehicle.getMatricula(),mVehicle.clone());
     }
+
+    /**
+     * Da execute ao rent (atualizando combustivel,etc) e guarda no histórico do carro a rent
+     * @param mVehicle
+     * @param rent
+     */
     public void updateVehicleRent (Vehicle mVehicle, Rent rent) {
         mVehicle.executeTrip(rent);
+        mVehicle.addRent(rent);
         updateVehicle(mVehicle);
     }
 
-
+    /**
+     * Remove da pending Rating o aluguer tendo em conta o nif , para quando já foi dado o rate não aparecer que ainda está pending
+     * @param rent
+     * @param nif
+     */
     private void removeFromPendingRating(Rent rent,String nif) {
         String nifRent = nif;
         List<Rent> tmp = pendingRating.get(nifRent);
@@ -283,6 +383,11 @@ public class Data implements  Serializable ,IData
         }
     }
 
+    /**
+     * Adiciona à lista pendingRating para o utilizador saber que ainda tem ratings por dar
+     * @param rent
+     * @param nif
+     */
     private void addToPendingRating(Rent rent, String nif) {
         List<Rent> tmp = pendingRating.get(nif);
         if(tmp == null) {
@@ -292,33 +397,51 @@ public class Data implements  Serializable ,IData
         pendingRating.put(nif,tmp);
     }
 
-    public void giveRate(Rent rent , double rating) { //TODO: ACABAR RENT PARA CLIENTE ETC
-        rent.setRating(rating);
-        loggedInUser.addRentToHistory(rent.clone());
+    /**
+     * Dá rate ao owner e ao veiculo juntos.
+     * @param rent
+     * @param rating
+     */
+    public void giveRate(Rent rent , double rating) {
         Vehicle _rentVehicle = allVehicles.get(rent.getMatricula());
-        _rentVehicle.addRent(rent.clone());
-        _rentVehicle.updateRating(rating);
         Owner _ownerVehicle = (Owner) users.get(_rentVehicle.getNifOwner());
-        _ownerVehicle.addRentToHistory(rent.clone());
         _ownerVehicle.updateRating(rating);
+        _rentVehicle.updateRating(rating);
         removeFromPendingRating(rent,loggedInUser.getNif());
     }
 
+    /**
+     * Dá rate ao cliente.
+     * @param rent
+     * @param rating
+     */
+    public void giveRateClient(Rent rent,double rating) {
+        Client _client = (Client) this.users.get(rent.getNif());
+        _client.updateRating(rating);
+        removeFromPendingRating(rent,this.getLoggedInUser().getNif());
+    }
+
+
+    /**
+     * Dá rate ao owner e ao veículo em separado
+     * @param rent
+     * @param rating
+     * @param ratingCar
+     */
     public void giveRate(Rent rent , double rating, double ratingCar) {
-        rent.setRating(rating);
-        loggedInUser.addRentToHistory(rent.clone());
         Vehicle _rentVehicle = allVehicles.get(rent.getMatricula());
         Owner _ownerVehicle = (Owner) users.get(_rentVehicle.getNifOwner());
-        _ownerVehicle.addRentToHistory(rent.clone());
         _ownerVehicle.updateRating(rating);
-        rent.setRating(ratingCar);
-        _rentVehicle.addRent(rent.clone());
         _rentVehicle.updateRating(ratingCar);
         removeFromPendingRating(rent,loggedInUser.getNif());
     }
 
 
-
+    /**
+     * Adiciona carro à aplicação, verificando se já existe
+     * @param mVehicle
+     * @return
+     */
     public boolean addCar(Vehicle mVehicle) {
         Owner _own = (Owner) loggedInUser;
         boolean isSuccess = _own.addVehicle(mVehicle.getMatricula());
@@ -329,12 +452,17 @@ public class Data implements  Serializable ,IData
         return isSuccess;
     }
 
-    public static Data recoverState() {
-        Data mData = null;
+
+    /**
+     * Recupera o estado da aplicação
+     * @return UMCarroJa
+     */
+    public static UMCarroJa recoverState() {
+        UMCarroJa mUMCarroJa = null;
         try {
             FileInputStream fis = new FileInputStream("data.tmp");
             ObjectInputStream ois = new ObjectInputStream(fis);
-            mData = (Data) ois.readObject();
+            mUMCarroJa = (UMCarroJa) ois.readObject();
             System.out.println("Dados Lidos");
         } catch (InvalidClassException e) {
             System.out.println(e.getMessage());
@@ -347,28 +475,42 @@ public class Data implements  Serializable ,IData
         } catch(Exception e) {
             System.out.println(e.getMessage());
         }
-        if (mData == null) mData = new Data();
-        else mData.initLog();
-        return mData;
+        if (mUMCarroJa == null) mUMCarroJa = new UMCarroJa();
+        else mUMCarroJa.initLog();
+        return mUMCarroJa;
     }
 
+    /**
+     * Devolve a lista de alugueres pendentes a dar rating
+     * @param nif
+     * @return
+     */
     public List<Rent> getPendingRateList(String nif) {
         return this.pendingRating.get(nif);
     }
 
+    /**
+     * Retorna todos os veículos da aplicação
+     * @return List<Vehicle> de todos os veículos da aplicação
+     */
     public List<Vehicle> getAllAvailableVehicles () {
         return this.allVehicles.values().stream().map(Vehicle::clone).collect(Collectors.toList());
     }
 
+    /**
+     * Retorna todos os veículos de um certo tipo da aplicação
+     * @param a
+     * @return List<Vehicle>
+     */
     public List<Vehicle> getListOfCarType(Class<? extends Vehicle> a){
         return this.allVehicles.values().stream().filter(l-> l.getClass() == a).map(Vehicle::clone).collect(Collectors.toList());
     }
 
 
-    public void uptadeGasVehicle(String a){
-
-    }
-
+    /**
+     * Retorna a lista dos carros do Proprietário que está logado
+     * @return List<Vehicle> dos carros do Proprietário que está logado.
+     */
     public List<Vehicle> getListOfCarOwned() {
         if(!(getLoggedInUser() instanceof Owner)) return null;
         Owner owner = (Owner) getLoggedInUser();
@@ -380,6 +522,10 @@ public class Data implements  Serializable ,IData
         return tmp;
     }
 
+    /**
+     * Retorna a lista de carros que precisam de ser abastecidos
+     * @return List<Vehicle> lista de carros que precisam de ser abastecidos
+     */
     public List<Vehicle> getListOfCarsFuelNeeded() {
         List<Vehicle> tmp = getListOfCarOwned();
         return tmp.stream().filter(Vehicle::getNeedFuel).collect(Collectors.toList());

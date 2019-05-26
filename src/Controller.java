@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 import java.time.LocalDate;
@@ -11,12 +10,12 @@ public class Controller {
     private Menus aluguer;
     private Menus registar;
     private boolean running = true;
-    private Data data;
+    private UMCarroJa mUMCarroJa;
     private Scanner sn;
 
 
 
-    public Controller(Data date){
+    public Controller(UMCarroJa date){
         String[] listmenuPrincipal = {"Login", "Registar","Sair"};
         String[] listClient = {"Alugar um carro","Consultar Histórico de aluguer","Preço da ultima viagem",
                 "Dar rating aos  alugueres","Definir Posição","Sair"};
@@ -30,7 +29,7 @@ public class Controller {
         this.owner = new Menus(listOwner);
         this.aluguer = new Menus(listAluger);
         this.registar = new Menus(listRegistar);
-        this.data = date;
+        this.mUMCarroJa = date;
     }
 
 
@@ -38,7 +37,7 @@ public class Controller {
         sn = new Scanner(System.in);
         while(running) {
             System.out.println("BEM VINDO A UMCARROJA");
-            if(data.isLoggedIn()) {
+            if(mUMCarroJa.isLoggedIn()) {
                 activeMenu();
             } else mainMenu();
             clearScreen();
@@ -48,19 +47,19 @@ public class Controller {
     private void activeMenu() {
         String str;
         boolean isOwner = true;
-        if(data.getLoggedInUser().getClass() == Owner.class) {
+        if(mUMCarroJa.getLoggedInUser().getClass() == Owner.class) {
             str = "Proprietário";
         } else {
             isOwner = false;
             str = "Cliente";
         }
         if(isOwner){ // pode ser melhorado
-            Owner own = (Owner) data.getLoggedInUser();
-            System.out.printf("Nome: %s  Rating: %.2f   Tipo de User: %s\n",own.getName(), own.getRating() ,str);
+            Owner own = (Owner) mUMCarroJa.getLoggedInUser();
+            System.out.printf("Nome: %s  Rating: %.2f Nif: %s  Tipo de User: %s\n",own.getName(), own.getRating(), own.getNif() ,str);
             ownerMenu();
         } else { // pode ser melhoraoo
-            Client clt = (Client) data.getLoggedInUser();
-            System.out.printf("Nome: %s Nif: %s  Posicao: %s   Tipo de User: %s\n",clt.getName(), clt.getNif() ,clt.getPos().toString() ,str);
+            Client clt = (Client) mUMCarroJa.getLoggedInUser();
+            System.out.printf("Nome: %s Rating: %.2f Nif: %s  Posicao: %s   Tipo de User: %s\n",clt.getName(),clt.getRating() , clt.getNif() ,clt.getPos().toString() ,str);
             clientMenu();
         }
 
@@ -89,7 +88,7 @@ public class Controller {
         String userName = sn.next();
         System.out.print("Insira a password: ");
         String pass = sn.next();
-        if(data.loginOn(userName,pass)){
+        if(mUMCarroJa.loginOn(userName,pass)){
             System.out.println("Está logado!");
         }
     }
@@ -118,7 +117,7 @@ public class Controller {
             case 1:
                 Owner owner = new Owner(tmp.get(0),tmp.get(1),tmp.get(2),tmp.get(3),birthDate,tmp.get(4));
                 try{
-                    data.addUser(owner);
+                    mUMCarroJa.addUser(owner);
                 } catch(utilizadorJaExiste e) {
                     System.out.println(e.getMessage());
                 }
@@ -126,7 +125,7 @@ public class Controller {
             case 2:
                 Client client = new Client(tmp.get(0),tmp.get(1),tmp.get(2),tmp.get(3),birthDate,tmp.get(4));
                 try{
-                    data.addUser(client);
+                    mUMCarroJa.addUser(client);
                 } catch(utilizadorJaExiste e) {
                     System.out.println(e.getMessage());
                 }
@@ -154,9 +153,9 @@ public class Controller {
                 giveRatingToRentsMenu();
                 break;
             case 5:
-                Client user = ((Client) data.getLoggedInUser());
+                Client user = ((Client) mUMCarroJa.getLoggedInUser());
                 user.setPos(getPositionMenu());
-                data.updateUser(user);
+                mUMCarroJa.updateUser(user); //TODO: verificar se é necessario , acho que nao pq o logout ja vai dar update quando o user sair da sessao
                 break;
             default:
                 logout();
@@ -164,18 +163,23 @@ public class Controller {
         }
     }
 
-    private void giveRatingToRentsMenu(){
-        System.out.println("1-Separado");
-        System.out.println("2-Junto");
-        int a = sn.nextInt();
-        switch (a){
-            case 1:
-                //giveRatingToOwner();
-                //giveRatingToVehicle();
-                break;
-            case 2:
-                giveRatingToRents();
-                break;
+    private void giveRatingToRentsMenu() {
+        List<Rent> pendingRateList = mUMCarroJa.getPendingRateList(mUMCarroJa.getLoggedInUser().getNif());
+        showList(pendingRateList);
+        int choice = sn.nextInt();
+        if (pendingRateList.size() >= choice) {
+            System.out.println("1-Separado");
+            System.out.println("2-Junto");
+            int a = sn.nextInt();
+            Rent _rent = pendingRateList.get(choice-1);
+            switch (a) {
+                case 1:
+                    giveRatingToRentsSeparated(_rent);
+                    break;
+                case 2:
+                    giveRatingToRents(_rent);
+                    break;
+            }
         }
     }
 
@@ -201,10 +205,8 @@ public class Controller {
             case 6:
                 //rateClient();
                 break;
-            case 9:
-                logout();
-                break;
             default:
+                logout();
                 break;
         }
     }
@@ -221,15 +223,15 @@ public class Controller {
             if(res != 1 && res != 2 && res != 3) break;
             _vehicle = newVehicleWithProperties(res);
             if(_vehicle != null)
-                tmp = data.addCar(_vehicle);
+                tmp = mUMCarroJa.addCar(_vehicle);
             if(!tmp) System.out.println("\nJá existe essa Matricula\n");
         }
 
     }
 
     private void viewOwnerCars() {
-        Owner _owner = (Owner) data.getLoggedInUser();
-        List <Vehicle> vehicleList = data.getListOfCarOwned();
+        Owner _owner = (Owner) mUMCarroJa.getLoggedInUser();
+        List <Vehicle> vehicleList = mUMCarroJa.getListOfCarOwned();
         if(!vehicleList.isEmpty())
         showList(vehicleList);
         else {
@@ -239,13 +241,13 @@ public class Controller {
     }
 
     private void fuelCarMenu(){
-        Owner a = (Owner) data.getLoggedInUser();
+        Owner a = (Owner) mUMCarroJa.getLoggedInUser();
         System.out.println("1 - Mostrar os carros com menos de 10% de autonomia");
         System.out.println("2 - Abastecer carro dada a matricula");
         int option = this.owner.readOption();
         switch (option){
             case 1:
-                showList(data.getListOfCarsFuelNeeded());
+                showList(mUMCarroJa.getListOfCarsFuelNeeded());
                 break;
             case 2:
                 fuelCar();
@@ -255,11 +257,11 @@ public class Controller {
     }
 
     private void fuelCar(){ //TODO: através da lista de abastecer pegar no carro
-        Owner a = (Owner) data.getLoggedInUser();
+        Owner a = (Owner) mUMCarroJa.getLoggedInUser();
         String r = sn.next();
        /* if(a.containsMatricula(r)){
             a.fuelCar(r);
-            this.data.updateUser(a);
+            this.mUMCarroJa.updateUser(a);
             System.out.println("Carro abastecido");
         }else{
             System.out.println("Nao contem nenhum carro com essa matricula");
@@ -267,7 +269,7 @@ public class Controller {
     }
 
     private void viewRentHistory() {
-        List<Rent> rentList = data.getLoggedInUser().getRentList();
+        List<Rent> rentList = mUMCarroJa.getLoggedInUser().getRentList();
         showList(rentList);
         sn.next();
     }
@@ -276,11 +278,11 @@ public class Controller {
     private void aluguerMenu(){
         Vehicle _rentVehicle = null;
         this.aluguer.executeMenu();
-        Client clt = (Client) data.getLoggedInUser();
+        Client clt = (Client) mUMCarroJa.getLoggedInUser();
         switch (this.aluguer.getChoice()) {
             case 1:
                 try {
-                    _rentVehicle = Rent.getNearCar(data.getAllAvailableVehicles(),clt.getPos());
+                    _rentVehicle = Rent.getNearCar(mUMCarroJa.getAllAvailableVehicles(),clt.getPos());
                 } catch (semVeiculosException e) {
                     System.out.println("Não existem veículos");
                     sn.next();
@@ -288,7 +290,7 @@ public class Controller {
                 break;
             case 2:
                 try {
-                    _rentVehicle = Rent.getCheapestCar(data.getAllAvailableVehicles());
+                    _rentVehicle = Rent.getCheapestCar(mUMCarroJa.getAllAvailableVehicles());
                 } catch(semVeiculosException e) {
                     System.out.println("Não existem veículos");
                     sn.next();
@@ -303,7 +305,7 @@ public class Controller {
         }
         if(_rentVehicle != null){
             Posicao toWhere = getPositionMenu();
-            data.createRent(_rentVehicle,toWhere);
+            mUMCarroJa.createRent(_rentVehicle,toWhere);
         }
     }
 
@@ -316,19 +318,28 @@ public class Controller {
         return new Posicao(Double.parseDouble(arrPosString[0]),Double.parseDouble(arrPosString[1]));
     }
 
-    private void giveRatingToRents() {
-        List<Rent> pendingRateList = data.getPendingRateList(data.getLoggedInUser().getNif());
-        showList(pendingRateList);
-        int choice = sn.nextInt();
-        if(pendingRateList.size() >= choice) {
-            System.out.println("Rate (0.0-100.0): ");
-            double rate = sn.nextDouble();
-            data.giveRate(pendingRateList.get(choice-1),rate);
+    private double giveRateMenu() {
+        System.out.println("Rate (0.0-100.0): ");
+        return sn.nextDouble();
+    }
+
+    private void giveRatingToRents(Rent mRent) {
+            double rate = giveRateMenu();
+            mUMCarroJa.giveRate(mRent,rate);
+    }
+
+    private void giveRatingToRentsSeparated(Rent mRent) {
+
+            System.out.println("Rate ao Proprietario:");
+            double rate  = giveRateMenu();
+            System.out.println("Rate ao carro:");
+            double rateCar = giveRateMenu();
+            mUMCarroJa.giveRate(mRent,rate,rateCar);
         }
 
-    }
-    private void viewLastRentPrice() { // TODO : MELHORAR ISTO
-        List<Rent> rentList = data.getLoggedInUser().getRentList();
+
+    private void viewLastRentPrice() {
+        List<Rent> rentList = mUMCarroJa.getLoggedInUser().getRentList();
         if(!rentList.isEmpty()){
             Rent rent = rentList.get(rentList.size()-1);
             System.out.println(rent.getPrice());
@@ -375,20 +386,20 @@ public class Controller {
 
         switch(vehicleType) {
             case 1:
-                _car = new HybridCar(marca,matricula,data.getLoggedInUser().getNif(),averageSpeed,pricePerKm,consumPerKm,mPos,fuel);
+                _car = new HybridCar(marca,matricula, mUMCarroJa.getLoggedInUser().getNif(),averageSpeed,pricePerKm,consumPerKm,mPos,fuel);
                 break;
             case 2:
-                _car = new EletricCar(marca,matricula,data.getLoggedInUser().getNif(),averageSpeed,pricePerKm,consumPerKm,mPos,fuel);
+                _car = new EletricCar(marca,matricula, mUMCarroJa.getLoggedInUser().getNif(),averageSpeed,pricePerKm,consumPerKm,mPos,fuel);
                 break;
             case 3:
-                _car = new GasCar(marca,matricula,data.getLoggedInUser().getNif(),averageSpeed,pricePerKm,consumPerKm,mPos,fuel);
+                _car = new GasCar(marca,matricula, mUMCarroJa.getLoggedInUser().getNif(),averageSpeed,pricePerKm,consumPerKm,mPos,fuel);
                 break;
         }
         return _car;
     }
 
     private void logout() {
-        data.logout();
+        mUMCarroJa.logout();
     }
 
     public static void clearScreen() {

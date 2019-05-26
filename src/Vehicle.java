@@ -126,7 +126,6 @@ public abstract class Vehicle implements Serializable {
 
     public void addRent(Rent a){
         this.alugueres.add(a.clone());
-        updateRating(a.getRating());
     }
 
     public void updateRating(double rate) {

@@ -9,12 +9,12 @@ public class Main
     
     public static void main(String [] args)
     {
-        Data mData = Data.recoverState();
-        //mData.populateData();
-        //Data mData = Data.getDataFromBackupFile("logsPOO_carregamentoInicial.bak");
-        Controller con = new Controller(mData);
+        UMCarroJa mUMCarroJa = UMCarroJa.recoverState();
+        //mUMCarroJa.populateData();
+        //UMCarroJa mUMCarroJa = UMCarroJa.getDataFromBackupFile("logsPOO_carregamentoInicial.bak");
+        Controller con = new Controller(mUMCarroJa);
         con.initControler();
-        mData.saveState();
+        mUMCarroJa.saveState();
     }
 
 

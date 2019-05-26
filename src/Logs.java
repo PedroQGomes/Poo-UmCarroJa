@@ -15,8 +15,7 @@ public class Logs
 
     public Logs()
     {
-        //filename = LocalDateTime.now().toString();
-        filename = "log";
+        filename = LocalDateTime.now().toString();
         try {
             FileWriter fw = new FileWriter(filename, true);
             BufferedWriter bw = new BufferedWriter(fw);
@@ -57,8 +56,6 @@ public class Logs
         stringBuilder.append(rent.getMatricula());
         stringBuilder.append(" , nif ");
         stringBuilder.append(rent.getNif());
-        stringBuilder.append(" , e com o rating ");
-        stringBuilder.append(rent.getRating());
         printWriter.println(stringBuilder.toString());
     }
 

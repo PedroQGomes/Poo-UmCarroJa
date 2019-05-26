@@ -37,14 +37,6 @@ public class Client extends GeneralUser
         return new Client(this);
     }
 
-    public List<Rent> getNoRatingList() {
-        List <Rent> tmp = getRentList();
-        List <Rent> tmpNoRate = new ArrayList<>();
-        for(Rent r:tmp) {
-            if(r.getRating() < 0) tmpNoRate.add(r);
-        }
-        return tmpNoRate;
-    }
 
 
 
