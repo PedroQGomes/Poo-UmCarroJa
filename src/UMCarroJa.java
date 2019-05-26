@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class UMCarroJa implements  Serializable ,IData
+public class UMCarroJa implements  Serializable ,IUMCarroJa
 {
     private static final long serialVersionUID = 123456789L;
     private Map<String,String> emailToNif;
@@ -274,7 +274,7 @@ public class UMCarroJa implements  Serializable ,IData
      * @throws utilizadorJaExiste
      */
     public void addUser (GeneralUser generalUser) throws utilizadorJaExiste {
-        if(emailToNif.get(generalUser.getEmail()) != null) throw new utilizadorJaExiste("Utilizador já existe");
+        if(emailToNif.get(generalUser.getEmail()) != null || users.get(generalUser.getNif()) != null) throw new utilizadorJaExiste("Utilizador já existe");
         emailToNif.put(generalUser.getEmail(),generalUser.getNif());
         users.put(generalUser.getNif(),generalUser);
         log.addToLogUser(generalUser);

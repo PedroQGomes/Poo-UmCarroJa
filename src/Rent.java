@@ -16,7 +16,6 @@ public class Rent implements Serializable
     private static final long serialVersionUID = 1994567219L;
 
 
-    // instance variables - replace the example below with your own
     private LocalDateTime date;
     private Duration rentTime;
     private double price;

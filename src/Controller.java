@@ -40,7 +40,6 @@ public class Controller {
             if(mUMCarroJa.isLoggedIn()) {
                 activeMenu();
             } else mainMenu();
-            clearScreen();
         }
 
     }
@@ -203,7 +202,7 @@ public class Controller {
                 viewLastRentPrice();
                 break;
             case 6:
-                //rateClient();
+                rateClient();
                 break;
             default:
                 logout();
@@ -211,6 +210,15 @@ public class Controller {
         }
     }
 
+    private void rateClient() {
+        List<Rent> pendingRateList = mUMCarroJa.getPendingRateList(mUMCarroJa.getLoggedInUser().getNif());
+        showList(pendingRateList);
+        int choice = sn.nextInt();
+        if (pendingRateList.size() >= choice) {
+            double rate = giveRateMenu();
+            mUMCarroJa.giveRateClient(pendingRateList.get(choice-1),rate);
+        }
+    }
     private void vehicleRegister() {
         boolean tmp = false;
         while(!tmp){

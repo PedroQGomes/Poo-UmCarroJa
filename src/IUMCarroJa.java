@@ -1,12 +1,13 @@
-import java.io.*;
 import java.util.List;
 
-public interface IData {
+public interface IUMCarroJa {
     boolean loginOn(String username,String password);
     void addUser (GeneralUser generalUser) throws utilizadorJaExiste;
     boolean addCar(Vehicle mVehicle);
     void createRent(Vehicle rentVehicle, Posicao posicao);
     void giveRate(Rent rent , double rating);
+    void giveRate(Rent rent, double rate, double rateCar);
+    void giveRateClient(Rent rent,double rating);
     //void populateData();
     void saveState();
     void initLog();
