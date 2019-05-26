@@ -286,9 +286,10 @@ public class Controller {
                 r.setPrice(p);
                 this.mUMCarroJa.updateVehicle(r);
                 System.out.println("Preço atualizado");
+                return;
             }
-            else{System.out.println("Erro matricula inexistente");}
         }
+        System.out.println("Erro matricula inexistente");
 
 
 
@@ -486,6 +487,7 @@ public class Controller {
                flag = true;
            }catch (InputMismatchException e){
                System.out.println("Formato errado,insira um double");
+               sn.nextLine();
            }
         }
         return a;
@@ -500,7 +502,9 @@ public class Controller {
                 flag = true;
             }catch (InputMismatchException e){
                 System.out.println("Formato errado,insira um inteiro");
+                sn.nextLine();
             }
+
         }
         return a;
     }
