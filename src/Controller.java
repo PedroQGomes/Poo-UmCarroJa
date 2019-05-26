@@ -93,6 +93,11 @@ public class Controller {
         }
     }
 
+    private boolean emailIsValid(String email) {
+        String[] fields  = email.split("@");
+        return (fields.length == 2);
+    }
+
     private void registaUser(){
         System.out.print("Registar como Owner (1) ou como Cliente(2) ");
         int option = this.aluguer.readOption();
@@ -101,6 +106,11 @@ public class Controller {
         for(i=0;i < this.registar.getSizeMenu();i++){
             this.registar.printMenu(i);
             String a = sn.next();
+            while(i == 0  && (!emailIsValid(a))) {
+                System.out.print("Email Invalido\n");
+                System.out.print("Email:");
+                a = sn.next();
+            }
             tmp.add(a);
         }
         String[] arrStrBirth = tmp.get(tmp.size()-1).split("-");
