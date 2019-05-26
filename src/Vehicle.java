@@ -171,9 +171,9 @@ public abstract class Vehicle implements Serializable {
 
     public Duration rentTime(Posicao x){
         double dist = this.pos.distancia(x);
-        double tempo = dist / this.averageSpeed;
-        long a = (long) tempo;
-        return(Duration.ofHours(a));
+        double tempo = (dist / this.averageSpeed)*60;
+        long time = (long) tempo;
+        return(Duration.ofMinutes(time) );
     }
 
     public void showinfo(){

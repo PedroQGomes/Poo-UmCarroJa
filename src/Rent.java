@@ -6,6 +6,7 @@
  */
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -44,7 +45,7 @@ public class Rent implements Serializable
         this.nif = r.getNif();
         this.pos = r.getPosicao().clone();
         this.matricula= r.getMatricula();
-        this.distancia = getDistancia();
+        this.distancia = r.getDistancia();
     }
 
     public double getDistancia() {
@@ -204,7 +205,8 @@ public class Rent implements Serializable
         sb.append("Matricula: ").append(this.matricula).append(", ");
         sb.append("Nif do cliente: ").append(this.getNif()).append(", ");
         sb.append("Duração: ").append(this.getRentTime().toMinutes()).append("min , ");
-        sb.append("Distância: ").append(this.getDistancia()).append("km , ");
+        DecimalFormat decimalFormat = new DecimalFormat("###.##");
+        sb.append("Distância: ").append(decimalFormat.format(this.getDistancia())).append("km , ");
         sb.append("Preço: ").append(this.getPrice()).append(", ");
         sb.append("em ").append(this.getDate());
         return sb.toString();

@@ -10,7 +10,6 @@ public class Main
     public static void main(String [] args)
     {
         UMCarroJa mUMCarroJa = UMCarroJa.recoverState();
-        //mUMCarroJa.populateData();
         if(!mUMCarroJa.isBackupDataRead()) {
             mUMCarroJa = UMCarroJa.getDataFromBackupFile("logsPOO_carregamentoInicial.bak",mUMCarroJa);
             mUMCarroJa.setBackupDataRead();
