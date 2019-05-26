@@ -296,9 +296,10 @@ public class Controller {
                 r.setPrice(p);
                 this.mUMCarroJa.updateVehicle(r);
                 System.out.println("Preço atualizado");
+                return;
             }
-            else{System.out.println("Erro matricula inexistente");}
         }
+        System.out.println("Erro matricula inexistente");
 
 
 
@@ -312,6 +313,7 @@ public class Controller {
         switch (option){
             case 1:
                 showList(mUMCarroJa.getListOfCarsFuelNeeded());
+                fuelCarOfList(mUMCarroJa.getListOfCarsFuelNeeded());
                 break;
             case 2:
                 fuelCar();
@@ -319,6 +321,22 @@ public class Controller {
         }
 
     }
+
+
+    private void fuelCarOfList(List<Vehicle> cars){
+        if(cars.isEmpty())return;
+        System.out.println("Insira o respetivo numero do carro para o abastecer");
+        int op = getIntImput();
+        if(op <= cars.size() && op > 0) {
+            this.mUMCarroJa.abasteceCarro(cars.get(op - 1).getMatricula());
+            System.out.println("Carro abastecido");
+        }
+        else {
+            System.out.println("Nao contem nenhum carro com essa matricula");
+        }
+
+    }
+
 
     private void fuelCar(){ //TODO: através da lista de abastecer pegar no carro
         Owner a = (Owner) mUMCarroJa.getLoggedInUser();
@@ -510,6 +528,7 @@ public class Controller {
                flag = true;
            }catch (InputMismatchException e){
                System.out.println("Formato errado,insira um double");
+               sn.nextLine();
            }
         }
         return a;
@@ -524,6 +543,7 @@ public class Controller {
                 flag = true;
             }catch (InputMismatchException e){
                 System.out.println("Formato errado,insira um inteiro");
+                sn.nextLine();
             }
         }
         return a;

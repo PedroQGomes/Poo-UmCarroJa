@@ -112,4 +112,13 @@ public abstract class GeneralUser implements Serializable
         tmp += rate;
         return tmp/this.nRate;
     }
+
+    public String toString(){
+        StringBuffer sb = new StringBuffer("General User");
+        sb.append("Nome: ").append(this.name).append(", ");
+        sb.append("Nif: ").append(this.nif).append(", ");
+        sb.append("Email: ").append(this.email).append(", ");
+        sb.append("Rating: ").append(this.rating).append(", ");
+        return sb.toString();
+    }
 }
