@@ -69,6 +69,7 @@ public class Owner extends GeneralUser
     public void fuelCar(String matricula){
         if(this.mapCar.containsKey(matricula)){
             this.mapCar.get(matricula).abastece();
+            System.out.println(this.mapCar.get(matricula).getCurrentFuel());
         }
     }
 
@@ -85,6 +86,9 @@ public class Owner extends GeneralUser
         this.mapCar.get(a.getMatricula()).executeTrip(a);
     }
 
+    public boolean containsMatricula(String a){
+        return this.mapCar.containsKey(a);
+    }
 
 
 

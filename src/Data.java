@@ -269,7 +269,10 @@ public class Data implements  Serializable ,IData
         vehicleOwner.acceptRent(rent.clone());
     }
 
-
+    public void updateAutonomyVehicle(Owner o,Vehicle mVehicle){
+        allVehicles.put(mVehicle.getMatricula(),mVehicle.clone());
+        users.put(o.getNif(),o.clone());
+    }
     private void removeFromPendingRating(Rent rent) {
         String nifRent = rent.getNif();
         List<Rent> tmp = pendingRating.get(nifRent);
@@ -302,7 +305,7 @@ public class Data implements  Serializable ,IData
         _ownerVehicle.updateRating(rating);
         removeFromPendingRating(rent);
     }
-
+    /*
     public void giveRateVehicle(Rent rent , double rating) {
         rent.setRating(rating);
         //loggedInUser.addRentToHistory(rent.clone());
@@ -314,7 +317,7 @@ public class Data implements  Serializable ,IData
         //_ownerVehicle.addRentToHistory(rent.clone());
         //_ownerVehicle.updateRating(rating);
         removeFromPendingRating(rent);
-    }
+    }*/
 
 
     public boolean addCar(Vehicle mVehicle) {
@@ -326,6 +329,7 @@ public class Data implements  Serializable ,IData
         }
         return isSuccess;
     }
+
     public static Data recoverState() {
         Data mData = null;
         try {
@@ -360,6 +364,11 @@ public class Data implements  Serializable ,IData
 
     public List<Vehicle> getListOfCarType(Class<? extends Vehicle> a){
         return this.allVehicles.values().stream().filter(l-> l.getClass() == a).map(Vehicle::clone).collect(Collectors.toList());
+    }
+
+
+    public void uptadeGasVehicle(String a){
+
     }
 
 }
