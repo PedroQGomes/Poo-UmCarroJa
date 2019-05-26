@@ -247,7 +247,7 @@ public class Data implements  Serializable ,IData
     }
 
     public void createRent (Vehicle rentVehicle,Posicao posicao) {
-        Duration duration = Duration.ZERO;
+        Duration duration = rentVehicle.rentTime(posicao);
         double _price = rentVehicle.rentPrice(posicao);
         Posicao pos = posicao;
         String nif = loggedInUser.getNif();
@@ -270,8 +270,8 @@ public class Data implements  Serializable ,IData
     }
 
 
-    private void removeFromPendingRating(Rent rent) {
-        String nifRent = rent.getNif();
+    private void removeFromPendingRating(Rent rent,String nif) {
+        String nifRent = nif;
         List<Rent> tmp = pendingRating.get(nifRent);
         Iterator it = tmp.iterator();
         while(it.hasNext()) {
@@ -292,27 +292,31 @@ public class Data implements  Serializable ,IData
         pendingRating.put(nif,tmp);
     }
 
-    public void giveRate(Rent rent , double rating) {
+    public void giveRate(Rent rent , double rating) { //TODO: ACABAR RENT PARA CLIENTE ETC
         rent.setRating(rating);
         loggedInUser.addRentToHistory(rent.clone());
         Vehicle _rentVehicle = allVehicles.get(rent.getMatricula());
         _rentVehicle.addRent(rent.clone());
+        _rentVehicle.updateRating(rating);
         Owner _ownerVehicle = (Owner) users.get(_rentVehicle.getNifOwner());
         _ownerVehicle.addRentToHistory(rent.clone());
         _ownerVehicle.updateRating(rating);
-        removeFromPendingRating(rent);
+        removeFromPendingRating(rent,loggedInUser.getNif());
     }
 
-    public void giveRateVehicle(Rent rent , double rating) {
+    public void giveRate(Rent rent , double rating, double ratingCar) {
         rent.setRating(rating);
-        //loggedInUser.addRentToHistory(rent.clone());
+        loggedInUser.addRentToHistory(rent.clone());
         Vehicle _rentVehicle = allVehicles.get(rent.getMatricula());
+        Owner _ownerVehicle = (Owner) users.get(_rentVehicle.getNifOwner());
+        _ownerVehicle.addRentToHistory(rent.clone());
+        _ownerVehicle.updateRating(rating);
+        rent.setRating(ratingCar);
         _rentVehicle.addRent(rent.clone());
-        updateVehicleRent(_rentVehicle,rent);
-        //_ownerVehicle.addRentToHistory(rent.clone());
-        //_ownerVehicle.updateRating(rating);
-        removeFromPendingRating(rent);
+        _rentVehicle.updateRating(ratingCar);
+        removeFromPendingRating(rent,loggedInUser.getNif());
     }
+
 
 
     public boolean addCar(Vehicle mVehicle) {
@@ -359,6 +363,27 @@ public class Data implements  Serializable ,IData
 
     public List<Vehicle> getListOfCarType(Class<? extends Vehicle> a){
         return this.allVehicles.values().stream().filter(l-> l.getClass() == a).map(Vehicle::clone).collect(Collectors.toList());
+    }
+
+
+    public void uptadeGasVehicle(String a){
+
+    }
+
+    public List<Vehicle> getListOfCarOwned() {
+        if(!(getLoggedInUser() instanceof Owner)) return null;
+        Owner owner = (Owner) getLoggedInUser();
+        List<Vehicle> tmp = new ArrayList<>();
+        List<String> tmpMat = owner.getListOfMatricula();
+        for(String plat:tmpMat) {
+            tmp.add(this.allVehicles.get(plat));
+        }
+        return tmp;
+    }
+
+    public List<Vehicle> getListOfCarsFuelNeeded() {
+        List<Vehicle> tmp = getListOfCarOwned();
+        return tmp.stream().filter(Vehicle::getNeedFuel).collect(Collectors.toList());
     }
 
 }

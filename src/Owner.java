@@ -47,8 +47,9 @@ public class Owner extends GeneralUser
     public boolean addVehicle(String mat){
         if(listCar.contains(mat)) return false;
         this.listCar.add(mat);
-        return false;
+        return true;
     }
+
 
 }
 
