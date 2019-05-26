@@ -176,4 +176,19 @@ public abstract class Vehicle implements Serializable {
         return(Duration.ofHours(a));
     }
 
+    public void showinfo(){
+        for(Rent a : this.alugueres){
+            System.out.println(a.toString());
+        }
+    }
+
+    public String toString(){
+        StringBuffer sb = new StringBuffer();
+        sb.append("Marca: ").append(this.marca).append(", ");
+        sb.append("Matricula: ").append(this.matricula).append(", ");
+        sb.append("Posição: ").append(this.pos).append(", ");
+        sb.append("Rating: ").append(this.rating).append(", ");
+        sb.append("Preco: ").append(this.pricePerKm).append(", ");
+        return sb.toString();
+    }
 }

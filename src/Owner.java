@@ -83,5 +83,9 @@ public class Owner extends GeneralUser
     }
 
 
+    public boolean containsMatricula(String a){
+        return this.listCar.contains(a);
+    }
+
 }
 

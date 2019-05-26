@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 import java.time.LocalDate;
@@ -20,7 +21,7 @@ public class Controller {
         String[] listClient = {"Alugar um carro","Consultar Histórico de aluguer","Preço da ultima viagem",
                 "Dar rating aos  alugueres","Definir Posição","Sair"};
         String[] listOwner = {"Registar um carro","Ver registos dos carros",
-                "Ver histórico de aluguer","Abastecer um carro","Receitas da ultima Viagem","Dar rating aos clientes","Sair"};
+                "Ver histórico de aluguer","Abastecer um carro","Receitas da ultima Viagem","Dar rating aos clientes","Mudar o preço de um carro","Sair"};
         String[] listAluger = {"Solicitar o aluguer de um carro mais prox das sua Posicao","Solicitar o aluguer de um carro mais barato",
                 "Solicitar o aluguer de um carro especifico","Solicitar um aluguer de um carro com uma autonomia desejada","Voltar a trás"};
         String[] listRegistar = {"Email:","Nome:","Password:","Morada:","Nif:","Data de Nascimento (Formato: 15-01-2005):"};
@@ -214,6 +215,9 @@ public class Controller {
             case 6:
                 rateClient();
                 break;
+            case 7:
+                changePrice();
+                break;
             default:
                 logout();
                 break;
@@ -248,14 +252,48 @@ public class Controller {
     }
 
     private void viewOwnerCars() {
-        Owner _owner = (Owner) mUMCarroJa.getLoggedInUser();
         List <Vehicle> vehicleList = mUMCarroJa.getListOfCarOwned();
         if(!vehicleList.isEmpty())
         showList(vehicleList);
         else {
             System.out.println("Não tem carros associados!");
         }
+        detailedInfo(vehicleList);
         sn.next();
+    }
+
+    private void detailedInfo(List <Vehicle> vehicleList){
+        System.out.println("Insira o numero correspondente do carro para mais informaçao");
+        int a = sn.nextInt();
+        if(a < vehicleList.size()){
+            if(vehicleList.get(a-1).getAlugueres().isEmpty()){
+                System.out.println("Este carro ainda nao realizou alugueres");
+            }else{vehicleList.get(a-1).showinfo();}
+        }
+    }
+
+    private void changePrice(){
+        System.out.println("Insira a matricula do carro a mudar o preço");
+        String a = sn.next();
+        System.out.println("Insira o preço desejado para o carro");
+        List <Vehicle> vehicleList = mUMCarroJa.getListOfCarOwned();
+        double p;
+        try{p = sn.nextDouble();
+        }catch (InputMismatchException e){
+            System.out.println("Formato errado");
+            p = -1;
+        }
+        for(Vehicle r : vehicleList){
+            if(r.getMatricula().equals(a) && p > 0){
+                r.setPrice(p);
+                this.mUMCarroJa.updateVehicle(r);
+                System.out.println("Preço atualizado");
+            }
+            else{System.out.println("Erro matricula inexistente");}
+        }
+
+
+
     }
 
     private void fuelCarMenu(){
@@ -277,13 +315,12 @@ public class Controller {
     private void fuelCar(){ //TODO: através da lista de abastecer pegar no carro
         Owner a = (Owner) mUMCarroJa.getLoggedInUser();
         String r = sn.next();
-       /* if(a.containsMatricula(r)){
-            a.fuelCar(r);
-            this.mUMCarroJa.updateUser(a);
+        if(a.containsMatricula(r)){
+            this.mUMCarroJa.abasteceCarro(r);
             System.out.println("Carro abastecido");
         }else{
             System.out.println("Nao contem nenhum carro com essa matricula");
-        } */
+        }
     }
 
     private void viewRentHistory() {

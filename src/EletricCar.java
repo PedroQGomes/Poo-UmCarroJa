@@ -49,14 +49,16 @@ public class EletricCar extends Vehicle {
     }
 
     public void abastece(){
+
         this.bateria = maxBateria;
+        super.setNeedFuel(false);
     }
 
     public void warningGas(){
         double tmp = 0.1* maxBateria;
         if(bateria < tmp){
             super.setNeedFuel(true);
-        }
+        }else{super.setNeedFuel(false);}
     }
 
     // retira a gota que gasta na viagem ao carro
@@ -77,17 +79,10 @@ public class EletricCar extends Vehicle {
 
     public String toString(){
         StringBuffer sb = new StringBuffer("Veiculo Eletrico ");
-        sb.append("Marca: ").append(super.getMarca()).append(", ");
-        sb.append("Matricula: ").append(super.getMatricula()).append(", ");
-        sb.append("Posição: ").append(super.getPos()).append(", ");
-        sb.append("Rating: ").append(super.getRating()).append(", ");
+        sb.append(super.toString()).append(", ");
         sb.append("Bateria: ").append(this.getBateria());
-
         return sb.toString();
     }
 
-    public double getAutonomia(){
-        return this.bateria;
-    }
 
 }

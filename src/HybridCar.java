@@ -58,15 +58,17 @@ public class HybridCar extends Vehicle{
     public void abastece(){
         this.gasoleo = maxGasoleo;
         this.bateria = maxBateria;
+        super.setNeedFuel(false);
     }
+
 
     public void warningGas(){
         double total = maxBateria + maxGasoleo;
-        double autonomia = getAutonomy();
-        double tmp = 0.1* total;
+        double autonomia = this.getCurrentFuel();
+        double tmp = 0.1 * total;
         if(autonomia < tmp){
             super.setNeedFuel(true);
-        }
+        }else{super.setNeedFuel(false);}
     }
 
     // retira a gota que gasta na viagem ao carro
@@ -94,13 +96,9 @@ public class HybridCar extends Vehicle{
 
     public String toString(){
         StringBuffer sb = new StringBuffer("Veiculo Hibrido ");
-        sb.append("Marca: ").append(super.getMarca()).append(", ");
-        sb.append("Matricula: ").append(super.getMatricula()).append(", ");
-        sb.append("Posição: ").append(super.getPos()).append(", ");
-        sb.append("Rating: ").append(super.getRating()).append(", ");
+        sb.append(super.toString()).append(", ");
         sb.append("Combustivel: ").append(this.getGasoleo()).append(", ");
         sb.append("Bateria: ").append(this.getBateria()).append(", ");
-
         return sb.toString();
     }
 

@@ -49,14 +49,16 @@ public class GasCar extends Vehicle
     }
     
     public void abastece(){
+
         this.gasoleo = maxGasoleo;
+        super.setNeedFuel(false);
     }
 
     public void warningGas(){
         double tmp = 0.1* maxGasoleo;
         if(gasoleo < tmp){
             super.setNeedFuel(true);
-        }
+        }else{super.setNeedFuel(false);}
     }
 
     // retira a gota que gasta na viagem ao carro
@@ -76,15 +78,9 @@ public class GasCar extends Vehicle
 
     public String toString(){
         StringBuffer sb = new StringBuffer("Veiculo a Gasoleo/Gasolina ");
-        sb.append("Marca: ").append(super.getMarca()).append(", ");
-        sb.append("Matricula: ").append(super.getMatricula()).append(", ");
-        sb.append("Posição: ").append(super.getPos()).append(", ");
-        sb.append("Rating: ").append(super.getRating()).append(", ");
+        sb.append(super.toString()).append(", ");
         sb.append("Combustivel: ").append(this.getGasoleo()).append(", ");
         return sb.toString();
     }
 
-    public double getAutonomia(){
-        return this.gasoleo;
-    }
 }
