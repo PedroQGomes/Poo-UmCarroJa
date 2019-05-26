@@ -553,6 +553,9 @@ public class UMCarroJa implements  Serializable ,IUMCarroJa
      */
     public List<Vehicle> getListOfCarsFuelNeeded() {
         List<Vehicle> tmp = getListOfCarOwned();
+        for(Vehicle v: tmp){
+            v.warningGas();
+        }
         return tmp.stream().filter(Vehicle::getNeedFuel).collect(Collectors.toList());
     }
 

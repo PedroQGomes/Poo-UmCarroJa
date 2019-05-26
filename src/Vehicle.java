@@ -183,7 +183,7 @@ public abstract class Vehicle implements Serializable {
     }
 
     public String toString(){
-        StringBuffer sb = new StringBuffer("Veiculo Hibrido ");
+        StringBuffer sb = new StringBuffer();
         sb.append("Marca: ").append(this.marca).append(", ");
         sb.append("Matricula: ").append(this.matricula).append(", ");
         sb.append("Posição: ").append(this.pos).append(", ");

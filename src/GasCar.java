@@ -49,14 +49,16 @@ public class GasCar extends Vehicle
     }
     
     public void abastece(){
+
         this.gasoleo = maxGasoleo;
+        super.setNeedFuel(false);
     }
 
     public void warningGas(){
         double tmp = 0.1* maxGasoleo;
         if(gasoleo < tmp){
             super.setNeedFuel(true);
-        }
+        }else{super.setNeedFuel(false);}
     }
 
     // retira a gota que gasta na viagem ao carro
@@ -81,7 +83,4 @@ public class GasCar extends Vehicle
         return sb.toString();
     }
 
-    public double getAutonomia(){
-        return this.gasoleo;
-    }
 }

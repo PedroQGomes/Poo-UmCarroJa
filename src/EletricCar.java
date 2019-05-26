@@ -49,14 +49,16 @@ public class EletricCar extends Vehicle {
     }
 
     public void abastece(){
+
         this.bateria = maxBateria;
+        super.setNeedFuel(false);
     }
 
     public void warningGas(){
         double tmp = 0.1* maxBateria;
         if(bateria < tmp){
             super.setNeedFuel(true);
-        }
+        }else{super.setNeedFuel(false);}
     }
 
     // retira a gota que gasta na viagem ao carro
@@ -82,8 +84,5 @@ public class EletricCar extends Vehicle {
         return sb.toString();
     }
 
-    public double getAutonomia(){
-        return this.bateria;
-    }
 
 }

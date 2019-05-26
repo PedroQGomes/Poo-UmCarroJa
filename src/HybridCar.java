@@ -58,15 +58,17 @@ public class HybridCar extends Vehicle{
     public void abastece(){
         this.gasoleo = maxGasoleo;
         this.bateria = maxBateria;
+        super.setNeedFuel(false);
     }
+
 
     public void warningGas(){
         double total = maxBateria + maxGasoleo;
-        double autonomia = getAutonomy();
-        double tmp = 0.1* total;
+        double autonomia = this.getCurrentFuel();
+        double tmp = 0.1 * total;
         if(autonomia < tmp){
             super.setNeedFuel(true);
-        }
+        }else{super.setNeedFuel(false);}
     }
 
     // retira a gota que gasta na viagem ao carro
