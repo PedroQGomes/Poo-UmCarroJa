@@ -8,7 +8,6 @@ public interface IUMCarroJa {
     void giveRate(Rent rent , double rating);
     void giveRate(Rent rent, double rate, double rateCar);
     void giveRateClient(Rent rent,double rating);
-    //void populateData();
     void saveState();
     void initLog();
     void updateUser(GeneralUser user);

@@ -20,7 +20,7 @@ public class UMCarroJa implements  Serializable ,IUMCarroJa
     private GeneralUser loggedInUser = null;
     private Map<String,List<Rent>> pendingRating;
     private transient Logs log;
-    private boolean backupDataRead = false;
+    private boolean backupDataRead = true; //TODO: POR A FALSE PARA ENTREGAR AO PROF
 
 
     /**
@@ -168,6 +168,11 @@ public class UMCarroJa implements  Serializable ,IUMCarroJa
             Class<? extends Vehicle> carType = null;
             Vehicle _vehicle = null;
             Posicao p = new Posicao(Double.parseDouble(fields[1]), Double.parseDouble(fields[2]));
+            Client clt;
+            mUMCarroJa.loggedInUser = mUMCarroJa.users.get(fields[0]);
+            if(mUMCarroJa.getLoggedInUser() instanceof  Client) {
+                clt = (Client) mUMCarroJa.getLoggedInUser();
+            } else return;
             try {
                 switch (fields[3]) {
                     case "Gasolina":
@@ -180,14 +185,13 @@ public class UMCarroJa implements  Serializable ,IUMCarroJa
                         carType = HybridCar.class;
                         break;
                 }
-                if (fields[4].equals("MaisPerto")) _vehicle = Rent.getNearCar(mUMCarroJa.getListOfCarType(carType), p);
+                if (fields[4].equals("MaisPerto")) _vehicle = Rent.getNearCar(mUMCarroJa.getListOfCarType(carType,p,clt.getPos()), p);
                 else if (fields[4].equals("MaisBarato"))
-                    _vehicle = Rent.getCheapestCar(mUMCarroJa.getListOfCarType(carType));
+                    _vehicle = Rent.getCheapestCar(mUMCarroJa.getListOfCarType(carType,p,clt.getPos()));
             } catch (semVeiculosException e) {
                 return;
             }
             if (_vehicle != null) {
-                mUMCarroJa.loggedInUser = mUMCarroJa.users.get(fields[0]);
                 if (mUMCarroJa.getLoggedInUser() != null)
                     mUMCarroJa.createRent(_vehicle, p);
             }
@@ -311,19 +315,6 @@ public class UMCarroJa implements  Serializable ,IUMCarroJa
         return (loggedInUser != null);
     }
 
-    /*public void populateData ( ) {
-        LocalDate date = LocalDate.now();
-        Owner _owner = new Owner("own","own","asd","asd",date,"10");
-        Client _client = new Client("clt","clt","asd","asd",date,"1000");
-        Vehicle _vehicle = new GasCar("Opel","01-EH-33","10",100,1,1,new Posicao(1,1),500);
-        addUser(_owner);
-        addUser(_client);
-        loggedInUser = _owner;
-        addCar(_vehicle);
-        loggedInUser = _client;
-        createRent(_vehicle,new Posicao(5,5));
-        loggedInUser = null;
-    } */
 
 
     /**
@@ -353,7 +344,9 @@ public class UMCarroJa implements  Serializable ,IUMCarroJa
         Posicao pos = posicao;
         String nif = this.loggedInUser.getNif();
         String matricula = rentVehicle.getMatricula();
-        Rent rent = new Rent(duration,_price,pos,nif,matricula);
+        double distancia = rentVehicle.getPos().distancia(posicao);
+        Rent rent = new Rent(duration,_price,pos,nif,matricula,distancia);
+
         updateVehicleRent(rentVehicle,rent.clone());
         addToPendingRating(rent.clone(),rentVehicle.getNifOwner());
         addToPendingRating(rent.clone(),nif);
@@ -519,7 +512,16 @@ public class UMCarroJa implements  Serializable ,IUMCarroJa
      * @return List<Vehicle> de todos os veículos da aplicação
      */
     public List<Vehicle> getAllAvailableVehicles () {
-        return this.allVehicles.values().stream().map(Vehicle::clone).collect(Collectors.toList());
+        return this.allVehicles.values().stream().filter(l -> !l.getNeedFuel()).map(Vehicle::clone).collect(Collectors.toList());
+    }
+
+    /**
+     * Assumimos que o cliente tem de estar mais longe do ponto para onde quer ir do que do carro.
+     * @param p
+     * @return
+     */
+    public List<Vehicle> getAllAvailableVehiclesWithFuelToTripAndCloseToClientThanToPosition(Posicao p,Posicao cliente) {
+        return this.allVehicles.values().stream().filter(l -> l.enoughAutonomy(p) && (p.distancia(cliente) > cliente.distancia(l.getPos()))).map(Vehicle::clone).collect(Collectors.toList());
     }
 
     /**
@@ -529,6 +531,18 @@ public class UMCarroJa implements  Serializable ,IUMCarroJa
      */
     public List<Vehicle> getListOfCarType(Class<? extends Vehicle> a){
         return this.allVehicles.values().stream().filter(l-> l.getClass() == a).map(Vehicle::clone).collect(Collectors.toList());
+    }
+
+    /**
+     * Retorna todos os veículos de um certo tipo da aplicação e que tenha combustivel e fique mais perto da posiçao do cliente do que para onde o cliente quer ir
+     * @param a
+     * @param toWhere
+     * @param cliente
+     * @return
+     */
+    public List<Vehicle> getListOfCarType(Class<? extends Vehicle> a,Posicao toWhere, Posicao cliente){
+        List<Vehicle> tmp = getAllAvailableVehiclesWithFuelToTripAndCloseToClientThanToPosition(toWhere,cliente);
+        return tmp.stream().filter(l-> l.getClass() == a).map(Vehicle::clone).collect(Collectors.toList());
     }
 
 

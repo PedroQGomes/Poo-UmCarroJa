@@ -297,10 +297,11 @@ public class Controller {
         Vehicle _rentVehicle = null;
         this.aluguer.executeMenu();
         Client clt = (Client) mUMCarroJa.getLoggedInUser();
+        Posicao toWhere = getPositionMenu();
         switch (this.aluguer.getChoice()) {
             case 1:
                 try {
-                    _rentVehicle = Rent.getNearCar(mUMCarroJa.getAllAvailableVehicles(),clt.getPos());
+                    _rentVehicle = Rent.getNearCar(mUMCarroJa.getAllAvailableVehiclesWithFuelToTripAndCloseToClientThanToPosition(toWhere,clt.getPos()),clt.getPos());
                 } catch (semVeiculosException e) {
                     System.out.println("Não existem veículos");
                     sn.next();
@@ -308,7 +309,7 @@ public class Controller {
                 break;
             case 2:
                 try {
-                    _rentVehicle = Rent.getCheapestCar(mUMCarroJa.getAllAvailableVehicles());
+                    _rentVehicle = Rent.getCheapestCar(mUMCarroJa.getAllAvailableVehiclesWithFuelToTripAndCloseToClientThanToPosition(toWhere,clt.getPos()));
                 } catch(semVeiculosException e) {
                     System.out.println("Não existem veículos");
                     sn.next();
@@ -322,7 +323,6 @@ public class Controller {
                 break;
         }
         if(_rentVehicle != null){
-            Posicao toWhere = getPositionMenu();
             mUMCarroJa.createRent(_rentVehicle,toWhere);
         }
     }

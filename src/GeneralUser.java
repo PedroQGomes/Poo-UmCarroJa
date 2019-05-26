@@ -51,7 +51,7 @@ public abstract class GeneralUser implements Serializable
     }
 
     public int getNRate() { return  this.nRate;}
-    public void setNRate(int nRate) { this.nRate = nRate;}
+
     public List<Rent> getRentList() {
         return this.rentList.stream().map(Rent::clone).collect(Collectors.toList());
     }
@@ -99,14 +99,7 @@ public abstract class GeneralUser implements Serializable
     public void addRentToHistory(Rent rent){
         this.rentList.add(rent.clone());
     }
-    
-    public List<Rent> getRentOfClient(String nif){
-        return this.rentList.stream().filter(l -> l.getNif().equals(nif)).map(Rent::clone).collect(Collectors.toList());
-    }
 
-    public void registerPriceTrip(double price){
-
-    }
 
     public void updateRating(double rate) {
         this.nRate++;

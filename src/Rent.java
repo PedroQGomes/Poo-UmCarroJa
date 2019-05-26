@@ -20,17 +20,22 @@ public class Rent implements Serializable
     private Duration rentTime;
     private double price;
     private Posicao pos; // posicao final
+
+
+
+    private double distancia;
     private String nif;
     private String matricula;
 
 
-    public Rent(Duration _rentTime, double _price,Posicao poss,String niff,String matricula){
+    public Rent(Duration _rentTime, double _price,Posicao poss,String niff,String matricula,double distancia){
         this.date = LocalDateTime.now();
         this.rentTime = _rentTime;
         this.price = _price;
         this.pos = poss;
         this.nif = niff;
         this.matricula = matricula;
+        this.distancia = distancia;
     }
     public Rent(Rent r) {
         this.date = r.getDate();
@@ -39,8 +44,12 @@ public class Rent implements Serializable
         this.nif = r.getNif();
         this.pos = r.getPosicao().clone();
         this.matricula= r.getMatricula();
+        this.distancia = getDistancia();
     }
 
+    public double getDistancia() {
+        return this.distancia;
+    }
 
     public LocalDateTime getDate() {
         return this.date;
@@ -65,7 +74,7 @@ public class Rent implements Serializable
         if(this == o)return true;
         if((o == null) || this.getClass() != o.getClass())return false;
         Rent a = (Rent) o;
-        return(a.getNif().equals(this.getNif()) && this.getMatricula().equals(a.getMatricula()) && a.getDate() == this.getDate()  && this.getPosicao() == a.getPosicao());
+        return(a.getNif().equals(this.getNif()) && this.getMatricula().equals(a.getMatricula()) && a.getDate() == this.getDate()  && this.getPosicao() == a.getPosicao() && this.getDistancia() == a.getDistancia() && this.getPrice() == a.getPrice() && this.rentTime == a.getRentTime());
     }
 
     public Rent clone(){
@@ -164,6 +173,7 @@ public class Rent implements Serializable
         sb.append("Matricula: ").append(this.matricula).append(", ");
         sb.append("Nif do cliente: ").append(this.getNif()).append(", ");
         sb.append("Duração: ").append(this.getRentTime().toMinutes()).append("min , ");
+        sb.append("Distância: ").append(this.getDistancia()).append("km , ");
         sb.append("Preço: ").append(this.getPrice()).append(", ");
         sb.append("em ").append(this.getDate());
         return sb.toString();
